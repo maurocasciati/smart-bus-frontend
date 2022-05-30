@@ -1,14 +1,15 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
+import { InicioProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation }: InicioProps) {
   return (
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
       <Button
         title="Ver detalle recorrido"
-        onPress={() => navigation.navigate('Detalle Recorrido')} />
+        onPress={() => navigation.navigate('DetalleRecorrido')} />
     </View>
   );
 }
