@@ -3,6 +3,7 @@
     "name": "smart-bus-frontend-driver",
     "slug": "smart-bus-frontend-driver",
     "version": "1.0.0",
+    "sdkVersion": "44.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,12 +19,20 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.unsam.smartbus",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCGxgy4rEOTwRgku1tetkgrM63TK41jAAk"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.unsam.smartbus",
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyCGxgy4rEOTwRgku1tetkgrM63TK41jAAk" } 
       }
     },
     "web": {
