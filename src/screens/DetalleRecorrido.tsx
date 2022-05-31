@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { View, Text, Button } from 'react-native';
 import { DetalleRecorridoProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import { GOOGLE_API_KEY } from '../constants';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function DetalleRecorrido({ route, navigation }: DetalleRecorridoProps) {
   const { recorridoId } = route.params;
@@ -20,10 +21,7 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
     latitude: -34.614310,
     longitude: -58.444872,
   });
-  const [marker2, setMarker2] = useState({
-    latitude: -34.616318,
-    longitude: -58.438910,
-  });
+  const [inputMarker, setInputMarker] = useState<LatLng | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -34,22 +32,49 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
   return (
     <View style={styles.container}>
       <Text>Pantalla detalle de Recorrido: {recorridoId}</Text>
+
+      <GooglePlacesAutocomplete
+        placeholder='Ingrese la dirección'
+        minLength={4}
+        fetchDetails={true}
+        onPress={(data, details) => {
+          if (details?.geometry?.location) {
+            const { lat, lng } = details.geometry.location;
+            setInputMarker({ latitude: lat, longitude: lng });
+          }
+        }}
+        query={{
+          key: GOOGLE_API_KEY,
+          language: 'es',
+          components: 'country:ar',
+        }}
+        debounce={500}
+        styles={{
+          textInputContainer: {
+            width: '90%',
+          },
+        }}
+      />
+
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         region={mapRegion}
       >
-        <Marker coordinate={marker1} title='From' />
-        <Marker coordinate={marker2} title='To' />
-
-        <MapViewDirections
-          origin={marker2}
-          destination={marker1}
-          apikey={GOOGLE_API_KEY}
-          strokeWidth={4}
-          strokeColor="#111111"
-        />
+        <Marker coordinate={marker1} title='Partida' />
+        { inputMarker && 
+          <>
+            <Marker coordinate={inputMarker} title='Destino' />
+            <MapViewDirections
+              origin={marker1}
+              destination={inputMarker}
+              apikey={GOOGLE_API_KEY}
+              strokeWidth={4}
+              strokeColor="#111111"
+            />
+          </>
+        }
       </MapView>
 
       

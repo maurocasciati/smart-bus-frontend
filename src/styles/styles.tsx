@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   map: {
-    height: '90%',
+    height: '60%',
     width: '90%'
   }
 });
