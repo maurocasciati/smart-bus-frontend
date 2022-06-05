@@ -3,13 +3,19 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   map: {
     height: '60%',
-    width: '90%'
+    width: '90%',
   },
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'centser',
     justifyContent: 'center',
     backgroundColor: 'peachpuff',
+  },
+  center: {
+    // flex: 1,
+    alignItems: 'center',
+    // justifyContent: 'center',
+    // backgroundColor: 'peachpuff',
   },
   image: {
     marginBottom: 40,
@@ -34,7 +40,7 @@ export const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
+    margin: 10,
     backgroundColor: 'darkorange',
   },
   primaryBtnText: {

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useContext } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, GestureResponderEvent } from 'react-native';
+import { View, TextInput, GestureResponderEvent } from 'react-native';
 import { AuthContext, AuthContextType } from '../auth/AuthProvider';
 import { styles } from '../styles/styles';
+import PrimaryButton from './PrimaryButton';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -19,7 +20,6 @@ export default function SignIn() {
 
   return (
     <>
-      <Image style={styles.image} source={require('../../assets/favicon.png')}/>
       <View style={styles.inputView}>
         <TextInput
           style={styles.textInput}
@@ -37,9 +37,7 @@ export default function SignIn() {
         />
       </View>
     
-      <TouchableOpacity style={styles.primaryBtn} onPress={onLogin}>
-        <Text style={styles.primaryBtnText}>INGRESAR</Text>
-      </TouchableOpacity>
+      <PrimaryButton name={'INGRESAR'} action={onLogin}/>
     </>
   );
 }

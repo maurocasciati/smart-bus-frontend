@@ -5,11 +5,13 @@ import * as React from 'react';
 import { AuthContext } from '../auth/AuthProvider';
 import DetalleRecorrido from '../screens/DetalleRecorrido';
 import HomeScreen from '../screens/Home';
+import NotFound from '../screens/NotFound';
 import ListadoRecorridos from '../screens/ListadoRecorridos';
 import Login from '../screens/Login';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
+  NotFound: undefined;
   Login: undefined;
   Inicio: undefined;
   ListadoRecorridos: undefined;
@@ -39,6 +41,7 @@ export default function NavigationComponent() {
             <Stack.Screen name="Inicio" component={HomeScreen} />
             <Stack.Screen name="ListadoRecorridos" component={ListadoRecorridos} />
             <Stack.Screen name="DetalleRecorrido" component={DetalleRecorrido} />
+            <Stack.Screen name="NotFound" component={NotFound} />
           </>
         ) : (
           <>

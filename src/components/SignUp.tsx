@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { styles } from '../styles/styles';
+import PrimaryButton from './PrimaryButton';
 
 export default function SignUp() {
   const [nombre, setNombre] = useState('');
@@ -17,8 +18,6 @@ export default function SignUp() {
 
   return (
     <>
-      <Image style={styles.image} source={require('../../assets/favicon.png')}/>
-      
       <View style={styles.inputView}>
         <TextInput
           style={styles.textInput}
@@ -49,9 +48,7 @@ export default function SignUp() {
         />
       </View>
     
-      <TouchableOpacity style={styles.primaryBtn} onPress={onLogin}>
-        <Text style={styles.primaryBtnText}>REGISTRARSE</Text>
-      </TouchableOpacity>
+      <PrimaryButton name='REGISTRARSE' action={onLogin} />
     </>
   );
 }
