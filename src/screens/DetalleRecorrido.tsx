@@ -31,39 +31,40 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
 
   return (
     <View style={styles.container}>
-      <Text>Pantalla detalle de Recorrido: {recorridoId}</Text>
+      <View style={styles.center}>
+        <Text>Pantalla detalle de Recorrido: {recorridoId}</Text>
 
-      <GooglePlacesAutocomplete
-        placeholder='Ingrese la dirección'
-        minLength={4}
-        fetchDetails={true}
-        onPress={(data, details) => {
-          if (details?.geometry?.location) {
-            const { lat, lng } = details.geometry.location;
-            setInputMarker({ latitude: lat, longitude: lng });
-          }
-        }}
-        query={{
-          key: GOOGLE_API_KEY,
-          language: 'es',
-          components: 'country:ar',
-        }}
-        debounce={500}
-        styles={{
-          textInputContainer: {
-            width: '90%',
-          },
-        }}
-      />
+        <GooglePlacesAutocomplete
+          placeholder='Ingrese la dirección'
+          minLength={4}
+          fetchDetails={true}
+          onPress={(data, details) => {
+            if (details?.geometry?.location) {
+              const { lat, lng } = details.geometry.location;
+              setInputMarker({ latitude: lat, longitude: lng });
+            }
+          }}
+          query={{
+            key: GOOGLE_API_KEY,
+            language: 'es',
+            components: 'country:ar',
+          }}
+          debounce={500}
+          styles={{
+            textInputContainer: {
+              width: '90%',
+            },
+          }}
+        />
 
-      <MapView
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        showsUserLocation={true}
-        region={mapRegion}
-      >
-        <Marker coordinate={marker1} title='Partida' />
-        { inputMarker && 
+        <MapView
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          showsUserLocation={true}
+          region={mapRegion}
+        >
+          <Marker coordinate={marker1} title='Partida' />
+          { inputMarker && 
           <>
             <Marker coordinate={inputMarker} title='Destino' />
             <MapViewDirections
@@ -74,13 +75,13 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
               strokeColor="#111111"
             />
           </>
-        }
-      </MapView>
+          }
+        </MapView>
 
-      
-      <Button
-        title="Volver a inicio"
-        onPress={() => navigation.navigate('Inicio')} />
+        <Button
+          title="Volver a inicio"
+          onPress={() => navigation.navigate('Inicio')} />
+      </View>
     </View>
   );
 }

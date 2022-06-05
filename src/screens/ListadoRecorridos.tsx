@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, ListRenderItemInfo } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity } from 'react-native';
 import { ListadoRecorridosProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
 import { styles } from '../styles/styles';
@@ -26,11 +26,16 @@ export default function ListadoRecorridos({ navigation }: ListadoRecorridosProps
   }
 
   const renderItem = (recorrido: ListRenderItemInfo<Recorrido>) => (
-    <View style={localstyles.item}>
+    <TouchableOpacity
+      style={localstyles.item}
+      onPress={() => navigation.navigate('DetalleRecorrido', {
+        recorridoId: recorrido.item.id,
+      })}
+    >
       <Text style={localstyles.title}>{recorrido.item.escuela}</Text>
       <Text style={localstyles.type}>{recorrido.item.esIda ? 'Ida' : 'Vuelta'}</Text>
       <Text style={localstyles.hour}>{recorrido.item.horario}</Text>
-    </View>
+    </TouchableOpacity>
   );
   
   return (

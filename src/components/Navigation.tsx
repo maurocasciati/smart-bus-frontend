@@ -15,7 +15,7 @@ export type RootStackParamList = {
   Login: undefined;
   Inicio: undefined;
   ListadoRecorridos: undefined;
-  DetalleRecorrido: { recorridoId: number };
+  DetalleRecorrido: { recorridoId: string };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
