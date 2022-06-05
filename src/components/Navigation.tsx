@@ -3,11 +3,12 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { AuthContext } from '../auth/AuthProvider';
-import DetalleRecorrido from '../screens/DetalleRecorrido';
+import DetalleRecorrido from '../screens/RecorridoDetalle';
 import HomeScreen from '../screens/Home';
 import NotFound from '../screens/NotFound';
-import ListadoRecorridos from '../screens/ListadoRecorridos';
+import ListadoRecorridos from '../screens/RecorridoListado';
 import Login from '../screens/Login';
+import { Recorrido } from '../domain/Recorrido';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -15,7 +16,7 @@ export type RootStackParamList = {
   Login: undefined;
   Inicio: undefined;
   ListadoRecorridos: undefined;
-  DetalleRecorrido: { recorridoId: string };
+  DetalleRecorrido: { recorrido: Recorrido };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
@@ -29,23 +30,19 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function NavigationComponent() {
   const { token } = React.useContext(AuthContext);
 
-  React.useEffect(() => {
-    console.log({token});
-  }, [token]);
-
   return (
     <NavigationContainer>
       <Stack.Navigator>
         { token ? (
           <>
             <Stack.Screen name="Inicio" component={HomeScreen} />
-            <Stack.Screen name="ListadoRecorridos" component={ListadoRecorridos} />
-            <Stack.Screen name="DetalleRecorrido" component={DetalleRecorrido} />
+            <Stack.Screen name="ListadoRecorridos" component={ListadoRecorridos} options={{ title: 'Listado de Recorridos' }}/>
+            <Stack.Screen name="DetalleRecorrido" component={DetalleRecorrido} options={{ title: 'Detalle del Recorrido' }}/>
             <Stack.Screen name="NotFound" component={NotFound} />
           </>
         ) : (
           <>
-            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Login" component={Login} options={{ title: 'Ingresar' }}/>
           </>
         )}
       </Stack.Navigator>

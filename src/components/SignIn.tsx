@@ -8,11 +8,10 @@ import PrimaryButton from './PrimaryButton';
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { token, saveToken } = useContext(AuthContext) as AuthContextType;
+  const { saveToken } = useContext(AuthContext) as AuthContextType;
 
   const onLogin = (e: GestureResponderEvent) => {
     e.preventDefault(); 
-    console.log({token});
     console.log({email});
     console.log({password});
     saveToken('token');

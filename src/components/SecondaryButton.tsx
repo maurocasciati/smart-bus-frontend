@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-export default function PrimaryButton(props: { name: string, action: (t: any) => void}) {
+export default function SecondaryButton(props: { name: string, action: (t: any) => void}) {
   return (
     <TouchableOpacity
       style={styles.primaryBtn}
@@ -13,16 +13,15 @@ export default function PrimaryButton(props: { name: string, action: (t: any) =>
 
 const styles = StyleSheet.create({
   primaryBtn: {
-    width: '80%',
     borderRadius: 25,
-    height: 50,
+    height: '100%',
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 10,
-    backgroundColor: 'darkorange',
+    backgroundColor: 'peachpuff',
   },
   primaryBtnText: {
-    color: '#fff',
-    fontSize: 18,
+    color: 'darkgray',
+    fontSize: 16,
   },
 });
