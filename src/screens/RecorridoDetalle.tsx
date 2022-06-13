@@ -19,7 +19,7 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
   return (
     <View style={styles.container}>
       <View style={localstyles.mapContainer}>
-        <MapViewRecorrido recorrido={recorrido}  />
+        <MapViewRecorrido recorrido={recorrido} />
       </View>
 
       <View style={localstyles.detailsContainer}>

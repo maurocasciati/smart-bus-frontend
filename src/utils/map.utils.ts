@@ -26,9 +26,9 @@ export function getRegionForCoordinates(points: LatLng[]) {
   const deltaY = (maxY - minY);
   
   return {
-    latitude: midX - 0.003,
+    latitude: midX - 0.006,
     longitude: midY,
-    latitudeDelta: deltaX + 0.006,
-    longitudeDelta: deltaY + 0.006,
+    latitudeDelta: deltaX + 0.016,
+    longitudeDelta: deltaY + 0.016,
   };
 }
