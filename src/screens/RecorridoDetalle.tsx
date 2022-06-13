@@ -1,22 +1,14 @@
 import React, { useEffect } from 'react';
-import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { View, Text, StyleSheet } from 'react-native';
 import { DetalleRecorridoProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
-import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import PrimaryButton from '../components/PrimaryButton';
-import { getRegionForCoordinates } from '../utils/map.utils';
 import SecondaryButton from '../components/SecondaryButton';
+import MapViewRecorrido from '../components/MapViewRecorrido';
 
 export default function DetalleRecorrido({ route, navigation }: DetalleRecorridoProps) {
   const { recorrido } = route.params;
-
-  const pointsList: LatLng[] = [
-    recorrido.escuela.coordenadas,
-    ...recorrido.pasajeros.map((pasajero) => pasajero.coordenadas)
-  ];
 
   useEffect(() => {
     (async () => {
@@ -27,27 +19,7 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
   return (
     <View style={styles.container}>
       <View style={localstyles.mapContainer}>
-        <MapView
-          style={localstyles.map}
-          customMapStyle={customMapStyle}
-          provider={PROVIDER_GOOGLE}
-          showsUserLocation={true}
-          region={getRegionForCoordinates(pointsList)}
-        >
-          <Marker coordinate={recorrido.escuela.coordenadas} title={recorrido.escuela.nombre} />
-
-          { recorrido.pasajeros.map((pasajero) => 
-            <Marker key={pasajero.id} coordinate={pasajero.coordenadas} title={pasajero.domicilio} />
-          )}
-
-          <MapViewDirections
-            origin={recorrido.escuela.coordenadas}
-            destination={recorrido.pasajeros[1].coordenadas}
-            apikey={GOOGLE_API_KEY}
-            strokeWidth={10}
-            strokeColor='darkorange'
-          />
-        </MapView>
+        <MapViewRecorrido recorrido={recorrido}  />
       </View>
 
       <View style={localstyles.detailsContainer}>
