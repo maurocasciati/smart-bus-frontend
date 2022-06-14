@@ -23,6 +23,16 @@ export const pasajerosMock = [
       }
     } as Pasajero,
     {
+      id: '2',
+      nombre: 'Nicolas',
+      apellido: 'Espindola',
+      domicilio: 'F. J. Seguí 638',
+      coordenadas: {
+        latitude: -34.617460,
+        longitude: -58.455455,
+      }
+    } as Pasajero,
+    {
       id: '3',
       nombre: 'Joaquin',
       apellido: 'Arnedo',
@@ -32,16 +42,6 @@ export const pasajerosMock = [
         longitude: -58.447132,
       }
     } as Pasajero,
-    {
-      id: '2',
-      nombre: 'Nicolas',
-      apellido: 'Espindola',
-      domicilio: 'F. J. Seguí 638',
-      coordenadas: {
-        latitude: -34.617460,
-        longitude: -58.455455,
-      }
-    } as Pasajero
 ];
 
 export const mockRecorridos: Recorrido[] = [];

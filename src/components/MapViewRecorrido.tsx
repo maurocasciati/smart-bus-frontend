@@ -20,7 +20,6 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
     (async () => {
       await Location.requestForegroundPermissionsAsync();
       setCurrentPosition((await Location.getCurrentPositionAsync()).coords);
-      // Location.watchPositionAsync({}, location => setCurrentPosition(location.coords))
     })();
   }, []);
 
@@ -41,16 +40,23 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
         <Marker key={pasajero.id} coordinate={pasajero.coordenadas} title={pasajero.domicilio} image={require('../../assets/marker-house.png')}/>
       )}
 
-      {/* TODO: Considerar mejor el inicio y fin dependiendo de si es ida o vuelta. */}
       <MapViewDirections
-        origin={esIda ? currentPosition : escuela.coordenadas}
-        destination={esIda ? escuela.coordenadas : currentPosition}
+        origin={currentPosition}
+        destination={esIda ? pointsList[0] : escuela.coordenadas}
+        apikey={GOOGLE_API_KEY}
+        strokeWidth={5}
+        strokeColor='orange'
+      />
+
+      <MapViewDirections
+        origin={esIda ? pointsList[0] : escuela.coordenadas}
+        destination={esIda ? escuela.coordenadas : pointsList[pointsList.length - 1]}
         waypoints={pointsList}
-        optimizeWaypoints={true}
+        optimizeWaypoints={false} // Poner en true cuando tengamos order automatico.
         splitWaypoints={true}
         apikey={GOOGLE_API_KEY}
-        strokeWidth={8}
-        strokeColor='orange'
+        strokeWidth={5}
+        strokeColor='#f2c777'
       />
     </MapView>
   );
