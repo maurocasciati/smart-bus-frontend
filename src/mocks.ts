@@ -8,7 +8,8 @@ export const escuelaMock = {
   coordenadas: {
     latitude: -34.608751,
     longitude: -58.446538,
-  }
+  },
+  esEscuela: true,
 } as Escuela;
 
 export const pasajerosMock = [
