@@ -18,7 +18,7 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
 
   return (
     <View style={styles.container}>
-      <View style={localstyles.mapContainer}>
+      <View>
         <MapViewRecorrido recorrido={recorrido} />
       </View>
 
@@ -30,7 +30,7 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
             <Text style={localstyles.subtitle}>{ recorrido.escuela.domicilio }</Text>
           </View>
           <View>
-            <View style={{ height: 25, width: 100 }}>
+            <View style={{ height: 30, width: 100 }}>
               <SecondaryButton name='Editar' action={() => navigation.navigate('NotFound')}></SecondaryButton>
             </View>
             <Text style={localstyles.type}>{recorrido.esIda ? 'Ida' : 'Vuelta'}</Text>
@@ -39,12 +39,12 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
         </View>
         <View style={localstyles.pasajerosContainer}>
           <Text style={localstyles.pasajerosText}>Cantidad de pasajeros: {recorrido.pasajeros.length}</Text>
-          <View style={{ height: 25, width: 100 }}>
+          <View style={{ height: 30, width: 100 }}>
             <SecondaryButton name='Ver listado' action={() => navigation.navigate('NotFound')}></SecondaryButton>
           </View>
         </View>
         <View style={localstyles.footerButton}>
-          <PrimaryButton name={'INICIAR'} action={() => navigation.navigate('NotFound')}/>
+          <PrimaryButton name={'INICIAR'} action={() => navigation.navigate('RecorridoEnCurso', { recorrido })}/>
         </View>
       </View>
     </View>
@@ -52,14 +52,12 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
 }
 
 const localstyles = StyleSheet.create({
-  mapContainer: {
-    flex: 7,
-  },
   map: {
-    height: '154%',
+    height: '100%',
     width: '100%',
   },
   detailsContainer: {
+    marginTop: -200,
     borderRadius: 20,
     elevation: 6,
     backgroundColor: '#fff',
@@ -77,7 +75,7 @@ const localstyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 10,
-    flex: 4,
+    flex: 2,
   },
   title: {
     fontSize: 18,
@@ -88,6 +86,7 @@ const localstyles = StyleSheet.create({
     alignContent: 'center',
   },
   pasajerosText: {
+    marginTop: -5,
     fontSize: 18,
     flex: 3,
   },

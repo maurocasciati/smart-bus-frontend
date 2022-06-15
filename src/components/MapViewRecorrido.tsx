@@ -64,7 +64,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
 
 const localstyles = StyleSheet.create({
   map: {
-    height: '152%',
+    height: '100%',
     width: '100%',
   },
 });
