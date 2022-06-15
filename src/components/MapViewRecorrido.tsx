@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
-import { StyleSheet } from 'react-native';
 import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import { getRegionForCoordinates } from '../utils/map.utils';
 import { Recorrido } from '../domain/Recorrido';
+import { styles } from '../styles/styles';
 
 
 export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }) {
@@ -27,7 +27,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
 
   return (
     <MapView
-      style={localstyles.map}
+      style={styles.map}
       customMapStyle={customMapStyle}
       provider={PROVIDER_GOOGLE}
       showsUserLocation={true}
@@ -61,10 +61,3 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
     </MapView>
   );
 }
-
-const localstyles = StyleSheet.create({
-  map: {
-    height: '100%',
-    width: '100%',
-  },
-});

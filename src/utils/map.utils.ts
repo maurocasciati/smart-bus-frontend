@@ -1,7 +1,7 @@
 import { LatLng, Region } from 'react-native-maps';
 
 export function getRegionForCoordinates(points: LatLng[]) {
-  const delta = 0.0025;
+  const delta = 0.0015;
   // points should be an array of { latitude: X, longitude: Y }
   let minX: number, maxX: number, minY: number, maxY: number;
   
@@ -15,7 +15,7 @@ export function getRegionForCoordinates(points: LatLng[]) {
   
   // calculate rect
   points.map((point) => {
-    minX = Math.min(minX, point.latitude) - delta;
+    minX = Math.min(minX, point.latitude) - 2  *delta;
     maxX = Math.max(maxX, point.latitude) + delta;
     minY = Math.min(minY, point.longitude) - delta;
     maxY = Math.max(maxY, point.longitude) + delta;

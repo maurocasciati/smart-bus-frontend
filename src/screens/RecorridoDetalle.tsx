@@ -52,10 +52,7 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
 }
 
 const localstyles = StyleSheet.create({
-  map: {
-    height: '100%',
-    width: '100%',
-  },
+
   detailsContainer: {
     marginTop: -200,
     borderRadius: 20,
@@ -66,7 +63,8 @@ const localstyles = StyleSheet.create({
   },
   recorridoContainer: {
     flexDirection: 'row',
-    margin: 10,
+    padding: 10,
+    marginBottom: 10,
     flex: 8,
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
@@ -87,7 +85,7 @@ const localstyles = StyleSheet.create({
   },
   pasajerosText: {
     marginTop: -5,
-    fontSize: 18,
+    fontSize: 16,
     flex: 3,
   },
   footerButton: {

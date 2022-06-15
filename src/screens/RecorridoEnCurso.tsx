@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { RecorridoEnCursoProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
@@ -9,6 +9,7 @@ import { getFocusedRegion } from '../utils/map.utils';
 import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import MapViewDirections from 'react-native-maps-directions';
 import ActionButton from '../components/ActionButton';
+import SecondaryButton from '../components/SecondaryButton';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -17,6 +18,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const [paradas, setParadas] = useState<Parada[]>([]);
   const [waypoints, setWaypoints] = useState<LatLng[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [toggleFocus, setToggleFocus] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
@@ -42,12 +44,12 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const esUltimaParada = (): boolean => paradas.length > 1;
   const removerParada = (): void => setParadas(paradas.slice(1));
 
-  const getRegion = (): Region => getFocusedRegion(currentPosition);
+  const getRegion = (): Region => toggleFocus ? getFocusedRegion(currentPosition) : getFocusedRegion(paradas[0].coordenadas);
 
   const renderMap = () => {
     return loading ? null : (
       <MapView
-        style={localstyles.map}
+        style={styles.map}
         customMapStyle={customMapStyle}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
@@ -88,30 +90,33 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       { renderMap() }
 
       <View style={localstyles.detailsContainer}>
-
         <View style={localstyles.recorridoContainer}>
-          <View style={{ flex: 1, margin: 5 }}>
-            <ActionButton name='No Sube' action={removerParada}></ActionButton>
-          </View>
-          <View style={{ flex: 3, margin: 5 }}>
-            <ActionButton name='Sube' action={removerParada}></ActionButton>
-          </View>
+          { esUltimaParada()?
+            <>
+              <View style={{ flex: 1, margin: 5 }}>
+                <ActionButton name='No Sube' action={removerParada}></ActionButton>
+              </View>
+              <View style={{ flex: 3, margin: 5 }}>
+                <ActionButton name='Sube' action={removerParada}></ActionButton>
+              </View>
+            </> :
+            <View style={{ flex: 1, margin: 5 }}>
+              <ActionButton name={'FINALIZAR'} action={() => navigation.navigate('DetalleRecorrido', { recorrido })}/>
+            </View>
+          }
         </View>
-
-        <View style={localstyles.pasajerosContainer}>
+        <TouchableOpacity
+          style={localstyles.pasajerosContainer}
+          onPress={() => setToggleFocus(!toggleFocus)}
+        >
           <Text style={localstyles.pasajerosText}>Siguiente: {paradas[0].domicilio}</Text>
-        </View>
-
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
 const localstyles = StyleSheet.create({
-  map: {
-    height: '100%',
-    width: '100%',
-  },
   detailsContainer: {
     marginTop: -150,
     borderRadius: 20,
@@ -122,7 +127,7 @@ const localstyles = StyleSheet.create({
   },
   recorridoContainer: {
     flexDirection: 'row',
-    margin: 10,
+    padding: 10,
     flex: 1,
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
@@ -133,28 +138,8 @@ const localstyles = StyleSheet.create({
     marginHorizontal: 10,
     flex: 1,
   },
-  title: {
-    fontSize: 18,
-    alignContent: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    alignContent: 'center',
-  },
   pasajerosText: {
     fontSize: 18,
     flex: 3,
-  },
-  footerButton: {
-    alignItems: 'center',
-    elevation: 6,
-  },
-  type: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  hour: {
-    fontSize: 16,
-    textAlign: 'center',
   },
 });
