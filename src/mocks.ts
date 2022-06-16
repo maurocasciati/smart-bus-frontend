@@ -8,7 +8,8 @@ export const escuelaMock = {
   coordenadas: {
     latitude: -34.608751,
     longitude: -58.446538,
-  }
+  },
+  esEscuela: true,
 } as Escuela;
 
 export const pasajerosMock = [
@@ -16,30 +17,30 @@ export const pasajerosMock = [
       id: '1',
       nombre: 'Mauro',
       apellido: 'Casciati',
-      domicilio: 'Federico García Lorca 250',
+      domicilio: 'Valle 1208',
       coordenadas: {
-        latitude: -34.618654,
-        longitude: -58.445307,
+        latitude: -34.625542,
+        longitude: -58.445162,
       }
     } as Pasajero,
     {
       id: '2',
       nombre: 'Nicolas',
       apellido: 'Espindola',
-      domicilio: 'Franklin 650',
+      domicilio: 'F. J. Seguí 638',
       coordenadas: {
-        latitude: -34.607765,
-        longitude: -58.440867,
+        latitude: -34.617460,
+        longitude: -58.455455,
       }
     } as Pasajero,
     {
       id: '3',
       nombre: 'Joaquin',
       apellido: 'Arnedo',
-      domicilio: 'Planes 1250',
+      domicilio: 'Thames 150',
       coordenadas: {
-        latitude: -34.613013,
-        longitude: -58.451598,
+        latitude: -34.598409,
+        longitude: -58.447132,
       }
     } as Pasajero,
 ];

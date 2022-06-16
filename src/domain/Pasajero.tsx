@@ -1,12 +1,8 @@
-import { LatLng } from 'react-native-maps';
+import { Parada } from './Parada';
 
-export type Pasajero = {
-  id: string,
-  nombre: string,
+export type Pasajero = Parada & {
   apellido: string,
   nacimiento: string,
-  telefono: string,
-  domicilio: string,
   pido_dpto: string,
-  coordenadas: LatLng,
+  esEscuelta: false,
 }

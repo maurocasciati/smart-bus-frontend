@@ -6,6 +6,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'peachpuff',
   },
+  map: {
+    height: '100%',
+    width: '100%',
+  },
   center: {
     alignItems: 'center',
   },
