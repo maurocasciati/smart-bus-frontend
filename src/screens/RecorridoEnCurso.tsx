@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { RecorridoEnCursoProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
-import MapView, { LatLng, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import MapView, { LatLng, Marker } from 'react-native-maps';
 import { Parada } from '../domain/Parada';
 import { getFocusedRegion } from '../utils/map.utils';
 import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import MapViewDirections from 'react-native-maps-directions';
 import ActionButton from '../components/ActionButton';
-import SecondaryButton from '../components/SecondaryButton';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
   const { pasajeros, escuela, esIda } = recorrido;
-  const [currentPosition, setCurrentPosition] = useState<LatLng>({} as LatLng);
+  const [currentPosition, setCurrentPosition] = useState<LatLng>({ longitude: 0, latitude: 0 });
   const [paradas, setParadas] = useState<Parada[]>([]);
   const [waypoints, setWaypoints] = useState<LatLng[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [toggleFocus, setToggleFocus] = useState<boolean>(true);
+  
+  const mapRef = useRef<MapView>(null);
 
   useEffect(() => {
     (async () => {
@@ -41,19 +42,28 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     setWaypoints(paradas.map((pasajero) => pasajero.coordenadas));
   }, [paradas]);
 
+  useEffect(() => {
+    toggleFocus
+      ? mapRef.current?.animateToRegion(getFocusedRegion(currentPosition))
+      : mapRef.current?.animateToRegion(getFocusedRegion(paradas[0].coordenadas));
+  }, [toggleFocus]);
+
+  useEffect(() => {
+    toggleFocus && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition));
+  }, [currentPosition]);
+
   const esUltimaParada = (): boolean => paradas.length > 1;
   const removerParada = (): void => setParadas(paradas.slice(1));
-
-  const getRegion = (): Region => toggleFocus ? getFocusedRegion(currentPosition) : getFocusedRegion(paradas[0].coordenadas);
+  const animateToInitialRegion = (): void => mapRef.current?.animateToRegion(getFocusedRegion(currentPosition), 1);
 
   const renderMap = () => {
     return loading ? null : (
       <MapView
+        ref={mapRef}
         style={styles.map}
         customMapStyle={customMapStyle}
-        provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
-        region={getRegion()}
+        onMapReady={animateToInitialRegion}
       >
         { paradas.map((parada) => 
           <Marker
