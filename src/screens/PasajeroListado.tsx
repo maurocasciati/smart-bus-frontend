@@ -1,38 +1,46 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity } from 'react-native';
-import { RecorridoListadoProps } from '../components/Navigation';
+import { PasajeroListadoProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
-import { Recorrido } from '../domain/Recorrido';
-import { mockRecorridos } from '../mocks';
+import { Pasajero } from '../domain/Pasajero';
+
 import { styles } from '../styles/styles';
 
-export default function RecorridoListado({ navigation }: RecorridoListadoProps) {
-  const renderItem = (recorrido: ListRenderItemInfo<Recorrido>) => (
+export default function PasajeroListado({ route, navigation }: PasajeroListadoProps) {
+  const { recorrido } = route.params;
+
+
+  const renderItem = (pasajeroItem: ListRenderItemInfo<Pasajero>) => (
     <TouchableOpacity
       style={localstyles.item}
-      onPress={() => navigation.navigate('RecorridoDetalle', {
-        recorrido: recorrido.item,
-      })}
+      onPress={() => console.log('hola')
+        // navigation.navigate('PasajeroEdicion', { recorrido })
+      }
     >
       <View style={{ flex: 1 }}>
-        <Text style={localstyles.title}>{recorrido.item.nombre}</Text>
-        <Text style={localstyles.subtitle}>{recorrido.item.escuela.nombre}</Text>
+        <Text style={localstyles.title}>
+          {pasajeroItem.item.nombre + ' ' + pasajeroItem.item.apellido }
+        </Text>
+        <Text style={localstyles.subtitle}>
+          {pasajeroItem.item.pido_dpto ? pasajeroItem.item.domicilio + ' ' + pasajeroItem.item.pido_dpto : pasajeroItem.item.domicilio}
+        </Text>
       </View>
-      <View>
+      {/* TODO: Mostrar de este lado los botones para cambiar el orden del listado de pasajeros
+      <View>  
         <Text style={localstyles.type}>{recorrido.item.esIda ? 'Ida' : 'Vuelta'}</Text>
         <Text style={localstyles.hour}>{recorrido.item.horario}</Text>
-      </View>
+      </View> */}
     </TouchableOpacity>
   );
   
   return (
     <View style={styles.container}>
       <SafeAreaView style={localstyles.list}>
-        <FlatList data={mockRecorridos} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={recorrido.pasajeros} renderItem={renderItem} keyExtractor={item => item.id} />
       </SafeAreaView>
 
       <View style={styles.center}>
-        <PrimaryButton name={'Crear Recorrido'} action={() => navigation.navigate('NotFound')}/>
+        <PrimaryButton name={'Volver'} action={() => navigation.navigate('RecorridoDetalle', { recorrido })}/>
       </View>
     </View>
   );

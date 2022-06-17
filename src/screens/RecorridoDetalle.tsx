@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import * as Location from 'expo-location';
 import { View, Text, StyleSheet } from 'react-native';
-import { DetalleRecorridoProps } from '../components/Navigation';
+import { RecorridoDetalleProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
 import SecondaryButton from '../components/SecondaryButton';
 import MapViewRecorrido from '../components/MapViewRecorrido';
 
-export default function DetalleRecorrido({ route, navigation }: DetalleRecorridoProps) {
+export default function RecorridoDetalle({ route, navigation }: RecorridoDetalleProps) {
   const { recorrido } = route.params;
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function DetalleRecorrido({ route, navigation }: DetalleRecorrido
         <View style={localstyles.pasajerosContainer}>
           <Text style={localstyles.pasajerosText}>Cantidad de pasajeros: {recorrido.pasajeros.length}</Text>
           <View style={{ height: 30, width: 100 }}>
-            <SecondaryButton name='Ver listado' action={() => navigation.navigate('NotFound')}></SecondaryButton>
+            <SecondaryButton name='Ver listado' action={() => navigation.navigate('PasajeroListado', { recorrido })}></SecondaryButton>
           </View>
         </View>
         <View style={localstyles.footerButton}>
