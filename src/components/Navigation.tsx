@@ -10,6 +10,7 @@ import RecorridoListado from '../screens/RecorridoListado';
 import Login from '../screens/Login';
 import { Recorrido } from '../domain/Recorrido';
 import RecorridoEnCurso from '../screens/RecorridoEnCurso';
+import PasajeroListado from '../screens/PasajeroListado';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -19,6 +20,7 @@ export type RootStackParamList = {
   RecorridoListado: undefined;
   RecorridoDetalle: { recorrido: Recorrido };
   RecorridoEnCurso: { recorrido: Recorrido };
+  PasajeroListado: { recorrido: Recorrido };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
@@ -26,6 +28,7 @@ export type InicioProps = NativeStackScreenProps<RootStackParamList, 'Inicio'>;
 export type RecorridoListadoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoListado'>;
 export type RecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalle'>;
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
+export type PasajeroListadoProps = NativeStackScreenProps<RootStackParamList, 'PasajeroListado'>;
 
 // Declaración del stack de pantallas que se va a usar dentro del componente de navegación
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,6 +45,7 @@ export default function NavigationComponent() {
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Detalle del Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en Curso' }}/>
+            <Stack.Screen name="PasajeroListado" component={PasajeroListado} options={{ title: 'Listado de Pasajeros' }}/>
             <Stack.Screen name="NotFound" component={NotFound} />
           </>
         ) : (
