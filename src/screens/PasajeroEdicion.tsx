@@ -3,13 +3,14 @@ import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 import { View, Text, StyleSheet } from 'react-native';
-import { DetalleRecorridoProps } from '../components/Navigation';
+import { RecorridoDetalleProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import { GOOGLE_API_KEY } from '../constants';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import PrimaryButton from '../components/PrimaryButton';
 
-export default function EditarPasajero({ route, navigation }: DetalleRecorridoProps) {
+// TODO
+export default function EditarPasajero({ route, navigation }: RecorridoDetalleProps) {
   const { recorrido } = route.params;
 
   const [inputMarker, setInputMarker] = useState<LatLng | null>(null);

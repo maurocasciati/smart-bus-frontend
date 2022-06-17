@@ -9,7 +9,7 @@ export default function HomeScreen({ navigation }: InicioProps) {
       <Text>Open up App.tsx to start working on your app!</Text>
       <Button
         title="Ver listado de recorridos"
-        onPress={() => navigation.navigate('ListadoRecorridos')} />
+        onPress={() => navigation.navigate('RecorridoListado')} />
     </View>
   );
 }

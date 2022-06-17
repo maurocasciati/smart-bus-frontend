@@ -6,7 +6,7 @@ import { Recorrido } from '../domain/Recorrido';
 import { mockRecorridos } from '../mocks';
 import { styles } from '../styles/styles';
 
-export default function RecorridoListado({ navigation }: RecorridoListadoProps) {
+export default function PasajeroListado({ navigation }: RecorridoListadoProps) {
   const renderItem = (recorrido: ListRenderItemInfo<Recorrido>) => (
     <TouchableOpacity
       style={localstyles.item}

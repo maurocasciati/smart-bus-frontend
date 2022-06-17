@@ -3,10 +3,10 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { AuthContext } from '../auth/AuthProvider';
-import DetalleRecorrido from '../screens/RecorridoDetalle';
+import RecorridoDetalle from '../screens/RecorridoDetalle';
 import HomeScreen from '../screens/Home';
 import NotFound from '../screens/NotFound';
-import ListadoRecorridos from '../screens/RecorridoListado';
+import RecorridoListado from '../screens/RecorridoListado';
 import Login from '../screens/Login';
 import { Recorrido } from '../domain/Recorrido';
 import RecorridoEnCurso from '../screens/RecorridoEnCurso';
@@ -16,15 +16,15 @@ export type RootStackParamList = {
   NotFound: undefined;
   Login: undefined;
   Inicio: undefined;
-  ListadoRecorridos: undefined;
-  DetalleRecorrido: { recorrido: Recorrido };
+  RecorridoListado: undefined;
+  RecorridoDetalle: { recorrido: Recorrido };
   RecorridoEnCurso: { recorrido: Recorrido };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
 export type InicioProps = NativeStackScreenProps<RootStackParamList, 'Inicio'>;
-export type ListadoRecorridosProps = NativeStackScreenProps<RootStackParamList, 'ListadoRecorridos'>;
-export type DetalleRecorridoProps = NativeStackScreenProps<RootStackParamList, 'DetalleRecorrido'>;
+export type RecorridoListadoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoListado'>;
+export type RecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalle'>;
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
 
 // Declaración del stack de pantallas que se va a usar dentro del componente de navegación
@@ -39,8 +39,8 @@ export default function NavigationComponent() {
         { token ? (
           <>
             <Stack.Screen name="Inicio" component={HomeScreen} />
-            <Stack.Screen name="ListadoRecorridos" component={ListadoRecorridos} options={{ title: 'Listado de Recorridos' }}/>
-            <Stack.Screen name="DetalleRecorrido" component={DetalleRecorrido} options={{ title: 'Detalle del Recorrido' }}/>
+            <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
+            <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Detalle del Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en Curso' }}/>
             <Stack.Screen name="NotFound" component={NotFound} />
           </>

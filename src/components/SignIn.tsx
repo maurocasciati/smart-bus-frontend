@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { useState } from 'react';
 import { useContext } from 'react';
 import { View, TextInput, Text, GestureResponderEvent } from 'react-native';
-import { AuthContext, AuthContextType } from '../auth/AuthProvider';
+import { AuthContext } from '../auth/AuthProvider';
 import { styles } from '../styles/styles';
 import PrimaryButton from './PrimaryButton';
 import {REACT_APP_BASE_URL} from '@env';
@@ -21,7 +21,6 @@ export default function SignIn() {
     
     try{
       const resp = await axios.post<{token : string}>(`${baseUrl}/Usuario/autenticar`, {email, password});
-      
       if(resp.data && resp.data.token){
         saveToken(resp.data.token);
       }

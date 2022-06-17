@@ -1,10 +1,9 @@
 import { REACT_APP_BASE_URL } from '@env';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { View, TextInput, Text, Button } from 'react-native';
+import { useForm } from 'react-hook-form';
+import { View, Text } from 'react-native';
 import { VALIDACIONES } from '../domain/Validaciones';
-import { styles } from '../styles/styles';
 import CustomTextInput from './form/CustomTextInput';
 import PrimaryButton from './PrimaryButton';
 

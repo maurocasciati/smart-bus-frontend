@@ -22,11 +22,10 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const mapRef = useRef<MapView>(null);
 
   useEffect(() => {
+    let isMounted = true;
     (async () => {
       await Location.requestForegroundPermissionsAsync();
-      Location.watchPositionAsync({}, location => setCurrentPosition(location.coords));
-
-      console.log(escuela);
+      Location.watchPositionAsync({}, location => isMounted && setCurrentPosition(location.coords));
 
       setParadas([
         ...esIda ? [] : [escuela],
@@ -36,6 +35,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
 
       setLoading(false);
     })();
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
               </View>
             </> :
             <View style={{ flex: 1, margin: 5 }}>
-              <ActionButton name={'FINALIZAR'} action={() => navigation.navigate('DetalleRecorrido', { recorrido })}/>
+              <ActionButton name={'FINALIZAR'} action={() => navigation.navigate('RecorridoDetalle', { recorrido })}/>
             </View>
           }
         </View>
