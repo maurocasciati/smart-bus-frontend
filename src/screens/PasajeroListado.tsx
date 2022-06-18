@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, SafeAreaView, FlatList, ListRenderItemInfo, Tou
 import { PasajeroListadoProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
 import { Pasajero } from '../domain/Pasajero';
-
 import { styles } from '../styles/styles';
 
 export default function PasajeroListado({ route, navigation }: PasajeroListadoProps) {
@@ -35,7 +34,7 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
   
   return (
     <View style={styles.container}>
-      <SafeAreaView style={localstyles.list}>
+      <SafeAreaView style={styles.list}>
         <FlatList data={recorrido.pasajeros} renderItem={renderItem} keyExtractor={item => item.id} />
       </SafeAreaView>
 
@@ -47,11 +46,6 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
 }
 
 const localstyles = StyleSheet.create({
-  list: {
-    flex: 1,
-    margin: 20,
-    borderRadius: 8,
-  },
   item: {
     flexDirection: 'row',
     backgroundColor: 'white',

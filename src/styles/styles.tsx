@@ -16,6 +16,11 @@ export const styles = StyleSheet.create({
   image: {
     marginBottom: 40,
   },
+  list: {
+    flex: 1,
+    margin: 20,
+    borderRadius: 8,
+  },
   inputView: {
     backgroundColor: '#fff',
     borderRadius: 30,

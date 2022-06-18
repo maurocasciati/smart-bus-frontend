@@ -2,15 +2,53 @@ import { Escuela } from './domain/Escuela';
 import { Pasajero } from './domain/Pasajero';
 import { Recorrido } from './domain/Recorrido';
 
-export const escuelaMock = {
-  nombre: 'Escuela Técnica N° 9',
-  domicilio: 'Gral. Martín de Gainza 1050',
-  coordenadas: {
-    latitude: -34.608751,
-    longitude: -58.446538,
-  },
-  esEscuela: true,
-} as Escuela;
+export const escuelasMock = [
+  {
+    id: '1',
+    nombre: 'Escuela Técnica N° 9',
+    domicilio: 'Gral. Martín de Gainza 1050',
+    telefono: '1122334455',
+    coordenadas: {
+      latitude: -34.608751,
+      longitude: -58.446538,
+    },
+    esEscuela: true,
+  } as Escuela,
+  {
+    id: '2',
+    nombre: 'Colegio Marianista',
+    domicilio: 'Avenida Rivadavia 5652',
+    telefono: '1122334455',
+    coordenadas: {
+      latitude: -34.622168,
+      longitude: -58.444967,
+    },
+    esEscuela: true,
+  } as Escuela,
+  {
+    id: '3',
+    nombre: 'Instituto educativo Ferro Carril Oeste',
+    domicilio: 'Bacacay 1050',
+    telefono: '1122334455',
+    coordenadas: {
+      latitude: -34.618994,
+      longitude: -58.444184,
+    },
+    esEscuela: true,
+  } as Escuela,
+  {
+    id: '4',
+    nombre: 'Instituto Redemptrix Captivorum',
+    domicilio: 'Espinosa 1220',
+    telefono: '1122334455',
+    coordenadas: {
+      latitude: -34.609023,
+      longitude: -58.453580,
+    },
+    esEscuela: true,
+  } as Escuela,
+  
+];
 
 export const pasajerosMock = [
     {
@@ -46,15 +84,21 @@ export const pasajerosMock = [
 ];
 
 export const mockRecorridos: Recorrido[] = [];
-for (let i = 1; i < 15; i++) {
-  const esIda = i % 2 == 0;
+for (let i = 0; i < 4; i++) {
   mockRecorridos.push({
     id: i.toString(),
-    nombre: 'Técnica 9 turno ' + (esIda ? 'mañana ' : 'tarde ') + i.toString(),
-    escuela: escuelaMock,
-    esIda,
-    horario: esIda ? '07:00' : '13:00',
-    anio: '2022',
+    nombre: escuelasMock[i].nombre + ' turno mañana ',
+    escuela: escuelasMock[i],
+    esIda: true,
+    horario: '07:00',
+    pasajeros: pasajerosMock,
+  });
+  mockRecorridos.push({
+    id: (i+4).toString(),
+    nombre: escuelasMock[i].nombre + ' turno tarde ',
+    escuela: escuelasMock[i],
+    esIda: false,
+    horario: '13:00',
     pasajeros: pasajerosMock,
   });
 }
