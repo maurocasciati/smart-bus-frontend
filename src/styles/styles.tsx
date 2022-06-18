@@ -18,8 +18,9 @@ export const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    margin: 20,
-    borderRadius: 8,
+    margin: 30,
+    backgroundColor: 'white',
+    borderRadius: 30,
   },
   inputView: {
     backgroundColor: '#fff',
@@ -38,5 +39,31 @@ export const styles = StyleSheet.create({
   secondaryText: {
     color: '#000',
     padding: 14,
-  }
+  },
+  line: {
+    borderBottomColor: 'lightgray',
+    borderBottomWidth: 1,
+  },
+  item: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 30,
+  },
+  title: {
+    fontSize: 18,
+    alignContent: 'center',
+  },
+  subtitle: {
+    fontSize: 14,
+    alignContent: 'center',
+  },
+  type: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  hour: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });

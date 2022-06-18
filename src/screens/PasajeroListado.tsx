@@ -10,26 +10,28 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
 
 
   const renderItem = (pasajeroItem: ListRenderItemInfo<Pasajero>) => (
-    <TouchableOpacity
-      style={localstyles.item}
-      onPress={() => console.log('hola')
+    <View style={styles.line}>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => console.log('hola')
         // navigation.navigate('PasajeroEdicion', { recorrido })
-      }
-    >
-      <View style={{ flex: 1 }}>
-        <Text style={localstyles.title}>
-          {pasajeroItem.item.nombre + ' ' + pasajeroItem.item.apellido }
-        </Text>
-        <Text style={localstyles.subtitle}>
-          {pasajeroItem.item.pido_dpto ? pasajeroItem.item.domicilio + ' ' + pasajeroItem.item.pido_dpto : pasajeroItem.item.domicilio}
-        </Text>
-      </View>
-      {/* TODO: Mostrar de este lado los botones para cambiar el orden del listado de pasajeros
+        }
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={styles.title}>
+            {pasajeroItem.item.nombre + ' ' + pasajeroItem.item.apellido }
+          </Text>
+          <Text style={styles.subtitle}>
+            {pasajeroItem.item.pido_dpto ? pasajeroItem.item.domicilio + ' ' + pasajeroItem.item.pido_dpto : pasajeroItem.item.domicilio}
+          </Text>
+        </View>
+        {/* TODO: Mostrar de este lado los botones para cambiar el orden del listado de pasajeros
       <View>  
         <Text style={localstyles.type}>{recorrido.item.esIda ? 'Ida' : 'Vuelta'}</Text>
         <Text style={localstyles.hour}>{recorrido.item.horario}</Text>
       </View> */}
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
   
   return (
@@ -44,29 +46,3 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
     </View>
   );
 }
-
-const localstyles = StyleSheet.create({
-  item: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 20,
-    borderBottomColor: 'lightgray',
-    borderBottomWidth: 1,
-  },
-  title: {
-    fontSize: 18,
-    alignContent: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    alignContent: 'center',
-  },
-  type: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  hour: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
-});

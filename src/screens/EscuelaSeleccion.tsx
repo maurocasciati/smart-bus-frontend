@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, View, Text, StyleSheet, ListRenderItemInfo, TouchableOpacity } from 'react-native';
+import { FlatList, SafeAreaView, View, Text, StyleSheet, ListRenderItemInfo, TouchableOpacity, TextInput } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { EscuelaSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
@@ -9,36 +9,53 @@ import PrimaryButton from '../components/PrimaryButton';
 
 export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccionProps) {
   const { dataRecorrido } = route.params;
-  const [ idEscuela, setIdEscuela] = useState<string | null>(null);
+  const [idEscuela, setIdEscuela] = useState<string | null>(null);
+  const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>(escuelasMock);
+
+  const filtrarEscuela = (nombre: string) => {
+    setListadoEscuelas(escuelasMock.filter((escuela) => escuela.nombre.toLowerCase().includes(nombre.toLowerCase())));
+  };
 
   const renderItem = (escuela: ListRenderItemInfo<Escuela>) => (
-    <TouchableOpacity
-      style={localstyles.item}
-      onPress={() => setIdEscuela(escuela.item.id)}
-    >
-      <View style={{ flex: 1 }}>
-        <Text style={localstyles.title}>
-          {escuela.item.nombre}
-        </Text>
-        <Text style={localstyles.subtitle}>
-          {escuela.item.domicilio}
-        </Text>
-      </View>
-      <View style={{ alignSelf: 'center' }}>
-        <Checkbox 
-          value={idEscuela === escuela.item.id}
-          color={'orange'}/>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.line}>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => setIdEscuela(escuela.item.id)}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={styles.title}>
+            {escuela.item.nombre}
+          </Text>
+          <Text style={styles.subtitle}>
+            {escuela.item.domicilio}
+          </Text>
+        </View>
+        <View style={{ alignSelf: 'center' }}>
+          <Checkbox 
+            value={idEscuela === escuela.item.id}
+            color={'orange'}/>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
   
   return (
     <View style={styles.container}>
+      <View style={localstyles.header}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder='Buscar'
+            onChangeText={filtrarEscuela}
+          />
+        </View>
+      </View>
+
       <SafeAreaView style={styles.list}>
-        <FlatList data={escuelasMock} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={listadoEscuelas} renderItem={renderItem} keyExtractor={item => item.id} />
       </SafeAreaView>
       
-      <View style={styles.center}>
+      <View style={localstyles.footer}>
         <PrimaryButton name={'Crear nueva Escuela'} action={() => []}/>
         <PrimaryButton name={'Seleccionar Pasajeros'} action={() => []}/>
       </View>
@@ -47,19 +64,14 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
 }
 
 const localstyles = StyleSheet.create({
-  item: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 20,
-    borderBottomColor: 'lightgray',
-    borderBottomWidth: 1,
+  header: {
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: -30,
   },
-  title: {
-    fontSize: 18,
-    alignContent: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    alignContent: 'center',
+  footer: {
+    alignItems: 'center',
+    marginTop: -20,
+    marginBottom: 20,
   },
 });
