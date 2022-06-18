@@ -6,7 +6,6 @@ export type Recorrido = {
   nombre: string,
   esIda: boolean,
   horario: string,
-  anio: string,
   pasajeros: Pasajero[],
   escuela: Escuela,
 }

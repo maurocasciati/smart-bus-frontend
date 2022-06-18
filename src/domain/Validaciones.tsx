@@ -9,8 +9,13 @@ export class VALIDACIONES {
     required: MENSAJES.VALIDACION.REQUERIDO
   };
   
-  static EMAIL : CustomRule = {
+  static EMAIL: CustomRule = {
     required: MENSAJES.VALIDACION.REQUERIDO, 
     pattern: {value: EX_REG.EMAIL, message: MENSAJES.VALIDACION.EMAIL}
+  };
+  
+  static HORARIO: CustomRule = {
+    required: MENSAJES.VALIDACION.REQUERIDO, 
+    pattern: {value: EX_REG.HORARIO, message: MENSAJES.VALIDACION.HORARIO}
   };
 }

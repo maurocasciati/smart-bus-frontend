@@ -11,6 +11,7 @@ import Login from '../screens/Login';
 import { Recorrido } from '../domain/Recorrido';
 import RecorridoEnCurso from '../screens/RecorridoEnCurso';
 import PasajeroListado from '../screens/PasajeroListado';
+import RecorridoEdicion from '../screens/RecorridoEdicion';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   RecorridoListado: undefined;
   RecorridoDetalle: { recorrido: Recorrido };
   RecorridoEnCurso: { recorrido: Recorrido };
+  RecorridoEdicion: { recorrido: Recorrido | null }
   PasajeroListado: { recorrido: Recorrido };
 };
 
@@ -28,6 +30,7 @@ export type InicioProps = NativeStackScreenProps<RootStackParamList, 'Inicio'>;
 export type RecorridoListadoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoListado'>;
 export type RecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalle'>;
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
+export type RecorridoEdicionProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEdicion'>;
 export type PasajeroListadoProps = NativeStackScreenProps<RootStackParamList, 'PasajeroListado'>;
 
 // Declaración del stack de pantallas que se va a usar dentro del componente de navegación
@@ -45,6 +48,7 @@ export default function NavigationComponent() {
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Detalle del Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en Curso' }}/>
+            <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Guardar Recorrido' }}/>
             <Stack.Screen name="PasajeroListado" component={PasajeroListado} options={{ title: 'Listado de Pasajeros' }}/>
             <Stack.Screen name="NotFound" component={NotFound} />
           </>

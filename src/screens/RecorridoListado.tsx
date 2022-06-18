@@ -32,7 +32,7 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
       </SafeAreaView>
 
       <View style={styles.center}>
-        <PrimaryButton name={'Crear Recorrido'} action={() => navigation.navigate('NotFound')}/>
+        <PrimaryButton name={'Crear Recorrido'} action={() => navigation.navigate('RecorridoEdicion', { recorrido: null } )}/>
       </View>
     </View>
   );
