@@ -61,7 +61,7 @@ export default function NavigationComponent() {
           <>
             <Stack.Screen name="Inicio" component={HomeScreen} />
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
-            <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Detalle del Recorrido' }}/>
+            <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en Curso' }}/>
             <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="PasajeroEdicion" component={PasajeroEdicion} options={{ title: 'Pasajero' }}/>

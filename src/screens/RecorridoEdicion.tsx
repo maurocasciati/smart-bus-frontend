@@ -12,7 +12,7 @@ import { RecorridoFormType } from '../components/form/FormTypes';
 export default function RecorridoEdicion({ route, navigation }: RecorridoEdicionProps) {
   const { recorrido } = route.params;
   
-  const {control, handleSubmit, formState: {errors}, reset} = useForm<RecorridoFormType>({
+  const {control, handleSubmit, formState: {errors}} = useForm<RecorridoFormType>({
     defaultValues: {
       nombre: recorrido?.nombre || '',
       esIda: recorrido?.esIda || false,
