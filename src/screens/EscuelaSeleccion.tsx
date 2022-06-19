@@ -24,7 +24,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   };
 
   const crearEscuela = () => {
-    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido: null });
+    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido });
   };
 
   const guardarRecorrido = () => {

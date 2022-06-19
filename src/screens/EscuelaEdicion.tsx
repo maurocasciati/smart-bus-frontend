@@ -27,7 +27,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
     console.log({ dataEscuela });
     // TODO: Pegarle al back para guardar escuela antes de esto: vvvvv
     alert(`La escuela ${dataEscuela.nombre} fue guardada con éxito`);
-    dataRecorrido ? navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido: null })
+    dataRecorrido ? navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido })
       : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
         : navigation.navigate('RecorridoListado');
   };
