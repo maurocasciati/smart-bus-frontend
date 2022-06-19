@@ -9,8 +9,8 @@ import ErrorText from '../components/ErrorText';
 import { Pasajero } from '../domain/Pasajero';
 
 export default function PasajeroSeleccion({ route, navigation }: PasajeroSeleccionProps) {
-  const { dataRecorrido } = route.params;
-  const [idPasajeros, setIdPasajeros] = useState<string[]>([]);
+  const { dataRecorrido, recorrido } = route.params;
+  const [idPasajeros, setIdPasajeros] = useState<string[]>(recorrido?.pasajeros?.map(p => p.id) || []);
   const [listadoPasajeros, setListadoPasajeros] = useState<Pasajero[]>(pasajerosMock);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
@@ -27,7 +27,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
   const guardarRecorrido = () => {
     dataRecorrido.idPasajeros = idPasajeros;
     console.log(dataRecorrido);
-    alert(`El recorrido ${dataRecorrido.nombre} fue creado con éxito`);
+    alert(`El recorrido ${dataRecorrido.nombre} fue guardado con éxito`);
     navigation.navigate('RecorridoListado');
   };
 
@@ -81,7 +81,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
       </SafeAreaView>
       
       <View style={localstyles.footer}>
-        <PrimaryButton name={'Crear nuevo Pasajero'} action={crearPasajero} color={'#9c9c9c'}/>
+        <PrimaryButton name={'Crear nuevo Pasajero'} action={crearPasajero} secondary={true}/>
         { mensajeError && ErrorText(mensajeError) }
         <PrimaryButton name={'Guardar Recorrido'} action={finalizar}/>
       </View>

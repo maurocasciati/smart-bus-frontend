@@ -31,7 +31,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
           </View>
           <View>
             <View style={{ height: 30, width: 100 }}>
-              <SecondaryButton name='Editar' action={() => navigation.navigate('NotFound')}></SecondaryButton>
+              <SecondaryButton name='Editar' action={() => navigation.navigate('RecorridoEdicion', { recorrido } )}></SecondaryButton>
             </View>
             <Text style={localstyles.type}>{recorrido.esIda ? 'Ida' : 'Vuelta'}</Text>
             <Text style={localstyles.hour}>{recorrido.horario}</Text>
