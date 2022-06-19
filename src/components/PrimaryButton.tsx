@@ -1,10 +1,10 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-export default function PrimaryButton(props: { name: string, color?: string, action: (t: any) => void}) {
+export default function PrimaryButton(props: { name: string, secondary?: boolean, action: (t: any) => void}) {
   return (
     <TouchableOpacity
-      style={{ ...styles.primaryBtn, backgroundColor: props.color || 'darkorange'}}
+      style={{ ...styles.primaryBtn, backgroundColor: props.secondary ? '#9c9c9c' : 'darkorange'}}
       onPress={props.action}>
       <Text style={styles.primaryBtnText}>{ props.name }</Text>
     </TouchableOpacity>

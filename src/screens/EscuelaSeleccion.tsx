@@ -9,8 +9,8 @@ import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
 
 export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccionProps) {
-  const { dataRecorrido } = route.params;
-  const [idEscuela, setIdEscuela] = useState<string | null>(null);
+  const { dataRecorrido, recorrido } = route.params;
+  const [idEscuela, setIdEscuela] = useState<string | null>(recorrido?.escuela?.id || null);
   const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>(escuelasMock);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
@@ -24,12 +24,21 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   };
 
   const crearEscuela = () => {
-    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido: null });
+    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido });
   };
 
-  const siguiente = () => {
+  const guardarRecorrido = () => {
+    if (recorrido) {
+      //TODO: Pegarle directamente al back y guardar el recorrido con la nueva escuela seleccionada
+      console.log({dataRecorrido});
+      alert(`El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
+      navigation.navigate('RecorridoListado');
+    }
+  };
+
+  const seleccionarPasajeros = () => {
     idEscuela
-      ? navigation.navigate('PasajeroSeleccion', { dataRecorrido: { ...dataRecorrido, idEscuela }})
+      ? navigation.navigate('PasajeroSeleccion', { dataRecorrido: { ...dataRecorrido, idEscuela }, recorrido: null })
       : setMensajeError('Debe seleccionar una escuela del listado.');
   };
 
@@ -73,9 +82,12 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
       </SafeAreaView>
       
       <View style={localstyles.footer}>
-        <PrimaryButton name={'Crear nueva Escuela'} action={crearEscuela} color={'#9c9c9c'}/>
+        <PrimaryButton name={'Crear nueva Escuela'} action={crearEscuela} secondary={true}/>
         { mensajeError && ErrorText(mensajeError) }
-        <PrimaryButton name={'Seleccionar Pasajeros'} action={siguiente}/>
+        { recorrido
+          ? <PrimaryButton name={'Guardar'} action={guardarRecorrido}/>
+          : <PrimaryButton name={'Seleccionar Pasajeros'} action={seleccionarPasajeros}/>
+        }
       </View>
     </View>
   );

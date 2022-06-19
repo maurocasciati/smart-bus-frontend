@@ -31,9 +31,9 @@ export type RootStackParamList = {
   RecorridoEdicion: { recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
   PasajeroListado: { recorrido: Recorrido };
-  PasajeroSeleccion: { dataRecorrido: RecorridoFormType };
+  PasajeroSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
   EscuelaEdicion: { dataRecorrido: RecorridoFormType | null, escuela: Escuela | null, recorrido: Recorrido | null };
-  EscuelaSeleccion: { dataRecorrido: RecorridoFormType };
+  EscuelaSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
@@ -61,13 +61,13 @@ export default function NavigationComponent() {
           <>
             <Stack.Screen name="Inicio" component={HomeScreen} />
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
-            <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Detalle del Recorrido' }}/>
+            <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en Curso' }}/>
-            <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Guardar Recorrido' }}/>
-            <Stack.Screen name="PasajeroEdicion" component={PasajeroEdicion} options={{ title: 'Guardar Pasajero' }}/>
+            <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Recorrido' }}/>
+            <Stack.Screen name="PasajeroEdicion" component={PasajeroEdicion} options={{ title: 'Pasajero' }}/>
             <Stack.Screen name="PasajeroListado" component={PasajeroListado} options={{ title: 'Listado de Pasajeros' }}/>
             <Stack.Screen name="PasajeroSeleccion" component={PasajeroSeleccion} options={{ title: 'Seleccionar Pasajeros' }}/>
-            <Stack.Screen name="EscuelaEdicion" component={EscuelaEdicion} options={{ title: 'Guardar Escuela' }}/>
+            <Stack.Screen name="EscuelaEdicion" component={EscuelaEdicion} options={{ title: 'Escuela' }}/>
             <Stack.Screen name="EscuelaSeleccion" component={EscuelaSeleccion} options={{ title: 'Seleccionar Escuela' }}/>
             <Stack.Screen name="NotFound" component={NotFound} />
           </>

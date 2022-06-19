@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
     margin: 30,
     backgroundColor: 'white',
     borderRadius: 30,
+    elevation: 6,
   },
   inputView: {
     backgroundColor: '#fff',
@@ -46,8 +47,7 @@ export const styles = StyleSheet.create({
   },
   item: {
     flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 15,
+    padding: 20,
     borderRadius: 30,
   },
   title: {

@@ -13,8 +13,8 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
     <View style={styles.line}>
       <TouchableOpacity
         style={styles.item}
-        onPress={() => console.log('hola')
-        // navigation.navigate('PasajeroEdicion', { recorrido })
+        onPress={() => 
+          navigation.navigate('PasajeroEdicion', { dataRecorrido: null, pasajero: pasajeroItem.item, recorrido: recorrido })
         }
       >
         <View style={{ flex: 1 }}>

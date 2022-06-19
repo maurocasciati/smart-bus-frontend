@@ -26,11 +26,12 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
     }
   });
 
-  const onSubmit = async (dataPasajero: PasajeroFormType) => {
+  const guardarPasajero = async (dataPasajero: PasajeroFormType) => {
     console.log({ dataPasajero });
     // TODO: Pegarle al back para guardar pasajero antes de esto: vvvvv
 
-    dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido })
+    alert(`El pasajero ${dataPasajero.nombre} fue guardado con éxito`);
+    dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido, recorrido: null })
       : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
         : navigation.navigate('RecorridoListado');
   };
@@ -74,7 +75,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           rules={{}}
         />
 
-        <PrimaryButton name="Guardar Pasajero" action={handleSubmit(onSubmit)} />
+        <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
       </View>
     </View>
   );

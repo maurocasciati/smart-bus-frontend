@@ -12,18 +12,29 @@ import { RecorridoFormType } from '../components/form/FormTypes';
 export default function RecorridoEdicion({ route, navigation }: RecorridoEdicionProps) {
   const { recorrido } = route.params;
   
-  const {control, handleSubmit, formState: {errors}, reset} = useForm<RecorridoFormType>({
+  const {control, handleSubmit, formState: {errors}} = useForm<RecorridoFormType>({
     defaultValues: {
       nombre: recorrido?.nombre || '',
       esIda: recorrido?.esIda || false,
       horario: recorrido?.horario || '',
-      idPasajeros: [],
-      idEscuela: undefined,
+      idPasajeros: recorrido?.pasajeros?.map(p => p.id) || [],
+      idEscuela: recorrido?.escuela?.id,
     }
   });
 
-  const onSubmit = async (dataRecorrido: RecorridoFormType) => {
-    navigation.navigate('EscuelaSeleccion', { dataRecorrido });
+  const seleccionarEscuela = async (dataRecorrido: RecorridoFormType) => {
+    navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido });
+  };
+
+  const seleccionarPasajeros = async (dataRecorrido: RecorridoFormType) => {
+    navigation.navigate('PasajeroSeleccion', { dataRecorrido, recorrido });
+  };
+
+  const guardarRecorrido = async (dataRecorrido: RecorridoFormType) => {
+    console.log({dataRecorrido});
+    // TODO pegarle al back directo y guardar el recorrido solo con cambios de texto
+    alert(`El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
+    navigation.navigate('RecorridoListado');
   };
 
   return (
@@ -51,7 +62,9 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
           rules={VALIDACIONES.HORARIO}
         />
 
-        <PrimaryButton name="Seleccionar Escuela" action={handleSubmit(onSubmit)} />
+        <PrimaryButton name={`${recorrido ? 'Cambiar' : 'Seleccionar'} Escuela`} action={handleSubmit(seleccionarEscuela)} secondary={!!recorrido}/>
+        { recorrido && <PrimaryButton name="Cambiar Pasajeros" action={handleSubmit(seleccionarPasajeros)} secondary={true}/> }
+        { recorrido && <PrimaryButton name="Guardar Recorrido" action={handleSubmit(guardarRecorrido)} /> }
       </View>
     </View>
   );

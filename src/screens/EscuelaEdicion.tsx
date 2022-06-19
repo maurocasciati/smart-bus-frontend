@@ -23,11 +23,11 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
     }
   });
 
-  const onSubmit = async (dataEscuela: EscuelaFormType) => {
+  const guardarEscuela = async (dataEscuela: EscuelaFormType) => {
     console.log({ dataEscuela });
     // TODO: Pegarle al back para guardar escuela antes de esto: vvvvv
-
-    dataRecorrido ? navigation.navigate('EscuelaSeleccion', { dataRecorrido })
+    alert(`La escuela ${dataEscuela.nombre} fue guardada con éxito`);
+    dataRecorrido ? navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido })
       : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
         : navigation.navigate('RecorridoListado');
   };
@@ -57,7 +57,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           rules={VALIDACIONES.TEXTO_NO_VACIO}
         />
 
-        <PrimaryButton name="Guardar Escuela" action={handleSubmit(onSubmit)} />
+        <PrimaryButton name="Guardar Escuela" action={handleSubmit(guardarEscuela)} />
       </View>
     </View>
   );
