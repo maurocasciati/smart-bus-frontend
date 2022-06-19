@@ -6,19 +6,8 @@ import PrimaryButton from '../components/PrimaryButton';
 import CustomTextInput from '../components/form/CustomTextInput';
 import { VALIDACIONES } from '../domain/Validaciones';
 import { useForm } from 'react-hook-form';
-import { LatLng } from 'react-native-maps';
 import CustomGoogleAutocomplete from '../components/form/CustomGoogleAutocomplete';
-
-type EscuelaFormType = {
-  nombre: string,
-  domicilio: DomicilioFormType,
-  telefono: string,
-};
-
-type DomicilioFormType = {
-  domicilio: string,
-  coordenadas: LatLng | null,
-}
+import { EscuelaFormType } from '../components/form/FormTypes';
 
 export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProps) {
   const { escuela, dataRecorrido, recorrido } = route.params;
@@ -68,7 +57,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           rules={VALIDACIONES.TEXTO_NO_VACIO}
         />
 
-        <PrimaryButton name="Seleccionar Escuela" action={handleSubmit(onSubmit)} />
+        <PrimaryButton name="Guardar Escuela" action={handleSubmit(onSubmit)} />
       </View>
     </View>
   );

@@ -37,6 +37,10 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
       : setIdPasajeros([...idPasajeros, id]);
   };
 
+  const crearPasajero = () => {
+    navigation.navigate('PasajeroEdicion', { dataRecorrido, pasajero: null, recorrido: null });
+  };
+
   const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => (
     <View style={styles.line}>
       <TouchableOpacity
@@ -77,7 +81,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
       </SafeAreaView>
       
       <View style={localstyles.footer}>
-        <PrimaryButton name={'Crear nuevo Pasajero'} action={() => []}/>
+        <PrimaryButton name={'Crear nuevo Pasajero'} action={crearPasajero} color={'#9c9c9c'}/>
         { mensajeError && ErrorText(mensajeError) }
         <PrimaryButton name={'Guardar Recorrido'} action={finalizar}/>
       </View>

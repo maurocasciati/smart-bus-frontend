@@ -73,7 +73,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
       </SafeAreaView>
       
       <View style={localstyles.footer}>
-        <PrimaryButton name={'Crear nueva Escuela'} action={crearEscuela}/>
+        <PrimaryButton name={'Crear nueva Escuela'} action={crearEscuela} color={'#9c9c9c'}/>
         { mensajeError && ErrorText(mensajeError) }
         <PrimaryButton name={'Seleccionar Pasajeros'} action={siguiente}/>
       </View>

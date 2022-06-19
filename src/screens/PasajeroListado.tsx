@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity } from 'react-native';
 import { PasajeroListadoProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
 import { Pasajero } from '../domain/Pasajero';
@@ -22,7 +22,7 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
             {pasajeroItem.item.nombre + ' ' + pasajeroItem.item.apellido }
           </Text>
           <Text style={styles.subtitle}>
-            {pasajeroItem.item.pido_dpto ? pasajeroItem.item.domicilio + ' ' + pasajeroItem.item.pido_dpto : pasajeroItem.item.domicilio}
+            {pasajeroItem.item.piso_dpto ? pasajeroItem.item.domicilio + ' ' + pasajeroItem.item.piso_dpto : pasajeroItem.item.domicilio}
           </Text>
         </View>
         {/* TODO: Mostrar de este lado los botones para cambiar el orden del listado de pasajeros

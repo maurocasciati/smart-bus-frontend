@@ -17,6 +17,8 @@ import EscuelaSeleccion from '../screens/EscuelaSeleccion';
 import PasajeroSeleccion from '../screens/PasajeroSeleccion';
 import { Escuela } from '../domain/Escuela';
 import EscuelaEdicion from '../screens/EscuelaEdicion';
+import { Pasajero } from '../domain/Pasajero';
+import PasajeroEdicion from '../screens/PasajeroEdicion';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -27,6 +29,7 @@ export type RootStackParamList = {
   RecorridoDetalle: { recorrido: Recorrido };
   RecorridoEnCurso: { recorrido: Recorrido };
   RecorridoEdicion: { recorrido: Recorrido | null };
+  PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
   PasajeroListado: { recorrido: Recorrido };
   PasajeroSeleccion: { dataRecorrido: RecorridoFormType };
   EscuelaEdicion: { dataRecorrido: RecorridoFormType | null, escuela: Escuela | null, recorrido: Recorrido | null };
@@ -39,6 +42,7 @@ export type RecorridoListadoProps = NativeStackScreenProps<RootStackParamList, '
 export type RecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalle'>;
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
 export type RecorridoEdicionProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEdicion'>;
+export type PasajeroEdicionProps = NativeStackScreenProps<RootStackParamList, 'PasajeroEdicion'>;
 export type PasajeroListadoProps = NativeStackScreenProps<RootStackParamList, 'PasajeroListado'>;
 export type PasajeroSeleccionProps = NativeStackScreenProps<RootStackParamList, 'PasajeroSeleccion'>;
 export type EscuelaEdicionProps = NativeStackScreenProps<RootStackParamList, 'EscuelaEdicion'>;
@@ -60,6 +64,7 @@ export default function NavigationComponent() {
             <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Detalle del Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en Curso' }}/>
             <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Guardar Recorrido' }}/>
+            <Stack.Screen name="PasajeroEdicion" component={PasajeroEdicion} options={{ title: 'Guardar Pasajero' }}/>
             <Stack.Screen name="PasajeroListado" component={PasajeroListado} options={{ title: 'Listado de Pasajeros' }}/>
             <Stack.Screen name="PasajeroSeleccion" component={PasajeroSeleccion} options={{ title: 'Seleccionar Pasajeros' }}/>
             <Stack.Screen name="EscuelaEdicion" component={EscuelaEdicion} options={{ title: 'Guardar Escuela' }}/>

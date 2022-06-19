@@ -1,72 +1,81 @@
-import React, { useEffect, useState } from 'react';
-import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
-import * as Location from 'expo-location';
-import { View, Text, StyleSheet } from 'react-native';
-import { RecorridoDetalleProps } from '../components/Navigation';
+import React from 'react';
+import { View } from 'react-native';
+import { PasajeroEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
-import { GOOGLE_API_KEY } from '../constants';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import PrimaryButton from '../components/PrimaryButton';
+import CustomTextInput from '../components/form/CustomTextInput';
+import CustomGoogleAutocomplete from '../components/form/CustomGoogleAutocomplete';
+import { VALIDACIONES } from '../domain/Validaciones';
+import { useForm } from 'react-hook-form';
+import { PasajeroFormType } from '../components/form/FormTypes';
 
-// TODO
-export default function EditarPasajero({ route, navigation }: RecorridoDetalleProps) {
-  const { recorrido } = route.params;
+export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
+  const { pasajero, dataRecorrido, recorrido } = route.params;
+  
+  const {control, handleSubmit, formState: {errors}} = useForm<PasajeroFormType>({
+    defaultValues: {
+      nombre: pasajero?.nombre || '',
+      apellido: pasajero?.apellido || '',
+      nacimiento: pasajero?.nacimiento || '',
+      telefono: pasajero?.telefono || '',
+      piso_dpto: pasajero?.piso_dpto || '',
+      domicilio: {
+        domicilio: pasajero?.domicilio || '',
+        coordenadas: pasajero?.coordenadas || null,
+      },
+    }
+  });
 
-  const [inputMarker, setInputMarker] = useState<LatLng | null>(null);
+  const onSubmit = async (dataPasajero: PasajeroFormType) => {
+    console.log({ dataPasajero });
+    // TODO: Pegarle al back para guardar pasajero antes de esto: vvvvv
 
-  useEffect(() => {
-    (async () => {
-      await Location.requestForegroundPermissionsAsync();
-    })();
-  }, []);
+    dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido })
+      : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
+        : navigation.navigate('RecorridoListado');
+  };
 
   return (
     <View style={styles.container}>
-      <View style={localstyles.center}>
-        <Text>Editar Pasajero</Text>
-      </View>
-
-      <View style={localstyles.center}>
-        <GooglePlacesAutocomplete
-          placeholder='Ingrese la dirección'
-          minLength={4}
-          fetchDetails={true}
-          onPress={(data, details) => {
-            if (details?.geometry?.location) {
-              const { lat, lng } = details.geometry.location;
-              setInputMarker({ latitude: lat, longitude: lng });
-            }
-          }}
-          query={{
-            key: GOOGLE_API_KEY,
-            language: 'es',
-            components: 'country:ar',
-          }}
-          debounce={500}
-          styles={{
-            textInputContainer: {
-              width: '90%',
-            },
-          }}
+      <View style={styles.center}>
+        <CustomTextInput
+          control={control}
+          name='nombre'
+          errors={errors}
+          placeholder='Nombre'
+          rules={VALIDACIONES.TEXTO_NO_VACIO}
         />
-      </View>
+        <CustomTextInput
+          control={control}
+          name='apellido'
+          errors={errors}
+          placeholder='Apellido'
+          rules={VALIDACIONES.TEXTO_NO_VACIO}
+        />
+        <CustomTextInput
+          control={control}
+          name='telefono'
+          errors={errors}
+          placeholder='Telefono'
+          rules={VALIDACIONES.TELEFONO}
+        />
+        <CustomGoogleAutocomplete
+          control={control}
+          name='domicilio'
+          errors={errors}
+          placeholder='Domicilio'
+          rules={VALIDACIONES.TEXTO_NO_VACIO}
+        />
+        <CustomTextInput
+          control={control}
+          name='piso_dpto'
+          errors={errors}
+          placeholder='Piso y departamento'
+          rules={{}}
+        />
 
-      <View style={localstyles.endButton}>
-        <PrimaryButton name={'Guardar'} action={() => navigation.navigate('NotFound')}/>
+        <PrimaryButton name="Guardar Pasajero" action={handleSubmit(onSubmit)} />
       </View>
     </View>
   );
 }
-
-const localstyles = StyleSheet.create({
-  center: {
-    margin: 10,
-    flex: 1,
-    alignItems: 'center',
-  },
-  endButton: {
-    flex: 1,
-    alignItems: 'center',
-  },
-});
