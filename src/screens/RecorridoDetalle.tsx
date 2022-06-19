@@ -6,7 +6,6 @@ import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
 import SecondaryButton from '../components/SecondaryButton';
 import MapViewRecorrido from '../components/MapViewRecorrido';
-import RecorridoEdicion from './RecorridoEdicion';
 
 export default function RecorridoDetalle({ route, navigation }: RecorridoDetalleProps) {
   const { recorrido } = route.params;
