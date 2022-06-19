@@ -6,6 +6,7 @@ import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
 import SecondaryButton from '../components/SecondaryButton';
 import MapViewRecorrido from '../components/MapViewRecorrido';
+import RecorridoEdicion from './RecorridoEdicion';
 
 export default function RecorridoDetalle({ route, navigation }: RecorridoDetalleProps) {
   const { recorrido } = route.params;
@@ -26,15 +27,26 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
         <View style={localstyles.recorridoContainer}>
           <View style={{ flex: 1 }}>
             <Text style={localstyles.title}>{ recorrido.nombre }</Text>
-            <Text style={localstyles.subtitle}>{ recorrido.escuela.nombre }</Text>
+          </View>
+          <View style={{ paddingHorizontal: 20, alignContent: 'center' }}>
+            <Text style={localstyles.type}>{recorrido.esIda ? 'Ida' : 'Vuelta'}</Text>
+            <Text style={localstyles.hour}>{recorrido.horario}</Text>
+          </View>
+          <View>
+            <View style={{ height: 30, width: 100, alignContent: 'center' }}>
+              <SecondaryButton name='Editar' action={() => navigation.navigate('RecorridoEdicion', { recorrido } )}></SecondaryButton>
+            </View>
+          </View>
+        </View>
+        <View style={localstyles.escuelaContainer}>
+          <View style={{ flex: 1 }}>
+            <Text style={localstyles.title}>{ recorrido.escuela.nombre }</Text>
             <Text style={localstyles.subtitle}>{ recorrido.escuela.domicilio }</Text>
           </View>
           <View>
             <View style={{ height: 30, width: 100 }}>
-              <SecondaryButton name='Editar' action={() => navigation.navigate('RecorridoEdicion', { recorrido } )}></SecondaryButton>
+              <SecondaryButton name='Ver escuela' action={() => navigation.navigate('EscuelaEdicion', { recorrido, dataRecorrido: null, escuela: recorrido.escuela } )}></SecondaryButton>
             </View>
-            <Text style={localstyles.type}>{recorrido.esIda ? 'Ida' : 'Vuelta'}</Text>
-            <Text style={localstyles.hour}>{recorrido.horario}</Text>
           </View>
         </View>
         <View style={localstyles.pasajerosContainer}>
@@ -53,20 +65,24 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
 
 const localstyles = StyleSheet.create({
   detailsContainer: {
-    marginTop: -200,
+    marginTop: -230,
     borderRadius: 20,
     elevation: 6,
     backgroundColor: '#fff',
     margin: 25,
-    flex: 3,
+    flex: 1,
   },
   recorridoContainer: {
     flexDirection: 'row',
     padding: 10,
-    marginBottom: 10,
-    flex: 8,
+    flex: 5,
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
+  },
+  escuelaContainer: {
+    flexDirection: 'row',
+    padding: 10,
+    flex: 5,
   },
   pasajerosContainer: {
     flexDirection: 'row',
@@ -75,7 +91,7 @@ const localstyles = StyleSheet.create({
     flex: 2,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     alignContent: 'center',
   },
   subtitle: {
