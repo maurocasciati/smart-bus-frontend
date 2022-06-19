@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-export default function ActionButton(props: { name: string, action: (t: any) => void}) {
+export default function ActionButton(props: { name: string, action: () => void}) {
   return (
     <TouchableOpacity
       style={styles.container}
@@ -13,7 +13,6 @@ export default function ActionButton(props: { name: string, action: (t: any) => 
 
 const styles = StyleSheet.create({
   container: {
-    
     borderRadius: 25,
     height: '100%',
     width: '100%',

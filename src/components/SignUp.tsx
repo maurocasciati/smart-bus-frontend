@@ -2,8 +2,8 @@ import { REACT_APP_BASE_URL } from '@env';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { View, Text } from 'react-native';
 import { VALIDACIONES } from '../domain/Validaciones';
+import ErrorText from './ErrorText';
 import CustomTextInput from './form/CustomTextInput';
 import PrimaryButton from './PrimaryButton';
 
@@ -16,9 +16,9 @@ type FormType = {
 
 export default function SignUp() {
 
-  const [signUpError, setSignUpError] = useState('');
+  const [signUpError, setSignUpError] = useState<string | null>(null);
   
-  const {control, handleSubmit, formState: {errors}} = useForm<FormType>({
+  const {control, handleSubmit, formState: {errors}, reset} = useForm<FormType>({
     defaultValues: {
       nombre: '',
       apellido: '',
@@ -28,10 +28,12 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data: FormType) => {
+    setSignUpError(null);
     try{
       const resp = await axios.post(`${REACT_APP_BASE_URL}/Usuario/registrar`, data);
       if(resp){
         alert(`El usuario ${data.email} fue registrado con exito`);
+        reset();
       }
     }
     catch(error){
@@ -84,18 +86,8 @@ export default function SignUp() {
         ocultarTexto={true}
       />
 
-      {signUpError ? ErrorText(signUpError) : null}
-      <PrimaryButton name="Submit" action={handleSubmit(onSubmit)} />
+      {signUpError && ErrorText(signUpError)}
+      <PrimaryButton name="Registrarse" action={handleSubmit(onSubmit)} />
     </>
-  );
-}
-
-function ErrorText(mensajeError : string){
-  return (
-    <View>
-      <Text>
-        {`Error: ${mensajeError}`}
-      </Text>
-    </View>
   );
 }

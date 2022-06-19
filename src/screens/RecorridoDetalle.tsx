@@ -52,7 +52,6 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
 }
 
 const localstyles = StyleSheet.create({
-
   detailsContainer: {
     marginTop: -200,
     borderRadius: 20,
