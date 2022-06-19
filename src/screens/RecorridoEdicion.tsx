@@ -45,7 +45,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
         />
         <CustomTextInput
           control={control}
-          name='hora'
+          name='horario'
           errors={errors}
           placeholder='Horario (HH:MM)'
           rules={VALIDACIONES.HORARIO}

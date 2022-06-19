@@ -3,44 +3,57 @@ import { FlatList, SafeAreaView, View, Text, StyleSheet, ListRenderItemInfo, Tou
 import Checkbox from 'expo-checkbox';
 import { PasajeroSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
-import { Escuela } from '../domain/Escuela';
-import { escuelasMock } from '../mocks';
+import { pasajerosMock } from '../mocks';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
+import { Pasajero } from '../domain/Pasajero';
 
 export default function PasajeroSeleccion({ route, navigation }: PasajeroSeleccionProps) {
   const { dataRecorrido } = route.params;
-  const [idEscuela, setIdEscuela] = useState<string | null>(null);
-  const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>(escuelasMock);
+  const [idPasajeros, setIdPasajeros] = useState<string[]>([]);
+  const [listadoPasajeros, setListadoPasajeros] = useState<Pasajero[]>(pasajerosMock);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const filtrarEscuela = (nombre: string) => {
-    setListadoEscuelas(escuelasMock.filter((escuela) => escuela.nombre.toLowerCase().includes(nombre.toLowerCase())));
+  const filtrarPasajeros = (texto: string) => {
+    setListadoPasajeros(pasajerosMock.filter((escuela) => escuela.nombre.toLowerCase().includes(texto.toLowerCase()) || escuela.apellido.toLowerCase().includes(texto.toLowerCase())));
   };
 
-  const siguiente = () => {
-    idEscuela
-      ? navigation.navigate('EscuelaSeleccion', { dataRecorrido: { ...dataRecorrido, idEscuela }})
-      : setMensajeError('Debe seleccionar una escuela del listado.');
+  const finalizar = () => {
+    idPasajeros.length > 0
+      ? guardarRecorrido()
+      : setMensajeError('No se han seleccionado pasajeros.');
   };
 
-  const renderItem = (escuela: ListRenderItemInfo<Escuela>) => (
+  const guardarRecorrido = () => {
+    dataRecorrido.idPasajeros = idPasajeros;
+    console.log(dataRecorrido);
+    alert(`El recorrido ${dataRecorrido.nombre} fue creado con éxito`);
+    navigation.navigate('RecorridoListado');
+  };
+
+  const clickearPasajero = (id: string) => {
+    idPasajeros.includes(id)
+      ? setIdPasajeros(idPasajeros.filter(pid => pid != id))
+      : setIdPasajeros([...idPasajeros, id]);
+  };
+
+  const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => (
     <View style={styles.line}>
       <TouchableOpacity
         style={styles.item}
-        onPress={() => setIdEscuela(escuela.item.id)}
+        onPress={() => clickearPasajero(pasajero.item.id)}
       >
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>
-            {escuela.item.nombre}
+            {pasajero.item.nombre} {pasajero.item.apellido}
           </Text>
           <Text style={styles.subtitle}>
-            {escuela.item.domicilio}
+            {pasajero.item.domicilio}
           </Text>
         </View>
         <View style={{ alignSelf: 'center' }}>
           <Checkbox 
-            value={idEscuela === escuela.item.id}
+            value={idPasajeros.includes(pasajero.item.id)}
             color={'orange'}/>
         </View>
       </TouchableOpacity>
@@ -54,19 +67,19 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
           <TextInput
             style={styles.textInput}
             placeholder='Buscar'
-            onChangeText={filtrarEscuela}
+            onChangeText={filtrarPasajeros}
           />
         </View>
       </View>
 
       <SafeAreaView style={styles.list}>
-        <FlatList data={listadoEscuelas} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={listadoPasajeros} renderItem={renderItem} keyExtractor={item => item.id} />
       </SafeAreaView>
       
       <View style={localstyles.footer}>
-        <PrimaryButton name={'Crear nueva Escuela'} action={() => []}/>
+        <PrimaryButton name={'Crear nuevo Pasajero'} action={() => []}/>
         { mensajeError && ErrorText(mensajeError) }
-        <PrimaryButton name={'Seleccionar Pasajeros'} action={siguiente}/>
+        <PrimaryButton name={'Guardar Recorrido'} action={finalizar}/>
       </View>
     </View>
   );
