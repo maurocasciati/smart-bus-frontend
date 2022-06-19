@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { FlatList, SafeAreaView, View, Text, StyleSheet, ListRenderItemInfo, TouchableOpacity, TextInput } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import { EscuelaSeleccionProps } from '../components/Navigation';
+import { PasajeroSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import { Escuela } from '../domain/Escuela';
 import { escuelasMock } from '../mocks';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
 
-export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccionProps) {
+export default function PasajeroSeleccion({ route, navigation }: PasajeroSeleccionProps) {
   const { dataRecorrido } = route.params;
   const [idEscuela, setIdEscuela] = useState<string | null>(null);
   const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>(escuelasMock);
@@ -18,18 +18,9 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
     setListadoEscuelas(escuelasMock.filter((escuela) => escuela.nombre.toLowerCase().includes(nombre.toLowerCase())));
   };
 
-  const seleccionarEscuela = (id: string) => {
-    setMensajeError(null);
-    setIdEscuela(id);
-  };
-
-  const crearEscuela = () => {
-    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido: null });
-  };
-
   const siguiente = () => {
     idEscuela
-      ? navigation.navigate('PasajeroSeleccion', { dataRecorrido: { ...dataRecorrido, idEscuela }})
+      ? navigation.navigate('EscuelaSeleccion', { dataRecorrido: { ...dataRecorrido, idEscuela }})
       : setMensajeError('Debe seleccionar una escuela del listado.');
   };
 
@@ -37,7 +28,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
     <View style={styles.line}>
       <TouchableOpacity
         style={styles.item}
-        onPress={() => seleccionarEscuela(escuela.item.id)}
+        onPress={() => setIdEscuela(escuela.item.id)}
       >
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>
@@ -73,7 +64,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
       </SafeAreaView>
       
       <View style={localstyles.footer}>
-        <PrimaryButton name={'Crear nueva Escuela'} action={crearEscuela}/>
+        <PrimaryButton name={'Crear nueva Escuela'} action={() => []}/>
         { mensajeError && ErrorText(mensajeError) }
         <PrimaryButton name={'Seleccionar Pasajeros'} action={siguiente}/>
       </View>
