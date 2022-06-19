@@ -30,6 +30,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   const guardarRecorrido = () => {
     if (recorrido) {
       //TODO: Pegarle directamente al back y guardar el recorrido con la nueva escuela seleccionada
+      console.log({dataRecorrido});
       alert(`El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
       navigation.navigate('RecorridoListado');
     }

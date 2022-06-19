@@ -17,8 +17,8 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
       nombre: recorrido?.nombre || '',
       esIda: recorrido?.esIda || false,
       horario: recorrido?.horario || '',
-      idPasajeros: [],
-      idEscuela: undefined,
+      idPasajeros: recorrido?.pasajeros?.map(p => p.id) || [],
+      idEscuela: recorrido?.escuela?.id,
     }
   });
 
