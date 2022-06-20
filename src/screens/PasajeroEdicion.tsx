@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { TextInput, View } from 'react-native';
 import { PasajeroEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -8,9 +8,12 @@ import CustomGoogleAutocomplete from '../components/form/CustomGoogleAutocomplet
 import { VALIDACIONES } from '../domain/Validaciones';
 import { useForm } from 'react-hook-form';
 import { PasajeroFormType } from '../components/form/FormTypes';
+import DoubleButton from '../components/DobleButton';
 
 export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
   const { pasajero, dataRecorrido, recorrido } = route.params;
+
+  const [modoEdicion, setModoEdicion] = useState<boolean>(!recorrido);
   
   const {control, handleSubmit, formState: {errors}} = useForm<PasajeroFormType>({
     defaultValues: {
@@ -19,10 +22,10 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
       nacimiento: pasajero?.nacimiento || '',
       telefono: pasajero?.telefono || '',
       piso_dpto: pasajero?.piso_dpto || '',
-      domicilio: {
+      domicilio: pasajero?.domicilio ? {
         domicilio: pasajero?.domicilio || '',
         coordenadas: pasajero?.coordenadas || null,
-      },
+      } : null,
     }
   });
 
@@ -45,6 +48,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           errors={errors}
           placeholder='Nombre'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
+          editable={modoEdicion}
         />
         <CustomTextInput
           control={control}
@@ -52,6 +56,15 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           errors={errors}
           placeholder='Apellido'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
+          editable={modoEdicion}
+        />
+        <CustomTextInput
+          control={control}
+          name='nacimiento'
+          errors={errors}
+          placeholder='Nacimiento'
+          rules={VALIDACIONES.FECHA}
+          editable={modoEdicion}
         />
         <CustomTextInput
           control={control}
@@ -59,23 +72,49 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           errors={errors}
           placeholder='Telefono'
           rules={VALIDACIONES.TELEFONO}
+          editable={modoEdicion}
         />
-        <CustomGoogleAutocomplete
-          control={control}
-          name='domicilio'
-          errors={errors}
-          placeholder='Domicilio'
-          rules={VALIDACIONES.TEXTO_NO_VACIO}
-        />
+        { pasajero &&
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              value={pasajero?.domicilio} 
+              editable={false}
+            />
+          </View>
+        }
+        { modoEdicion &&
+          <CustomGoogleAutocomplete
+            control={control}
+            name='domicilio'
+            errors={errors}
+            placeholder={pasajero ? 'Editar domicilio' : 'Domicilio'}
+            rules={VALIDACIONES.TEXTO_NO_VACIO}
+          />
+        }
         <CustomTextInput
           control={control}
           name='piso_dpto'
           errors={errors}
           placeholder='Piso y departamento'
           rules={{}}
+          editable={modoEdicion}
         />
 
-        <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
+        { modoEdicion
+          ? <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
+          :
+          <>
+            <PrimaryButton name="Ver estado de cuenta" action={() => navigation.navigate('NotFound')} secondary={true} />
+            <DoubleButton 
+              name1="Establecer ausencia"
+              action1={() => recorrido && pasajero && navigation.navigate('EventualidadAusencia', { recorrido, pasajero })}
+              name2="Establecer cambio de domicilio"
+              action2={() => recorrido && pasajero && navigation.navigate('EventualidadDomicilio', { recorrido, pasajero })}
+              secondary={true} />
+            <PrimaryButton name="Editar Pasajero" action={() => setModoEdicion(true)} />
+          </>
+        }
       </View>
     </View>
   );

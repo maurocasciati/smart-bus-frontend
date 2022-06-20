@@ -23,4 +23,9 @@ export class VALIDACIONES {
     required: MENSAJES.VALIDACION.REQUERIDO, 
     pattern: {value: EX_REG.TELEFONO, message: MENSAJES.VALIDACION.TELEFONO}
   };
+
+  static FECHA: CustomRule = {
+    required: MENSAJES.VALIDACION.REQUERIDO, 
+    pattern: {value: EX_REG.FECHA, message: MENSAJES.VALIDACION.FECHA}
+  };
 }

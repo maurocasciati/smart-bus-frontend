@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { TextInput, View } from 'react-native';
 import { EscuelaEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -12,13 +12,15 @@ import { EscuelaFormType } from '../components/form/FormTypes';
 export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProps) {
   const { escuela, dataRecorrido, recorrido } = route.params;
   
+  const [modoEdicion, setModoEdicion] = useState<boolean>(!recorrido);
+  
   const {control, handleSubmit, formState: {errors}} = useForm<EscuelaFormType>({
     defaultValues: {
       nombre: escuela?.nombre || '',
-      domicilio: {
+      domicilio: escuela?.domicilio ? {
         domicilio: escuela?.domicilio || '',
         coordenadas: escuela?.coordenadas || null,
-      },
+      } : null,
       telefono: escuela?.telefono || '',
     }
   });
@@ -41,6 +43,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           errors={errors}
           placeholder='Nombre'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
+          editable={modoEdicion}
         />
         <CustomTextInput
           control={control}
@@ -48,16 +51,31 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           errors={errors}
           placeholder='Telefono'
           rules={VALIDACIONES.TELEFONO}
+          editable={modoEdicion}
         />
-        <CustomGoogleAutocomplete
-          control={control}
-          name='domicilio'
-          errors={errors}
-          placeholder='Domicilio'
-          rules={VALIDACIONES.TEXTO_NO_VACIO}
-        />
+        { escuela &&
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              value={escuela?.domicilio}
+              editable={false}
+            />
+          </View>
+        }
+        { modoEdicion &&
+          <CustomGoogleAutocomplete
+            control={control}
+            name='domicilio'
+            errors={errors}
+            placeholder='Editar domicilio'
+            rules={VALIDACIONES.TEXTO_NO_VACIO}
+          />
+        }
 
-        <PrimaryButton name="Guardar Escuela" action={handleSubmit(guardarEscuela)} />
+        { modoEdicion
+          ? <PrimaryButton name="Guardar Escuela" action={handleSubmit(guardarEscuela)} />
+          : <PrimaryButton name="Editar Escuela" action={() => setModoEdicion(true)} />
+        }
       </View>
     </View>
   );
