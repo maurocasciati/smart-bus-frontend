@@ -55,6 +55,13 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
         />
         <CustomTextInput
           control={control}
+          name='nacimiento'
+          errors={errors}
+          placeholder='Nacimiento'
+          rules={VALIDACIONES.FECHA}
+        />
+        <CustomTextInput
+          control={control}
           name='telefono'
           errors={errors}
           placeholder='Telefono'
