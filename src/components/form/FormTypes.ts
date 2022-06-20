@@ -1,5 +1,12 @@
 import { LatLng } from 'react-native-maps';
 
+export type SignUpFormType = {
+    nombre: string,
+    apellido: string,
+    email: string,
+    contraseña: string
+};
+
 export type RecorridoFormType = {
     nombre: string,
     esIda: boolean,
