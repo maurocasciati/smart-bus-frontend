@@ -1,7 +1,7 @@
 import { LatLng } from 'react-native-maps';
 
 export type Parada = {
-  id: string,
+  id: number,
   nombre: string,
   domicilio: string,
   coordenadas: LatLng,

@@ -10,7 +10,7 @@ import { Pasajero } from '../domain/Pasajero';
 
 export default function PasajeroSeleccion({ route, navigation }: PasajeroSeleccionProps) {
   const { dataRecorrido, recorrido } = route.params;
-  const [idPasajeros, setIdPasajeros] = useState<string[]>(recorrido?.pasajeros?.map(p => p.id) || []);
+  const [idPasajeros, setIdPasajeros] = useState<number[]>(recorrido?.pasajeros?.map(p => p.id) || []);
   const [listadoPasajeros, setListadoPasajeros] = useState<Pasajero[]>(pasajerosMock);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
@@ -31,7 +31,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
     navigation.navigate('RecorridoListado');
   };
 
-  const clickearPasajero = (id: string) => {
+  const clickearPasajero = (id: number) => {
     idPasajeros.includes(id)
       ? setIdPasajeros(idPasajeros.filter(pid => pid != id))
       : setIdPasajeros([...idPasajeros, id]);
@@ -77,7 +77,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
       </View>
 
       <SafeAreaView style={styles.list}>
-        <FlatList data={listadoPasajeros} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={listadoPasajeros} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
       </SafeAreaView>
       
       <View style={styles.footer}>

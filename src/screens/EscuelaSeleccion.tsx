@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { EscuelaSeleccionProps } from '../components/Navigation';
@@ -7,18 +7,39 @@ import { Escuela } from '../domain/Escuela';
 import { escuelasMock } from '../mocks';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
+import { getListadoEscuelas } from '../services/escuela.service';
+import { AuthContext } from '../auth/AuthProvider';
 
 export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccionProps) {
   const { dataRecorrido, recorrido } = route.params;
-  const [idEscuela, setIdEscuela] = useState<string | null>(recorrido?.escuela?.id || null);
-  const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>(escuelasMock);
+  const [idEscuela, setIdEscuela] = useState<number | null>(recorrido?.escuela?.id || null);
+  const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
+
+  const { token } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (token) {
+      (async () => {
+        try {
+          const escuelas = await getListadoEscuelas(token);
+          if (escuelas) {
+            setListadoEscuelas(escuelas);
+          }
+        } catch(error) {
+          setMensajeError(error as string);
+        }
+      })();
+    } else {
+      setMensajeError('Error de autenticación. Ingrese sesión.');
+    }
+  }, []);
 
   const filtrarEscuela = (nombre: string) => {
     setListadoEscuelas(escuelasMock.filter((escuela) => escuela.nombre.toLowerCase().includes(nombre.toLowerCase())));
   };
 
-  const seleccionarEscuela = (id: string) => {
+  const seleccionarEscuela = (id: number) => {
     setMensajeError(null);
     setIdEscuela(id);
   };
@@ -28,7 +49,8 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   };
 
   const guardarRecorrido = () => {
-    if (recorrido) {
+    if (recorrido && idEscuela) {
+      dataRecorrido.idEscuela = idEscuela;
       //TODO: Pegarle directamente al back y guardar el recorrido con la nueva escuela seleccionada
       console.log({dataRecorrido});
       Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
@@ -78,7 +100,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
       </View>
 
       <SafeAreaView style={styles.list}>
-        <FlatList data={listadoEscuelas} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={listadoEscuelas} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
       </SafeAreaView>
       
       <View style={styles.footer}>

@@ -2,7 +2,7 @@ import { Escuela } from './Escuela';
 import { Pasajero } from './Pasajero';
 
 export type Recorrido = {
-  id: string,
+  id: number,
   nombre: string,
   esIda: boolean,
   horario: string,
