@@ -28,7 +28,9 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
     dataRecorrido.idPasajeros = idPasajeros;
     console.log(dataRecorrido);
     Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue guardado con éxito`);
-    navigation.navigate('RecorridoListado');
+    recorrido
+      ? navigation.navigate('RecorridoDetalle', { recorrido })
+      : navigation.navigate('RecorridoListado');
   };
 
   const clickearPasajero = (id: number) => {

@@ -54,7 +54,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
       //TODO: Pegarle directamente al back y guardar el recorrido con la nueva escuela seleccionada
       console.log({dataRecorrido});
       Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
-      navigation.navigate('RecorridoListado');
+      navigation.navigate('RecorridoDetalle', { recorrido });
     }
   };
 
