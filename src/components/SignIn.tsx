@@ -16,7 +16,7 @@ export default function SignIn() {
   const onLogin = async (e: GestureResponderEvent) => {
     e.preventDefault();
 
-    setLoginError('');
+    setLoginError(null);
     
     try {
       const resp = await signIn(email, password);
