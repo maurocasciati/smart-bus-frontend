@@ -19,6 +19,8 @@ import { Escuela } from '../domain/Escuela';
 import EscuelaEdicion from '../screens/EscuelaEdicion';
 import { Pasajero } from '../domain/Pasajero';
 import PasajeroEdicion from '../screens/PasajeroEdicion';
+import EventualidadAusencia from '../screens/EventualidadAusencia';
+import EventualidadDomicilio from '../screens/EventualidadDomicilio';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -34,6 +36,8 @@ export type RootStackParamList = {
   PasajeroSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
   EscuelaEdicion: { dataRecorrido: RecorridoFormType | null, escuela: Escuela | null, recorrido: Recorrido | null };
   EscuelaSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
+  EventualidadAusencia: { recorrido: Recorrido, pasajero: Pasajero };
+  EventualidadDomicilio: { recorrido: Recorrido, pasajero: Pasajero };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
@@ -47,6 +51,8 @@ export type PasajeroListadoProps = NativeStackScreenProps<RootStackParamList, 'P
 export type PasajeroSeleccionProps = NativeStackScreenProps<RootStackParamList, 'PasajeroSeleccion'>;
 export type EscuelaEdicionProps = NativeStackScreenProps<RootStackParamList, 'EscuelaEdicion'>;
 export type EscuelaSeleccionProps = NativeStackScreenProps<RootStackParamList, 'EscuelaSeleccion'>;
+export type EventualidadAusenciaProps = NativeStackScreenProps<RootStackParamList, 'EventualidadAusencia'>;
+export type EventualidadDomicilioProps = NativeStackScreenProps<RootStackParamList, 'EventualidadDomicilio'>;
 
 // Declaración del stack de pantallas que se va a usar dentro del componente de navegación
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -69,6 +75,8 @@ export default function NavigationComponent() {
             <Stack.Screen name="PasajeroSeleccion" component={PasajeroSeleccion} options={{ title: 'Seleccionar Pasajeros' }}/>
             <Stack.Screen name="EscuelaEdicion" component={EscuelaEdicion} options={{ title: 'Escuela' }}/>
             <Stack.Screen name="EscuelaSeleccion" component={EscuelaSeleccion} options={{ title: 'Seleccionar Escuela' }}/>
+            <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>
+            <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio excepcional' }}/>
             <Stack.Screen name="NotFound" component={NotFound} />
           </>
         ) : (

@@ -30,7 +30,6 @@ export default function CustomGoogleAutocomplete({control, name, rules, placehol
               minLength={4}
               fetchDetails={true}
               onPress={(data, details) => {
-                console.log({data});
                 if (details?.geometry?.location) {
                   const { lat, lng } = details.geometry.location;
                   onChange({

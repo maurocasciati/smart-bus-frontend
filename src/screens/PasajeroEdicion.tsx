@@ -22,10 +22,10 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
       nacimiento: pasajero?.nacimiento || '',
       telefono: pasajero?.telefono || '',
       piso_dpto: pasajero?.piso_dpto || '',
-      domicilio: {
+      domicilio: pasajero?.domicilio ? {
         domicilio: pasajero?.domicilio || '',
         coordenadas: pasajero?.coordenadas || null,
-      },
+      } : null,
     }
   });
 
@@ -106,7 +106,12 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           :
           <>
             <PrimaryButton name="Ver estado de cuenta" action={() => navigation.navigate('NotFound')} secondary={true} />
-            <DoubleButton name1="Establecer ausencia" name2="Establecer cambio de domicilio" action1={() => []} action2={() => []} secondary={true} />
+            <DoubleButton 
+              name1="Establecer ausencia"
+              action1={() => recorrido && pasajero && navigation.navigate('EventualidadAusencia', { recorrido, pasajero })}
+              name2="Establecer cambio de domicilio"
+              action2={() => recorrido && pasajero && navigation.navigate('EventualidadDomicilio', { recorrido, pasajero })}
+              secondary={true} />
             <PrimaryButton name="Editar Pasajero" action={() => setModoEdicion(true)} />
           </>
         }

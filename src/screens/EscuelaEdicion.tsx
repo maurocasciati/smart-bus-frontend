@@ -17,10 +17,10 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
   const {control, handleSubmit, formState: {errors}} = useForm<EscuelaFormType>({
     defaultValues: {
       nombre: escuela?.nombre || '',
-      domicilio: {
+      domicilio: escuela?.domicilio ? {
         domicilio: escuela?.domicilio || '',
         coordenadas: escuela?.coordenadas || null,
-      },
+      } : null,
       telefono: escuela?.telefono || '',
     }
   });

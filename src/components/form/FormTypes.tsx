@@ -10,7 +10,7 @@ export type RecorridoFormType = {
 
 export type EscuelaFormType = {
     nombre: string,
-    domicilio: DomicilioFormType,
+    domicilio: DomicilioFormType | null,
     telefono: string,
 };
 
@@ -18,7 +18,7 @@ export type PasajeroFormType = {
     nombre: string,
     apellido: string,
     nacimiento: string,
-    domicilio: DomicilioFormType,
+    domicilio: DomicilioFormType | null,
     telefono: string,
     piso_dpto: string,
 };
@@ -26,4 +26,15 @@ export type PasajeroFormType = {
 export type DomicilioFormType = {
     domicilio: string,
     coordenadas: LatLng | null,
+};
+
+export type EventualidadAusenciaFormType = {
+    desde: string,
+    hasta: string,
+};
+
+export type EventualidadDomicilioFormType = {
+    desde: string,
+    hasta: string,
+    domicilio: DomicilioFormType | null,
 };
