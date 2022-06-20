@@ -105,7 +105,9 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           ? <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
           :
           <>
-            <PrimaryButton name="Ver estado de cuenta" action={() => navigation.navigate('NotFound')} secondary={true} />
+            <PrimaryButton 
+              name="Ver estado de cuenta"
+              action={() => recorrido && pasajero && navigation.navigate('EstadoDeCuenta', { pasajero, recorrido })} secondary={true} />
             <DoubleButton 
               name1="Establecer ausencia"
               action1={() => recorrido && pasajero && navigation.navigate('EventualidadAusencia', { recorrido, pasajero })}

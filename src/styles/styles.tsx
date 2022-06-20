@@ -66,4 +66,14 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  header: {
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: -30,
+  },
+  footer: {
+    alignItems: 'center',
+    marginTop: -20,
+    marginBottom: 20,
+  },
 });

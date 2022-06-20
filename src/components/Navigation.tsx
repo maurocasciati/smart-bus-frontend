@@ -21,6 +21,7 @@ import { Pasajero } from '../domain/Pasajero';
 import PasajeroEdicion from '../screens/PasajeroEdicion';
 import EventualidadAusencia from '../screens/EventualidadAusencia';
 import EventualidadDomicilio from '../screens/EventualidadDomicilio';
+import VerEstadoDeCuenta from '../screens/VerEstadoDeCuenta';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -38,6 +39,7 @@ export type RootStackParamList = {
   EscuelaSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
   EventualidadAusencia: { recorrido: Recorrido, pasajero: Pasajero };
   EventualidadDomicilio: { recorrido: Recorrido, pasajero: Pasajero };
+  EstadoDeCuenta: { recorrido: Recorrido, pasajero: Pasajero };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
@@ -53,6 +55,7 @@ export type EscuelaEdicionProps = NativeStackScreenProps<RootStackParamList, 'Es
 export type EscuelaSeleccionProps = NativeStackScreenProps<RootStackParamList, 'EscuelaSeleccion'>;
 export type EventualidadAusenciaProps = NativeStackScreenProps<RootStackParamList, 'EventualidadAusencia'>;
 export type EventualidadDomicilioProps = NativeStackScreenProps<RootStackParamList, 'EventualidadDomicilio'>;
+export type EstadoDeCuentaProps = NativeStackScreenProps<RootStackParamList, 'EstadoDeCuenta'>;
 
 // Declaración del stack de pantallas que se va a usar dentro del componente de navegación
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -68,7 +71,7 @@ export default function NavigationComponent() {
             <Stack.Screen name="Inicio" component={HomeScreen} />
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Recorrido' }}/>
-            <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en Curso' }}/>
+            <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en curso' }}/>
             <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="PasajeroEdicion" component={PasajeroEdicion} options={{ title: 'Pasajero' }}/>
             <Stack.Screen name="PasajeroListado" component={PasajeroListado} options={{ title: 'Listado de Pasajeros' }}/>
@@ -76,7 +79,8 @@ export default function NavigationComponent() {
             <Stack.Screen name="EscuelaEdicion" component={EscuelaEdicion} options={{ title: 'Escuela' }}/>
             <Stack.Screen name="EscuelaSeleccion" component={EscuelaSeleccion} options={{ title: 'Seleccionar Escuela' }}/>
             <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>
-            <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio excepcional' }}/>
+            <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
+            <Stack.Screen name="EstadoDeCuenta" component={VerEstadoDeCuenta} options={{ title: 'Estado de cuenta' }}/>
             <Stack.Screen name="NotFound" component={NotFound} />
           </>
         ) : (
