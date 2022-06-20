@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, View, Text, StyleSheet, ListRenderItemInfo, TouchableOpacity, TextInput } from 'react-native';
+import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { EscuelaSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
@@ -67,7 +67,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   
   return (
     <View style={styles.container}>
-      <View style={localstyles.header}>
+      <View style={styles.header}>
         <View style={styles.inputView}>
           <TextInput
             style={styles.textInput}
@@ -81,7 +81,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
         <FlatList data={listadoEscuelas} renderItem={renderItem} keyExtractor={item => item.id} />
       </SafeAreaView>
       
-      <View style={localstyles.footer}>
+      <View style={styles.footer}>
         <PrimaryButton name={'Crear nueva Escuela'} action={crearEscuela} secondary={true}/>
         { mensajeError && ErrorText(mensajeError) }
         { recorrido
@@ -92,16 +92,3 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
     </View>
   );
 }
-
-const localstyles = StyleSheet.create({
-  header: {
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: -30,
-  },
-  footer: {
-    alignItems: 'center',
-    marginTop: -20,
-    marginBottom: 20,
-  },
-});

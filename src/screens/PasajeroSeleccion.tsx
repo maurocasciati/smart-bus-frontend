@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, View, Text, StyleSheet, ListRenderItemInfo, TouchableOpacity, TextInput } from 'react-native';
+import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { PasajeroSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
@@ -66,7 +66,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
   
   return (
     <View style={styles.container}>
-      <View style={localstyles.header}>
+      <View style={styles.header}>
         <View style={styles.inputView}>
           <TextInput
             style={styles.textInput}
@@ -80,7 +80,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
         <FlatList data={listadoPasajeros} renderItem={renderItem} keyExtractor={item => item.id} />
       </SafeAreaView>
       
-      <View style={localstyles.footer}>
+      <View style={styles.footer}>
         <PrimaryButton name={'Crear nuevo Pasajero'} action={crearPasajero} secondary={true}/>
         { mensajeError && ErrorText(mensajeError) }
         <PrimaryButton name={'Guardar Recorrido'} action={finalizar}/>
@@ -88,16 +88,3 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
     </View>
   );
 }
-
-const localstyles = StyleSheet.create({
-  header: {
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: -30,
-  },
-  footer: {
-    alignItems: 'center',
-    marginTop: -20,
-    marginBottom: 20,
-  },
-});
