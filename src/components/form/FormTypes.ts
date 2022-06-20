@@ -17,7 +17,7 @@ export type RecorridoFormType = {
 
 export type EscuelaFormType = {
     nombre: string,
-    domicilio: DomicilioFormType | null,
+    direccion: DomicilioFormType | null,
     telefono: string,
 };
 

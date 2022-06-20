@@ -17,7 +17,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
   const {control, handleSubmit, formState: {errors}} = useForm<EscuelaFormType>({
     defaultValues: {
       nombre: escuela?.nombre || '',
-      domicilio: escuela?.domicilio ? {
+      direccion: escuela?.domicilio ? {
         domicilio: escuela?.domicilio || '',
         coordenadas: escuela?.coordenadas || null,
       } : null,
@@ -65,9 +65,9 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
         { modoEdicion &&
           <CustomGoogleAutocomplete
             control={control}
-            name='domicilio'
+            name='direccion'
             errors={errors}
-            placeholder='Editar domicilio'
+            placeholder='Editar dirección'
             rules={VALIDACIONES.TEXTO_NO_VACIO}
           />
         }
