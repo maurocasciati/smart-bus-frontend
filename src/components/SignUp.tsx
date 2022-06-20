@@ -2,6 +2,7 @@ import { REACT_APP_BASE_URL } from '@env';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Alert } from 'react-native';
 import { VALIDACIONES } from '../domain/Validaciones';
 import ErrorText from './ErrorText';
 import CustomTextInput from './form/CustomTextInput';
@@ -32,7 +33,7 @@ export default function SignUp() {
     try{
       const resp = await axios.post(`${REACT_APP_BASE_URL}/Usuario/registrar`, data);
       if(resp){
-        alert(`El usuario ${data.email} fue registrado con exito`);
+        Alert.alert('', `El usuario ${data.email} fue registrado con exito`);
         reset();
       }
     }

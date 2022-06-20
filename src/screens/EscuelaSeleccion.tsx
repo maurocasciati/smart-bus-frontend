@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput } from 'react-native';
+import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { EscuelaSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
@@ -31,7 +31,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
     if (recorrido) {
       //TODO: Pegarle directamente al back y guardar el recorrido con la nueva escuela seleccionada
       console.log({dataRecorrido});
-      alert(`El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
+      Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
       navigation.navigate('RecorridoListado');
     }
   };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { RecorridoEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -8,7 +8,6 @@ import { VALIDACIONES } from '../domain/Validaciones';
 import { useForm } from 'react-hook-form';
 import CustomSwitch from '../components/form/CustomSwitch';
 import { RecorridoFormType } from '../components/form/FormTypes';
-import { Recorrido } from '../domain/Recorrido';
 import ModalConfirmacion from '../components/ModalConfirmacion';
 
 export default function RecorridoEdicion({ route, navigation }: RecorridoEdicionProps) {
@@ -31,7 +30,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
   const eliminarRecorrido = async () => {
     toggleModalEliminar();
     // TODO pegarle al back directo y eliminar el recorrido
-    alert(`El recorrido ${recorrido?.nombre} fue eliminado con éxito`);
+    Alert.alert('', `El recorrido ${recorrido?.nombre} fue eliminado con éxito`);
     navigation.navigate('RecorridoListado');
   };
 
@@ -46,7 +45,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
   const guardarRecorrido = async (dataRecorrido: RecorridoFormType) => {
     console.log({dataRecorrido});
     // TODO pegarle al back directo y guardar el recorrido solo con cambios de texto
-    alert(`El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
+    Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
     navigation.navigate('RecorridoListado');
   };
 

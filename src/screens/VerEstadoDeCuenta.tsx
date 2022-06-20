@@ -1,6 +1,6 @@
 import Checkbox from 'expo-checkbox';
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ListRenderItemInfo, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, ListRenderItemInfo, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { EstadoDeCuentaProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
 import { EstadoDeCuenta, EstadoDeCuentaTexto } from '../domain/EstadoDeCuenta';
@@ -14,7 +14,7 @@ export default function VerEstadoDeCuenta({ route, navigation }: EstadoDeCuentaP
 
   const guardarCambios = () => {
     console.log(estadoDeCuenta);
-    alert(`El estado de cuenta del pasajero ${pasajero.nombre} del recorrido ${recorrido.nombre} fue guardado con éxito`);
+    Alert.alert('', `El estado de cuenta del pasajero ${pasajero.nombre} del recorrido ${recorrido.nombre} fue guardado con éxito`);
     navigation.navigate('PasajeroEdicion', { dataRecorrido: null, pasajero, recorrido });
   };
 

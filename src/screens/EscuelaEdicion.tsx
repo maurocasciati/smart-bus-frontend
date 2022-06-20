@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { Alert, TextInput, View } from 'react-native';
 import { EscuelaEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -28,7 +28,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
   const guardarEscuela = async (dataEscuela: EscuelaFormType) => {
     console.log({ dataEscuela });
     // TODO: Pegarle al back para guardar escuela antes de esto: vvvvv
-    alert(`La escuela ${dataEscuela.nombre} fue guardada con éxito`);
+    Alert.alert('', `La escuela ${dataEscuela.nombre} fue guardada con éxito`);
     dataRecorrido ? navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido })
       : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
         : navigation.navigate('RecorridoListado');
