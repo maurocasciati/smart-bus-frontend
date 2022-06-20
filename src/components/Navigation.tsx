@@ -68,7 +68,7 @@ export default function NavigationComponent() {
       <Stack.Navigator>
         { token ? (
           <>
-            <Stack.Screen name="Inicio" component={HomeScreen} />
+            {/* <Stack.Screen name="Inicio" component={HomeScreen} /> */}
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en curso' }}/>

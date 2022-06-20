@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { Alert, TextInput, View } from 'react-native';
 import { PasajeroEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -33,7 +33,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
     console.log({ dataPasajero });
     // TODO: Pegarle al back para guardar pasajero antes de esto: vvvvv
 
-    alert(`El pasajero ${dataPasajero.nombre} fue guardado con éxito`);
+    Alert.alert('', `El pasajero ${dataPasajero.nombre} fue guardado con éxito`);
     dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido, recorrido: null })
       : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
         : navigation.navigate('RecorridoListado');

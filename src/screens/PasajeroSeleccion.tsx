@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput } from 'react-native';
+import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { PasajeroSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
@@ -27,7 +27,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
   const guardarRecorrido = () => {
     dataRecorrido.idPasajeros = idPasajeros;
     console.log(dataRecorrido);
-    alert(`El recorrido ${dataRecorrido.nombre} fue guardado con éxito`);
+    Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue guardado con éxito`);
     navigation.navigate('RecorridoListado');
   };
 

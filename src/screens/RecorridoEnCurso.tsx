@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { RecorridoEnCursoProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import MapView, { LatLng, Marker } from 'react-native-maps';
@@ -54,7 +54,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   }, [currentPosition]);
 
   const finalizarRecorrido = () => {
-    alert(`El recorrido ${recorrido.nombre} finalizó con éxito`);
+    Alert.alert('', `El recorrido ${recorrido.nombre} finalizó con éxito`);
     navigation.navigate('RecorridoDetalle', { recorrido });
   };
 

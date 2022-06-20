@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { EventualidadAusenciaProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -21,7 +21,7 @@ export default function EventualidadAusencia({ route, navigation }: Eventualidad
   const guardarEventualidad = async (dataEventualidad: EventualidadAusenciaFormType) => {
     console.log({ dataEventualidad });
     // TODO: Pegarle al back para guardar eventualidad antes de esto: vvvvv
-    alert(`Se guardó la ausencia para el pasajero ${pasajero.nombre}`);
+    Alert.alert('', `Se guardó la ausencia para el pasajero ${pasajero.nombre}`);
     navigation.navigate('PasajeroEdicion', { dataRecorrido: null, recorrido, pasajero });
   };
 

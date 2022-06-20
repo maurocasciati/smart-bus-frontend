@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { EventualidadDomicilioProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -23,7 +23,7 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
   const guardarEventualidad = async (dataEventualidad: EventualidadDomicilioFormType) => {
     console.log({ dataEventualidad });
     // TODO: Pegarle al back para guardar eventualidad antes de esto: vvvvv
-    alert(`Se guardó el cambio de domicilio temporal para el pasajero ${pasajero.nombre}`);
+    Alert.alert('', `Se guardó el cambio de domicilio temporal para el pasajero ${pasajero.nombre}`);
     navigation.navigate('PasajeroEdicion', { dataRecorrido: null, recorrido, pasajero });
   };
 

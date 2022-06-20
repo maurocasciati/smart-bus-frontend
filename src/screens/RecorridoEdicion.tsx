@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, View } from 'react-native';
 import { RecorridoEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -8,9 +8,12 @@ import { VALIDACIONES } from '../domain/Validaciones';
 import { useForm } from 'react-hook-form';
 import CustomSwitch from '../components/form/CustomSwitch';
 import { RecorridoFormType } from '../components/form/FormTypes';
+import ModalConfirmacion from '../components/ModalConfirmacion';
 
 export default function RecorridoEdicion({ route, navigation }: RecorridoEdicionProps) {
   const { recorrido } = route.params;
+
+  const [showModalEliminar, setShowModalEliminar] = useState<boolean>(false);
   
   const {control, handleSubmit, formState: {errors}} = useForm<RecorridoFormType>({
     defaultValues: {
@@ -21,6 +24,15 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
       idEscuela: recorrido?.escuela?.id,
     }
   });
+
+  const toggleModalEliminar = () => setShowModalEliminar(!showModalEliminar);
+
+  const eliminarRecorrido = async () => {
+    toggleModalEliminar();
+    // TODO pegarle al back directo y eliminar el recorrido
+    Alert.alert('', `El recorrido ${recorrido?.nombre} fue eliminado con éxito`);
+    navigation.navigate('RecorridoListado');
+  };
 
   const seleccionarEscuela = async (dataRecorrido: RecorridoFormType) => {
     navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido });
@@ -33,7 +45,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
   const guardarRecorrido = async (dataRecorrido: RecorridoFormType) => {
     console.log({dataRecorrido});
     // TODO pegarle al back directo y guardar el recorrido solo con cambios de texto
-    alert(`El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
+    Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
     navigation.navigate('RecorridoListado');
   };
 
@@ -66,8 +78,16 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
 
         <PrimaryButton name={`${recorrido ? 'Cambiar' : 'Seleccionar'} Escuela`} action={handleSubmit(seleccionarEscuela)} secondary={!!recorrido}/>
         { recorrido && <PrimaryButton name="Cambiar Pasajeros" action={handleSubmit(seleccionarPasajeros)} secondary={true}/> }
+        { recorrido && <PrimaryButton name="Eliminar Recorrido" action={toggleModalEliminar} secondary={true}/> }
         { recorrido && <PrimaryButton name="Guardar Recorrido" action={handleSubmit(guardarRecorrido)} /> }
       </View>
+
+      <ModalConfirmacion
+        visible={showModalEliminar}
+        text={`¿Está seguro de eliminar el recorrido ${recorrido?.nombre}?`}
+        cancel={toggleModalEliminar}
+        confirm={eliminarRecorrido}
+      />
     </View>
   );
 }

@@ -28,7 +28,7 @@ export const escuelasMock = [
   } as Escuela,
   {
     id: '3',
-    nombre: 'Instituto educativo Ferro Carril Oeste',
+    nombre: 'Instituto Ferro Carril Oeste',
     domicilio: 'Bacacay 1050',
     telefono: '1122334455',
     coordenadas: {
@@ -88,7 +88,7 @@ export const mockRecorridos: Recorrido[] = [];
 for (let i = 0; i < 4; i++) {
   mockRecorridos.push({
     id: i.toString(),
-    nombre: escuelasMock[i].nombre + ' turno mañana ',
+    nombre: escuelasMock[i].nombre.split(' ').slice(1).join(' '),
     escuela: escuelasMock[i],
     esIda: true,
     horario: '07:00',
@@ -96,7 +96,7 @@ for (let i = 0; i < 4; i++) {
   });
   mockRecorridos.push({
     id: (i+4).toString(),
-    nombre: escuelasMock[i].nombre + ' turno tarde ',
+    nombre: escuelasMock[i].nombre.split(' ').slice(1).join(' ') + ' (regreso)',
     escuela: escuelasMock[i],
     esIda: false,
     horario: '13:00',
