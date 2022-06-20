@@ -46,6 +46,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
           errors={errors}
           placeholder='Nombre'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
+          editable={true}
         />
         <CustomSwitch
           control={control}
@@ -60,6 +61,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
           errors={errors}
           placeholder='Horario (HH:MM)'
           rules={VALIDACIONES.HORARIO}
+          editable={true}
         />
 
         <PrimaryButton name={`${recorrido ? 'Cambiar' : 'Seleccionar'} Escuela`} action={handleSubmit(seleccionarEscuela)} secondary={!!recorrido}/>

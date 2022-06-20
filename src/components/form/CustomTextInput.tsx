@@ -4,14 +4,15 @@ import { View, TextInput, Text } from 'react-native';
 import { styles } from '../../styles/styles';
 
 type CustomInputProps = {
-  control: Control<any>;
-  name: string;
-  rules: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
-  placeholder: string
-  errors: FieldErrors<FieldValues>
+  control: Control<any>,
+  name: string,
+  rules: Omit<RegisterOptions<FieldValues, FieldPath<FieldValues>>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>,
+  placeholder: string,
+  errors: FieldErrors<FieldValues>,
+  editable: boolean,
 };
 
-export default function CustomTextInput({control, name, rules, placeholder, errors, ocultarTexto} : CustomInputProps & {ocultarTexto?: boolean}) {
+export default function CustomTextInput({control, name, rules, placeholder, errors, ocultarTexto, editable} : CustomInputProps & {ocultarTexto?: boolean}) {
   return (
     <>
       <View>
@@ -30,6 +31,7 @@ export default function CustomTextInput({control, name, rules, placeholder, erro
               onChangeText={onChange}
               value={value} 
               secureTextEntry={ocultarTexto}
+              editable={editable}
             />
           )}
         />

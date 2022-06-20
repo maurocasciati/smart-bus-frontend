@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { TextInput, View } from 'react-native';
 import { PasajeroEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -11,6 +11,8 @@ import { PasajeroFormType } from '../components/form/FormTypes';
 
 export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
   const { pasajero, dataRecorrido, recorrido } = route.params;
+
+  const [modoEdicion, setModoEdicion] = useState<boolean>(!recorrido);
   
   const {control, handleSubmit, formState: {errors}} = useForm<PasajeroFormType>({
     defaultValues: {
@@ -45,6 +47,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           errors={errors}
           placeholder='Nombre'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
+          editable={modoEdicion}
         />
         <CustomTextInput
           control={control}
@@ -52,6 +55,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           errors={errors}
           placeholder='Apellido'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
+          editable={modoEdicion}
         />
         <CustomTextInput
           control={control}
@@ -59,6 +63,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           errors={errors}
           placeholder='Nacimiento'
           rules={VALIDACIONES.FECHA}
+          editable={modoEdicion}
         />
         <CustomTextInput
           control={control}
@@ -66,23 +71,40 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           errors={errors}
           placeholder='Telefono'
           rules={VALIDACIONES.TELEFONO}
+          editable={modoEdicion}
         />
-        <CustomGoogleAutocomplete
-          control={control}
-          name='domicilio'
-          errors={errors}
-          placeholder='Domicilio'
-          rules={VALIDACIONES.TEXTO_NO_VACIO}
-        />
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            value={pasajero?.domicilio} 
+            editable={false}
+          />
+        </View>
+        { modoEdicion &&
+          <CustomGoogleAutocomplete
+            control={control}
+            name='domicilio'
+            errors={errors}
+            placeholder='Editar domicilio'
+            rules={VALIDACIONES.TEXTO_NO_VACIO}
+          />
+        }
         <CustomTextInput
           control={control}
           name='piso_dpto'
           errors={errors}
           placeholder='Piso y departamento'
           rules={{}}
+          editable={modoEdicion}
         />
 
-        <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
+        { modoEdicion
+          ? <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
+          :
+          <>
+            <PrimaryButton name="Editar Pasajero" action={() => setModoEdicion(true)} />
+          </>
+        }
       </View>
     </View>
   );

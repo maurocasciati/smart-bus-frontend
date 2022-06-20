@@ -59,6 +59,7 @@ export default function SignUp() {
         errors={errors}
         placeholder="Nombre"
         rules={VALIDACIONES.TEXTO_NO_VACIO}
+        editable={true}
       />
 
       <CustomTextInput
@@ -67,6 +68,7 @@ export default function SignUp() {
         errors={errors}
         placeholder="Apellido"
         rules={VALIDACIONES.TEXTO_NO_VACIO}
+        editable={true}
       />
 
       <CustomTextInput
@@ -75,6 +77,7 @@ export default function SignUp() {
         errors={errors}
         placeholder="E-Mail"
         rules={VALIDACIONES.EMAIL}
+        editable={true}
       />
 
       <CustomTextInput
@@ -84,6 +87,7 @@ export default function SignUp() {
         placeholder="Contraseña"
         rules={VALIDACIONES.TEXTO_NO_VACIO}
         ocultarTexto={true}
+        editable={true}
       />
 
       {signUpError && ErrorText(signUpError)}
