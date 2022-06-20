@@ -16,7 +16,7 @@ export default function Login() {
       <View style={styles.center}>
         <Image style={styles.image} source={require('../../assets/favicon.png')}/>
 
-        { toggleScreen ? <SignIn/> : <SignUp/> }
+        { toggleScreen ? <SignIn/> : <SignUp toggleLogin={handleToggle}/> }
 
         <TouchableOpacity onPress={handleToggle}>
           <Text style={styles.secondaryText}>

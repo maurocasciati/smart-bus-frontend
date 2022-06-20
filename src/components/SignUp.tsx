@@ -1,25 +1,17 @@
-import { REACT_APP_BASE_URL } from '@env';
-import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert } from 'react-native';
 import { VALIDACIONES } from '../domain/Validaciones';
+import { signUp } from '../services/login.service';
 import ErrorText from './ErrorText';
 import CustomTextInput from './form/CustomTextInput';
+import { SignUpFormType } from './form/FormTypes';
 import PrimaryButton from './PrimaryButton';
 
-type FormType = {
-  nombre: string,
-  apellido: string,
-  email: string,
-  contraseña: string
-};
-
-export default function SignUp() {
-
+export default function SignUp(props: { toggleLogin: () => void}) {
   const [signUpError, setSignUpError] = useState<string | null>(null);
   
-  const {control, handleSubmit, formState: {errors}, reset} = useForm<FormType>({
+  const {control, handleSubmit, formState: {errors}} = useForm<SignUpFormType>({
     defaultValues: {
       nombre: '',
       apellido: '',
@@ -28,27 +20,17 @@ export default function SignUp() {
     }
   });
 
-  const onSubmit = async (data: FormType) => {
+  const onSubmit = async (dataSignUp: SignUpFormType) => {
     setSignUpError(null);
-    try{
-      const resp = await axios.post(`${REACT_APP_BASE_URL}/Usuario/registrar`, data);
+
+    try {
+      const resp = await signUp(dataSignUp);
       if(resp){
-        Alert.alert('', `El usuario ${data.email} fue registrado con exito`);
-        reset();
+        Alert.alert('', `El usuario ${dataSignUp.email} fue registrado con exito`);
+        props.toggleLogin();
       }
-    }
-    catch(error){
-      if(axios.isAxiosError(error)){
-        const err = error as AxiosError;
-        const errorResponse = err.response as AxiosResponse<{message?: string, title: string}>;
-        if(errorResponse.data)
-          setSignUpError(errorResponse.data.message ?? errorResponse.data.title);
-        else
-          setSignUpError(err.message);
-      }
-      else{
-        setSignUpError(error as string);
-      }
+    } catch(error) {
+      setSignUpError(error as string);
     }
   };
   

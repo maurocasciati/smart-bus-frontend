@@ -1,42 +1,30 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { useState } from 'react';
 import { useContext } from 'react';
-import { View, TextInput, Text, GestureResponderEvent } from 'react-native';
+import { View, TextInput, GestureResponderEvent } from 'react-native';
 import { AuthContext } from '../auth/AuthProvider';
+import { signIn } from '../services/login.service';
 import { styles } from '../styles/styles';
+import ErrorText from './ErrorText';
 import PrimaryButton from './PrimaryButton';
-import {REACT_APP_BASE_URL} from '@env';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState<string | null>(null);
   const { saveToken } = useContext(AuthContext);
-  const baseUrl = REACT_APP_BASE_URL;
-  const [loginError, setLoginError] = useState('');
 
   const onLogin = async (e: GestureResponderEvent) => {
     e.preventDefault();
 
     setLoginError('');
     
-    try{
-      const resp = await axios.post<{token : string}>(`${baseUrl}/Usuario/autenticar`, {email, password});
-      if(resp.data && resp.data.token){
+    try {
+      const resp = await signIn(email, password);
+      if(resp?.data.token){
         saveToken(resp.data.token);
       }
-    }
-    catch(error){
-      if(axios.isAxiosError(error)){
-        const err = error as AxiosError;
-        const errorResponse = err.response as AxiosResponse<{message?: string, title: string}>;
-        if(errorResponse.data)
-          setLoginError(errorResponse.data.message ?? errorResponse.data.title);
-        else
-          setLoginError(err.message);
-      }
-      else{
-        setLoginError(error as string);
-      }
+    } catch(error) {
+      setLoginError(error as string);
     }
   };
 
@@ -59,19 +47,8 @@ export default function SignIn() {
         />
       </View>
 
-      {loginError ? ErrorText(loginError) : null}
-    
+      {loginError && ErrorText(loginError)}
       <PrimaryButton name={'INGRESAR'} action={onLogin}/>
     </>
-  );
-}
-
-function ErrorText(mensajeError : string){
-  return (
-    <View>
-      <Text>
-        {`Error: ${mensajeError}`}
-      </Text>
-    </View>
   );
 }
