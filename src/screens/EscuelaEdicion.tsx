@@ -53,13 +53,15 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           rules={VALIDACIONES.TELEFONO}
           editable={modoEdicion}
         />
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            value={escuela?.domicilio}
-            editable={false}
-          />
-        </View>
+        { escuela &&
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              value={escuela?.domicilio}
+              editable={false}
+            />
+          </View>
+        }
         { modoEdicion &&
           <CustomGoogleAutocomplete
             control={control}
@@ -72,10 +74,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
 
         { modoEdicion
           ? <PrimaryButton name="Guardar Escuela" action={handleSubmit(guardarEscuela)} />
-          :
-          <>
-            <PrimaryButton name="Editar Escuela" action={() => setModoEdicion(true)} />
-          </>
+          : <PrimaryButton name="Editar Escuela" action={() => setModoEdicion(true)} />
         }
       </View>
     </View>

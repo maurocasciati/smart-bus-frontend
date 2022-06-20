@@ -8,6 +8,7 @@ import CustomGoogleAutocomplete from '../components/form/CustomGoogleAutocomplet
 import { VALIDACIONES } from '../domain/Validaciones';
 import { useForm } from 'react-hook-form';
 import { PasajeroFormType } from '../components/form/FormTypes';
+import DoubleButton from '../components/DobleButton';
 
 export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
   const { pasajero, dataRecorrido, recorrido } = route.params;
@@ -73,19 +74,21 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           rules={VALIDACIONES.TELEFONO}
           editable={modoEdicion}
         />
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            value={pasajero?.domicilio} 
-            editable={false}
-          />
-        </View>
+        { pasajero &&
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              value={pasajero?.domicilio} 
+              editable={false}
+            />
+          </View>
+        }
         { modoEdicion &&
           <CustomGoogleAutocomplete
             control={control}
             name='domicilio'
             errors={errors}
-            placeholder='Editar domicilio'
+            placeholder={pasajero ? 'Editar domicilio' : 'Domicilio'}
             rules={VALIDACIONES.TEXTO_NO_VACIO}
           />
         }
@@ -102,6 +105,8 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           ? <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
           :
           <>
+            <PrimaryButton name="Ver estado de cuenta" action={() => navigation.navigate('NotFound')} secondary={true} />
+            <DoubleButton name1="Establecer ausencia" name2="Establecer cambio de domicilio" action1={() => []} action2={() => []} secondary={true} />
             <PrimaryButton name="Editar Pasajero" action={() => setModoEdicion(true)} />
           </>
         }
