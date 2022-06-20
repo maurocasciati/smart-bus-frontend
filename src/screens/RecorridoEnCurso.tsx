@@ -9,6 +9,7 @@ import { getFocusedRegion } from '../utils/map.utils';
 import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import MapViewDirections from 'react-native-maps-directions';
 import ActionButton from '../components/ActionButton';
+import PrimaryButton from '../components/PrimaryButton';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -52,6 +53,12 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     toggleFocus && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition));
   }, [currentPosition]);
 
+  const finalizarRecorrido = () => {
+    alert(`El recorrido ${recorrido.nombre} finalizó con éxito`);
+    navigation.navigate('RecorridoDetalle', { recorrido });
+  };
+
+  const finalizarHabilitado = (): boolean => paradas.length === 0;
   const esUltimaParada = (): boolean => paradas.length > 1;
   const removerParada = (): void => setParadas(paradas.slice(1));
   const animateToInitialRegion = (): void => mapRef.current?.animateToRegion(getFocusedRegion(currentPosition), 1);
@@ -73,13 +80,13 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
             image={parada.esEscuela ? require('../../assets/marker-school.png') : require('../../assets/marker-house.png')}/>
         )}
 
-        <MapViewDirections
+        { !finalizarHabilitado() && <MapViewDirections
           origin={currentPosition}
           destination={paradas[0].coordenadas}
           apikey={GOOGLE_API_KEY}
           strokeWidth={5}
           strokeColor='orange'
-        />
+        /> }
 
         { esUltimaParada() && <MapViewDirections
           origin={paradas[0].coordenadas}
@@ -95,32 +102,69 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     );
   };
 
+  const renderBotonesPasajeros = () => {
+    return esIda
+      ? (
+        <>
+          <View style={{ flex: 1, margin: 5 }}>
+            <ActionButton name='No sube' action={removerParada}></ActionButton>
+          </View>
+          <View style={{ flex: 3, margin: 5 }}>
+            <ActionButton name='Confirmar subida' action={removerParada}></ActionButton>
+          </View>
+        </>
+      ) : (
+        <>
+          <View style={{ flex: 1, margin: 5 }}>
+            <ActionButton name='No baja' action={removerParada}></ActionButton>
+          </View>
+          <View style={{ flex: 3, margin: 5 }}>
+            <ActionButton name='Confirmar bajada' action={removerParada}></ActionButton>
+          </View>
+        </>      
+      );
+  };
+  
+  const renderBotonEscuela = () => {
+    return esIda
+      ? (
+        <View style={{ flex: 1, margin: 5 }}>
+          <ActionButton name={'Llegada a la escuela'} action={removerParada}/>
+        </View>
+      ) : (
+        <View style={{ flex: 1, margin: 5 }}>
+          <ActionButton name={'Salida de la escuela'} action={removerParada}/>
+        </View>
+      );
+  };
+
+  const renderFinalizarRecorrido = () => {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <PrimaryButton name={'Finalizar recorrido'} action={finalizarRecorrido}/>
+      </View>
+    );
+  };
+
   return loading ? null : (
     <View style={styles.container}>
       { renderMap() }
 
       <View style={localstyles.detailsContainer}>
-        <View style={localstyles.recorridoContainer}>
-          { esUltimaParada()?
-            <>
-              <View style={{ flex: 1, margin: 5 }}>
-                <ActionButton name='No Sube' action={removerParada}></ActionButton>
-              </View>
-              <View style={{ flex: 3, margin: 5 }}>
-                <ActionButton name='Sube' action={removerParada}></ActionButton>
-              </View>
-            </> :
-            <View style={{ flex: 1, margin: 5 }}>
-              <ActionButton name={'FINALIZAR'} action={() => navigation.navigate('RecorridoDetalle', { recorrido })}/>
+        { finalizarHabilitado()
+          ? renderFinalizarRecorrido()
+          : <>
+            <View style={localstyles.recorridoContainer}>
+              { paradas[0].esEscuela ? renderBotonEscuela() : renderBotonesPasajeros() }
             </View>
-          }
-        </View>
-        <TouchableOpacity
-          style={localstyles.pasajerosContainer}
-          onPress={() => setToggleFocus(!toggleFocus)}
-        >
-          <Text style={localstyles.pasajerosText}>Siguiente: {paradas[0].domicilio}</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={localstyles.pasajerosContainer}
+              onPress={() => setToggleFocus(!toggleFocus)}
+            >
+              <Text style={localstyles.pasajerosText}>Siguiente: {paradas[0].domicilio}</Text>
+            </TouchableOpacity>
+          </>
+        }
       </View>
     </View>
   );
