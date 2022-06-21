@@ -1,0 +1,1 @@
+export const mapDateTimeStringToHours = (date: Date) => new Date(date).toLocaleTimeString().slice(0, -3);

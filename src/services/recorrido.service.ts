@@ -6,7 +6,7 @@ import { authDelete, authGet, authPost, authPut, throwError } from '../utils/ser
 export const getListadoRecorridos = async (token: string | null) => {
   try {
     const resp = await authGet<Recorrido[]>(`${baseUrl}/Recorrido`, token);
-    return resp.data.map(recorrido => ({ ...recorrido, horario: recorrido.horario.slice(11, -7)}));
+    return resp.data;
   } catch(error) {
     throwError(error);
   }
@@ -14,7 +14,7 @@ export const getListadoRecorridos = async (token: string | null) => {
 
 export const postRecorrido = async (token: string | null, data: RecorridoFormType) => {
   try {
-    data.horario = `2022-06-21T${data.horario}:58.473`;
+    // data.horario = `2022-06-21T${data.horario}:58.473`;
     const resp = await authPost<Recorrido>(`${baseUrl}/Recorrido`, data, token);
     return resp.data;
   } catch(error) {
@@ -24,7 +24,7 @@ export const postRecorrido = async (token: string | null, data: RecorridoFormTyp
 
 export const putRecorrido = async (token: string | null, data: RecorridoFormType) => {
   try {
-    data.horario = `2022-06-21T${data.horario}:58.473`;
+    // data.horario = `2022-06-21T${data.horario}:58.473`;
     const resp = await authPut<Recorrido>(`${baseUrl}/Recorrido`, data, token);
     return resp.data;
   } catch(error) {

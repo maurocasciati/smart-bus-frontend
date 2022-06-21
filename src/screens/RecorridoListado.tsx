@@ -8,6 +8,7 @@ import PrimaryButton from '../components/PrimaryButton';
 import { Recorrido } from '../domain/Recorrido';
 import { getListadoRecorridos } from '../services/recorrido.service';
 import { styles } from '../styles/styles';
+import { mapDateTimeStringToHours } from '../utils/date.utils';
 
 export default function RecorridoListado({ navigation }: RecorridoListadoProps) {
   const [listadoRecorridos, setListadoRecorridos] = useState<Recorrido[]>([]);
@@ -48,7 +49,7 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
         </View>
         <View>
           <Text style={styles.type}>{recorrido.item.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
-          <Text style={styles.hour}>{recorrido.item.horario}</Text>
+          <Text style={styles.hour}>{mapDateTimeStringToHours(recorrido.item.horario)}</Text>
         </View>
       </TouchableOpacity>
     </View>
