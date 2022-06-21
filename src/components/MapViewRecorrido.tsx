@@ -9,7 +9,7 @@ import { styles } from '../styles/styles';
 
 
 export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }) {
-  const { pasajeros, escuela, esIda } = recorrido;
+  const { pasajeros, escuela, esRecorridoDeIda } = recorrido;
   const [currentPosition, setCurrentPosition] = useState<LatLng>();
 
   const pointsList: LatLng[] = [
@@ -42,15 +42,15 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
 
       <MapViewDirections
         origin={currentPosition}
-        destination={esIda ? pointsList[0] : escuela.direccion.coordenadas}
+        destination={esRecorridoDeIda ? pointsList[0] : escuela.direccion.coordenadas}
         apikey={GOOGLE_API_KEY}
         strokeWidth={5}
         strokeColor='orange'
       />
 
       <MapViewDirections
-        origin={esIda ? pointsList[0] : escuela.direccion.coordenadas}
-        destination={esIda ? escuela.direccion.coordenadas : pointsList[pointsList.length - 1]}
+        origin={esRecorridoDeIda ? pointsList[0] : escuela.direccion.coordenadas}
+        destination={esRecorridoDeIda ? escuela.direccion.coordenadas : pointsList[pointsList.length - 1]}
         waypoints={pointsList}
         optimizeWaypoints={false} // Poner en true cuando tengamos order automatico.
         splitWaypoints={true}

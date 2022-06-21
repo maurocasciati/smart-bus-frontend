@@ -3,18 +3,19 @@ import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacit
 import Checkbox from 'expo-checkbox';
 import { PasajeroSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
-import { pasajerosMock } from '../mocks';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
 import { Pasajero } from '../domain/Pasajero';
 import { AuthContext } from '../auth/AuthProvider';
 import { useFocusEffect } from '@react-navigation/native';
 import { getListadoPasajeros } from '../services/pasajero.service';
+import { postRecorrido, putRecorrido } from '../services/recorrido.service';
 
 export default function PasajeroSeleccion({ route, navigation }: PasajeroSeleccionProps) {
   const { dataRecorrido, recorrido } = route.params;
   const [idPasajeros, setIdPasajeros] = useState<number[]>(recorrido?.pasajeros?.map(p => p.id) || []);
   const [listadoPasajeros, setListadoPasajeros] = useState<Pasajero[]>([]);
+  const [listadoPasajerosFiltrados, setListadoPasajerosFiltrados] = useState<Pasajero[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
   const { token } = useContext(AuthContext);
@@ -28,6 +29,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
           const pasajeros = await getListadoPasajeros(token);
           if (componentIsFocused && pasajeros) {
             setListadoPasajeros(pasajeros);
+            setListadoPasajerosFiltrados(pasajeros);
           }
         } catch(error) {
           setMensajeError(error as string);
@@ -39,7 +41,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
   );
 
   const filtrarPasajeros = (texto: string) => {
-    setListadoPasajeros(pasajerosMock.filter((escuela) => escuela.nombre.toLowerCase().includes(texto.toLowerCase()) || escuela.apellido.toLowerCase().includes(texto.toLowerCase())));
+    setListadoPasajerosFiltrados(listadoPasajeros.filter((escuela) => escuela.nombre.toLowerCase().includes(texto.toLowerCase()) || escuela.apellido.toLowerCase().includes(texto.toLowerCase())));
   };
 
   const finalizar = () => {
@@ -48,13 +50,23 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
       : setMensajeError('No se han seleccionado pasajeros.');
   };
 
-  const guardarRecorrido = () => {
-    dataRecorrido.idPasajeros = idPasajeros;
-    console.log(dataRecorrido);
-    Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue guardado con éxito`);
-    recorrido
-      ? navigation.navigate('RecorridoDetalle', { recorrido })
-      : navigation.navigate('RecorridoListado');
+  const guardarRecorrido = async () => {
+    setMensajeError(null);
+
+    try {
+      dataRecorrido.idPasajeros = idPasajeros;
+      const resp = recorrido
+        ? await putRecorrido(token, dataRecorrido)
+        : await postRecorrido(token, dataRecorrido);
+      if(resp){
+        Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue ${recorrido ? 'actualizado' : 'guardado'} con éxito`);
+        recorrido
+          ? navigation.navigate('RecorridoDetalle', { recorrido: resp })
+          : navigation.navigate('RecorridoListado');
+      }
+    } catch(error) {
+      setMensajeError(error as string);
+    }
   };
 
   const clickearPasajero = (id: number) => {
@@ -103,7 +115,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
       </View>
 
       <SafeAreaView style={styles.list}>
-        <FlatList data={listadoPasajeros} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
+        <FlatList data={listadoPasajerosFiltrados} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
       </SafeAreaView>
       
       <View style={styles.footer}>

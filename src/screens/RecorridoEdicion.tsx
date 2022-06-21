@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { RecorridoEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
@@ -9,19 +9,27 @@ import { useForm } from 'react-hook-form';
 import CustomSwitch from '../components/form/CustomSwitch';
 import { RecorridoFormType } from '../components/form/FormTypes';
 import ModalConfirmacion from '../components/ModalConfirmacion';
+import { AuthContext } from '../auth/AuthProvider';
+import ErrorText from '../components/ErrorText';
+import { putRecorrido } from '../services/recorrido.service';
 
 export default function RecorridoEdicion({ route, navigation }: RecorridoEdicionProps) {
   const { recorrido } = route.params;
 
   const [showModalEliminar, setShowModalEliminar] = useState<boolean>(false);
+  const [mensajeError, setMensajeError] = useState<string | null>(null);
+  
+  const { token } = useContext(AuthContext);
   
   const {control, handleSubmit, formState: {errors}} = useForm<RecorridoFormType>({
     defaultValues: {
+      id: recorrido?.id,
       nombre: recorrido?.nombre || '',
-      esIda: recorrido?.esIda || false,
+      esRecorridoDeIda: recorrido?.esRecorridoDeIda || false,
       horario: recorrido?.horario || '',
       idPasajeros: recorrido?.pasajeros?.map(p => p.id) || [],
       idEscuela: recorrido?.escuela?.id,
+      idChofer: 1,
     }
   });
 
@@ -43,10 +51,17 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
   };
 
   const guardarRecorrido = async (dataRecorrido: RecorridoFormType) => {
-    console.log({dataRecorrido});
-    // TODO pegarle al back directo y guardar el recorrido solo con cambios de texto
-    Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
-    navigation.navigate('RecorridoListado');
+    setMensajeError(null);
+
+    try {
+      const resp = await putRecorrido(token, dataRecorrido);
+      if(resp){
+        Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
+        navigation.navigate('RecorridoListado');
+      }
+    } catch(error) {
+      setMensajeError(error as string);
+    }
   };
 
   return (
@@ -62,7 +77,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
         />
         <CustomSwitch
           control={control}
-          name='esIda'
+          name='esRecorridoDeIda'
           errors={errors}
           placeholderTrue='Ida'
           placeholderFalse='Vuelta'
@@ -79,6 +94,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
         <PrimaryButton name={`${recorrido ? 'Cambiar' : 'Seleccionar'} Escuela`} action={handleSubmit(seleccionarEscuela)} secondary={!!recorrido}/>
         { recorrido && <PrimaryButton name="Cambiar Pasajeros" action={handleSubmit(seleccionarPasajeros)} secondary={true}/> }
         { recorrido && <PrimaryButton name="Eliminar Recorrido" action={toggleModalEliminar} secondary={true}/> }
+        { mensajeError && ErrorText(mensajeError) }
         { recorrido && <PrimaryButton name="Guardar Recorrido" action={handleSubmit(guardarRecorrido)} /> }
       </View>
 

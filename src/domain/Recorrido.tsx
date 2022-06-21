@@ -4,7 +4,7 @@ import { Pasajero } from './Pasajero';
 export type Recorrido = {
   id: number,
   nombre: string,
-  esIda: boolean,
+  esRecorridoDeIda: boolean,
   horario: string,
   pasajeros: Pasajero[],
   escuela: Escuela,

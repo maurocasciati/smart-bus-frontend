@@ -8,11 +8,13 @@ export type SignUpFormType = {
 };
 
 export type RecorridoFormType = {
+    id: number,
     nombre: string,
-    esIda: boolean,
+    esRecorridoDeIda: boolean,
     horario: string,
     idPasajeros: number[],
     idEscuela: number,
+    idChofer: number,
 };
 
 export type EscuelaFormType = {

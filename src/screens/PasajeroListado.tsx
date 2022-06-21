@@ -26,7 +26,7 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
         </View>
         {/* TODO: Mostrar de este lado los botones para cambiar el orden del listado de pasajeros
       <View>  
-        <Text style={localstyles.type}>{recorrido.item.esIda ? 'Ida' : 'Vuelta'}</Text>
+        <Text style={localstyles.type}>{recorrido.item.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
         <Text style={localstyles.hour}>{recorrido.item.horario}</Text>
       </View> */}
       </TouchableOpacity>

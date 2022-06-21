@@ -28,7 +28,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
             <Text style={localstyles.title}>{ recorrido.nombre }</Text>
           </View>
           <View style={{ paddingHorizontal: 20, alignContent: 'center' }}>
-            <Text style={localstyles.type}>{recorrido.esIda ? 'Ida' : 'Vuelta'}</Text>
+            <Text style={localstyles.type}>{recorrido.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
             <Text style={localstyles.hour}>{recorrido.horario}</Text>
           </View>
           <View>
