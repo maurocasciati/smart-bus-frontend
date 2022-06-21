@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert, TextInput, View } from 'react-native';
 import { EscuelaEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
@@ -8,12 +8,18 @@ import { VALIDACIONES } from '../domain/Validaciones';
 import { useForm } from 'react-hook-form';
 import CustomGoogleAutocomplete from '../components/form/CustomGoogleAutocomplete';
 import { EscuelaFormType } from '../components/form/FormTypes';
+import ErrorText from '../components/ErrorText';
+import { postEscuela } from '../services/escuela.service';
+import { AuthContext } from '../auth/AuthProvider';
 
 export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProps) {
   const { escuela, dataRecorrido, recorrido } = route.params;
   
   const [modoEdicion, setModoEdicion] = useState<boolean>(!recorrido);
-  
+  const [mensajeError, setMensajeError] = useState<string | null>(null);
+
+  const { token } = useContext(AuthContext);
+
   const {control, handleSubmit, formState: {errors}} = useForm<EscuelaFormType>({
     defaultValues: {
       nombre: escuela?.nombre || '',
@@ -27,11 +33,20 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
 
   const guardarEscuela = async (dataEscuela: EscuelaFormType) => {
     console.log({ dataEscuela });
-    // TODO: Pegarle al back para guardar escuela antes de esto: vvvvv
-    Alert.alert('', `La escuela ${dataEscuela.nombre} fue guardada con éxito`);
-    dataRecorrido ? navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido })
-      : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
-        : navigation.navigate('RecorridoListado');
+
+    setMensajeError(null);
+
+    try {
+      const resp = await postEscuela(token, dataEscuela);
+      if(resp){
+        Alert.alert('', `La escuela ${dataEscuela.nombre} fue guardada con éxito`);
+        dataRecorrido ? navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido })
+          : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
+            : navigation.navigate('RecorridoListado');
+      }
+    } catch(error) {
+      setMensajeError(error as string);
+    }
   };
 
   return (
@@ -72,6 +87,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           />
         }
 
+        { mensajeError && ErrorText(mensajeError) }
         { modoEdicion
           ? <PrimaryButton name="Guardar Escuela" action={handleSubmit(guardarEscuela)} />
           : <PrimaryButton name="Editar Escuela" action={() => setModoEdicion(true)} />

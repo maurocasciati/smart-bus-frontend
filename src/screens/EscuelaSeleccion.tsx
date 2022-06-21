@@ -19,20 +19,16 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   const { token } = useContext(AuthContext);
 
   useEffect(() => {
-    if (token) {
-      (async () => {
-        try {
-          const escuelas = await getListadoEscuelas(token);
-          if (escuelas) {
-            setListadoEscuelas(escuelas);
-          }
-        } catch(error) {
-          setMensajeError(error as string);
+    (async () => {
+      try {
+        const escuelas = await getListadoEscuelas(token);
+        if (escuelas) {
+          setListadoEscuelas(escuelas);
         }
-      })();
-    } else {
-      setMensajeError('Error de autenticación. Ingrese sesión.');
-    }
+      } catch(error) {
+        setMensajeError(error as string);
+      }
+    })();
   }, []);
 
   const filtrarEscuela = (nombre: string) => {
