@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { EscuelaSeleccionProps } from '../components/Navigation';
@@ -9,6 +9,7 @@ import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
 import { getListadoEscuelas } from '../services/escuela.service';
 import { AuthContext } from '../auth/AuthProvider';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccionProps) {
   const { dataRecorrido, recorrido } = route.params;
@@ -18,18 +19,24 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
 
   const { token } = useContext(AuthContext);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const escuelas = await getListadoEscuelas(token);
-        if (escuelas) {
-          setListadoEscuelas(escuelas);
+  useFocusEffect(
+    useCallback(() => {
+      let componentIsFocused = true;
+
+      (async () => {
+        try {
+          const escuelas = await getListadoEscuelas(token);
+          if (componentIsFocused && escuelas) {
+            setListadoEscuelas(escuelas);
+          }
+        } catch(error) {
+          setMensajeError(error as string);
         }
-      } catch(error) {
-        setMensajeError(error as string);
-      }
-    })();
-  }, []);
+      })();
+
+      return () => { componentIsFocused = false; };
+    }, [])
+  );
 
   const filtrarEscuela = (nombre: string) => {
     setListadoEscuelas(escuelasMock.filter((escuela) => escuela.nombre.toLowerCase().includes(nombre.toLowerCase())));

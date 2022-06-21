@@ -5,6 +5,5 @@ export type Parada = {
   nombre: string,
   domicilio: string,
   coordenadas: LatLng,
-  telefono: string,
   esEscuela: boolean,
 }

@@ -18,7 +18,6 @@ export type RecorridoFormType = {
 export type EscuelaFormType = {
     nombre: string,
     direccion: DomicilioFormType | null,
-    telefono: string,
 };
 
 export type PasajeroFormType = {

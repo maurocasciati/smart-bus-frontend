@@ -5,4 +5,5 @@ export type Pasajero = Parada & {
   nacimiento: string,
   piso_dpto: string,
   esEscuela: false,
+  telefono: string,
 }

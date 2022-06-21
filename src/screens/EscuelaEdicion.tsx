@@ -27,13 +27,10 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
         domicilio: escuela?.domicilio || '',
         coordenadas: escuela?.coordenadas || null,
       } : null,
-      telefono: escuela?.telefono || '',
     }
   });
 
   const guardarEscuela = async (dataEscuela: EscuelaFormType) => {
-    console.log({ dataEscuela });
-
     setMensajeError(null);
 
     try {
@@ -60,14 +57,6 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           rules={VALIDACIONES.TEXTO_NO_VACIO}
           editable={modoEdicion}
         />
-        <CustomTextInput
-          control={control}
-          name='telefono'
-          errors={errors}
-          placeholder='Telefono'
-          rules={VALIDACIONES.TELEFONO}
-          editable={modoEdicion}
-        />
         { escuela &&
           <View style={styles.inputView}>
             <TextInput
@@ -82,7 +71,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
             control={control}
             name='direccion'
             errors={errors}
-            placeholder='Editar dirección'
+            placeholder={escuela ? 'Editar domicilio' : 'Domicilio'}
             rules={VALIDACIONES.TEXTO_NO_VACIO}
           />
         }
