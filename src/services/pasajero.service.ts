@@ -6,7 +6,7 @@ import { authGet, authPost, throwError } from '../utils/service.utils';
 export const getListadoPasajeros = async (token: string | null) => {
   try {
     const resp = await authGet<Pasajero[]>(`${baseUrl}/Pasajero`, token);
-    return resp.data;
+    return resp.data; // No hace falta mapear fecha porque no se muestra desde este objeto
   } catch(error) {
     throwError(error);
   }

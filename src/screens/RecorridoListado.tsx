@@ -23,7 +23,6 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
         try {
           const recorridos = await getListadoRecorridos(token);
           if (componentIsFocused && recorridos) {
-            console.log({recorridos});
             setListadoRecorridos(recorridos);
           }
         } catch(error) {

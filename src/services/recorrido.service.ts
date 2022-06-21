@@ -6,7 +6,7 @@ import { authGet, authPost, throwError } from '../utils/service.utils';
 export const getListadoRecorridos = async (token: string | null) => {
   try {
     const resp = await authGet<Recorrido[]>(`${baseUrl}/Recorrido`, token);
-    return resp.data as Recorrido[];
+    return resp.data.map(recorrido => ({ ...recorrido, horario: recorrido.horario.slice(11, -7)}));
   } catch(error) {
     throwError(error);
   }
@@ -14,8 +14,23 @@ export const getListadoRecorridos = async (token: string | null) => {
 
 export const postRecorrido = async (token: string | null, data: RecorridoFormType) => {
   try {
+    data.horario = `2022-06-21T${data.horario}:58.473`;
     const resp = await authPost<Recorrido>(`${baseUrl}/Recorrido`, data, token);
     return resp.data;
+  } catch(error) {
+    throwError(error);
+  }
+};
+
+export const putRecorrido = async (token: string | null, data: RecorridoFormType) => {
+  try {
+    data.horario = `2022-06-21T${data.horario}:58.473`;
+    console.log({data});
+    // TODO: Agregar llamada PUT (falta en el back)
+    
+    // const resp = await authPost<Recorrido>(`${baseUrl}/Recorrido`, data, token);
+    // return resp.data;
+    return data;
   } catch(error) {
     throwError(error);
   }
