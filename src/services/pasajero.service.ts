@@ -6,7 +6,6 @@ import { authGet, authPost, throwError } from '../utils/service.utils';
 export const getListadoPasajeros = async (token: string | null) => {
   try {
     const resp = await authGet<Pasajero[]>(`${baseUrl}/Pasajero`, token);
-    console.log({resp});
     return resp.data;
   } catch(error) {
     throwError(error);
