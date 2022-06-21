@@ -18,10 +18,11 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
   const {control, handleSubmit, formState: {errors}} = useForm<RecorridoFormType>({
     defaultValues: {
       nombre: recorrido?.nombre || '',
-      esIda: recorrido?.esIda || false,
+      esRecorridoDeIda: recorrido?.esRecorridoDeIda || false,
       horario: recorrido?.horario || '',
       idPasajeros: recorrido?.pasajeros?.map(p => p.id) || [],
       idEscuela: recorrido?.escuela?.id,
+      idChofer: 1,
     }
   });
 
@@ -62,7 +63,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
         />
         <CustomSwitch
           control={control}
-          name='esIda'
+          name='esRecorridoDeIda'
           errors={errors}
           placeholderTrue='Ida'
           placeholderFalse='Vuelta'

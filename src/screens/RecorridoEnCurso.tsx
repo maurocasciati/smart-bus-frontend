@@ -13,7 +13,7 @@ import PrimaryButton from '../components/PrimaryButton';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
-  const { pasajeros, escuela, esIda } = recorrido;
+  const { pasajeros, escuela, esRecorridoDeIda } = recorrido;
   const [currentPosition, setCurrentPosition] = useState<LatLng>({ longitude: 0, latitude: 0 });
   const [paradas, setParadas] = useState<Parada[]>([]);
   const [waypoints, setWaypoints] = useState<LatLng[]>([]);
@@ -29,9 +29,9 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       Location.watchPositionAsync({}, location => isMounted && setCurrentPosition(location.coords));
 
       setParadas([
-        ...esIda ? [] : [mapEscuelaToParada(escuela)],
+        ...esRecorridoDeIda ? [] : [mapEscuelaToParada(escuela)],
         ...mapPasajerosToParada(pasajeros),
-        ...esIda ? [mapEscuelaToParada(escuela)] : [],
+        ...esRecorridoDeIda ? [mapEscuelaToParada(escuela)] : [],
       ]);
 
       setLoading(false);
@@ -103,7 +103,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   };
 
   const renderBotonesPasajeros = () => {
-    return esIda
+    return esRecorridoDeIda
       ? (
         <>
           <View style={{ flex: 1, margin: 5 }}>
@@ -126,7 +126,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   };
   
   const renderBotonEscuela = () => {
-    return esIda
+    return esRecorridoDeIda
       ? (
         <View style={{ flex: 1, margin: 5 }}>
           <ActionButton name={'Llegada a la escuela'} action={removerParada}/>

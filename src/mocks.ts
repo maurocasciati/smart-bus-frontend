@@ -96,7 +96,7 @@ for (let i = 0; i < 4; i++) {
     id: i,
     nombre: escuelasMock[i].nombre.split(' ').slice(1).join(' '),
     escuela: escuelasMock[i],
-    esIda: true,
+    esRecorridoDeIda: true,
     horario: '07:00',
     pasajeros: pasajerosMock,
   });
@@ -104,7 +104,7 @@ for (let i = 0; i < 4; i++) {
     id: (i+4),
     nombre: escuelasMock[i].nombre.split(' ').slice(1).join(' ') + ' (regreso)',
     escuela: escuelasMock[i],
-    esIda: false,
+    esRecorridoDeIda: false,
     horario: '13:00',
     pasajeros: pasajerosMock,
   });

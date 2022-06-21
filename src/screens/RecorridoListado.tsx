@@ -48,7 +48,7 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
           <Text style={styles.subtitle}>{recorrido.item.escuela.nombre}</Text>
         </View>
         <View>
-          <Text style={styles.type}>{recorrido.item.esIda ? 'Ida' : 'Vuelta'}</Text>
+          <Text style={styles.type}>{recorrido.item.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
           <Text style={styles.hour}>{recorrido.item.horario}</Text>
         </View>
       </TouchableOpacity>
