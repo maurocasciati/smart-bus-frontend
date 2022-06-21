@@ -11,7 +11,7 @@ import { RecorridoFormType } from '../components/form/FormTypes';
 import ModalConfirmacion from '../components/ModalConfirmacion';
 import { AuthContext } from '../auth/AuthProvider';
 import ErrorText from '../components/ErrorText';
-import { putRecorrido } from '../services/recorrido.service';
+import { deleteRecorrido, putRecorrido } from '../services/recorrido.service';
 
 export default function RecorridoEdicion({ route, navigation }: RecorridoEdicionProps) {
   const { recorrido } = route.params;
@@ -37,9 +37,16 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
 
   const eliminarRecorrido = async () => {
     toggleModalEliminar();
-    // TODO pegarle al back directo y eliminar el recorrido
-    Alert.alert('', `El recorrido ${recorrido?.nombre} fue eliminado con éxito`);
-    navigation.navigate('RecorridoListado');
+
+    try {
+      const resp = !!recorrido && await deleteRecorrido(token, recorrido.id);
+      if(resp){
+        Alert.alert('', `El recorrido ${recorrido?.nombre} fue eliminado con éxito`);
+        navigation.navigate('RecorridoListado');
+      }
+    } catch(error) {
+      setMensajeError(error as string);
+    }
   };
 
   const seleccionarEscuela = async (dataRecorrido: RecorridoFormType) => {
@@ -99,7 +106,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
       </View>
 
       <ModalConfirmacion
-        visible={showModalEliminar}
+        visible={!!recorrido && showModalEliminar}
         text={`¿Está seguro de eliminar el recorrido ${recorrido?.nombre}?`}
         cancel={toggleModalEliminar}
         confirm={eliminarRecorrido}
