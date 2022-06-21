@@ -1,25 +1,21 @@
 import { REACT_APP_BASE_URL as baseUrl } from '@env';
-import axios from 'axios';
-import { SignUpFormType } from '../components/form/FormTypes';
+import { EscuelaFormType } from '../components/form/FormTypes';
 import { Escuela } from '../domain/Escuela';
-import { throwError } from '../utils/service.utils';
+import { authGet, authPost, throwError } from '../utils/service.utils';
 
-export const getListadoEscuelas = async (token: string) => {
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-  };
-
+export const getListadoEscuelas = async (token: string | null) => {
   try {
-    const resp = await axios.get<Escuela[]>(`${baseUrl}/Escuela`, config);
+    const resp = await authGet<Escuela[]>(`${baseUrl}/Escuela`, token);
     return resp.data;
   } catch(error) {
     throwError(error);
   }
 };
 
-export const signUp = async (data: SignUpFormType) => {
+export const postEscuela = async (token: string | null, data: EscuelaFormType) => {
   try {
-    return await axios.post(`${baseUrl}/Usuario/registrar`, data);
+    const resp = await authPost<Escuela>(`${baseUrl}/Escuela`, data, token);
+    return resp.data;
   } catch(error) {
     throwError(error);
   }
