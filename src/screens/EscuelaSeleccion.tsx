@@ -72,7 +72,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
 
   const seleccionarPasajeros = () => {
     idEscuela
-      ? navigation.navigate('PasajeroSeleccion', { dataRecorrido: { ...dataRecorrido, idEscuela }, recorrido: null })
+      ? navigation.navigate('PasajeroSeleccion', { dataRecorrido: { ...dataRecorrido, idEscuela }, recorrido })
       : setMensajeError('Debe seleccionar una escuela del listado.');
   };
 
@@ -119,7 +119,11 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
         <PrimaryButton name={'Crear nueva Escuela'} action={crearEscuela} secondary={true}/>
         { mensajeError && ErrorText(mensajeError) }
         { recorrido
-          ? <PrimaryButton name={'Guardar'} action={guardarRecorrido}/>
+          ? 
+          <>
+            <PrimaryButton name={'Cambiar Pasajeros'} action={seleccionarPasajeros} secondary={true}/>
+            <PrimaryButton name={'Guardar'} action={guardarRecorrido}/>
+          </>
           : <PrimaryButton name={'Seleccionar Pasajeros'} action={seleccionarPasajeros}/>
         }
       </View>
