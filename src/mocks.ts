@@ -53,7 +53,7 @@ export const escuelasMock = [
 
 export const pasajerosMock = [
     {
-      id: 1,
+      id: 3,
       nombre: 'Mauro',
       apellido: 'Casciati',
       domicilio: {
@@ -65,7 +65,7 @@ export const pasajerosMock = [
       },
     } as Pasajero,
     {
-      id: 2,
+      id: 4,
       nombre: 'Nicolas',
       apellido: 'Espindola',
       domicilio: {
@@ -77,7 +77,7 @@ export const pasajerosMock = [
       },
     } as Pasajero,
     {
-      id: 3,
+      id: 5,
       nombre: 'Joaquin',
       apellido: 'Arnedo',
       domicilio: {
