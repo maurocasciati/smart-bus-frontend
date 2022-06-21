@@ -23,6 +23,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
   
   const {control, handleSubmit, formState: {errors}} = useForm<RecorridoFormType>({
     defaultValues: {
+      id: recorrido?.id,
       nombre: recorrido?.nombre || '',
       esRecorridoDeIda: recorrido?.esRecorridoDeIda || false,
       horario: recorrido?.horario || '',

@@ -8,6 +8,7 @@ export type SignUpFormType = {
 };
 
 export type RecorridoFormType = {
+    id: number,
     nombre: string,
     esRecorridoDeIda: boolean,
     horario: string,

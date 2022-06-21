@@ -15,6 +15,14 @@ export async function authPost<T>(url: string, data: unknown, token: string | nu
   }
 }
 
+export async function authPut<T>(url: string, data: unknown, token: string | null,) {
+  if (token) {
+    return axios.put<T>(url, data, getHeaders(token));
+  } else {
+    throw textoErrorAutenticacion;
+  }
+}
+
 export async function authGet<T>(url: string, token: string | null,) {
   if (token) {
     return axios.get<T>(url, getHeaders(token));
