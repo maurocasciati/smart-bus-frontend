@@ -30,7 +30,7 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.list}>
-        <FlatList data={mockRecorridos} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={mockRecorridos} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
       </SafeAreaView>
 
       <View style={styles.center}>

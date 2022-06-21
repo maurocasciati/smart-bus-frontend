@@ -40,7 +40,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
         <View style={localstyles.escuelaContainer}>
           <View style={{ flex: 1 }}>
             <Text style={localstyles.title}>{ recorrido.escuela.nombre }</Text>
-            <Text style={localstyles.subtitle}>{ recorrido.escuela.domicilio }</Text>
+            <Text style={localstyles.subtitle}>{ recorrido.escuela.direccion.domicilio }</Text>
           </View>
           <View>
             <View style={{ height: 30, width: 100 }}>

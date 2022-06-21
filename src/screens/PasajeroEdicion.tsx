@@ -13,18 +13,18 @@ import DoubleButton from '../components/DobleButton';
 export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
   const { pasajero, dataRecorrido, recorrido } = route.params;
 
-  const [modoEdicion, setModoEdicion] = useState<boolean>(!recorrido);
+  const [modoEdicion, setModoEdicion] = useState<boolean>(!pasajero);
   
   const {control, handleSubmit, formState: {errors}} = useForm<PasajeroFormType>({
     defaultValues: {
       nombre: pasajero?.nombre || '',
       apellido: pasajero?.apellido || '',
-      nacimiento: pasajero?.nacimiento || '',
+      fechaNacimiento: pasajero?.fechaNacimiento || '',
       telefono: pasajero?.telefono || '',
-      piso_dpto: pasajero?.piso_dpto || '',
+      pisoDepartamento: pasajero?.pisoDepartamento || '',
       domicilio: pasajero?.domicilio ? {
-        domicilio: pasajero?.domicilio || '',
-        coordenadas: pasajero?.coordenadas || null,
+        domicilio: pasajero?.domicilio.domicilio || '',
+        coordenadas: pasajero?.domicilio.coordenadas || null,
       } : null,
     }
   });
@@ -60,7 +60,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
         />
         <CustomTextInput
           control={control}
-          name='nacimiento'
+          name='fechaNacimiento'
           errors={errors}
           placeholder='Nacimiento'
           rules={VALIDACIONES.FECHA}
@@ -78,7 +78,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           <View style={styles.inputView}>
             <TextInput
               style={styles.textInput}
-              value={pasajero?.domicilio} 
+              value={pasajero?.domicilio.domicilio} 
               editable={false}
             />
           </View>
@@ -94,7 +94,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
         }
         <CustomTextInput
           control={control}
-          name='piso_dpto'
+          name='pisoDepartamento'
           errors={errors}
           placeholder='Piso y departamento'
           rules={{}}

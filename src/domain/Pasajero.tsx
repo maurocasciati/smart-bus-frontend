@@ -1,9 +1,11 @@
-import { Parada } from './Parada';
+import { Domicilio } from './Domicilio';
 
-export type Pasajero = Parada & {
+export type Pasajero = {
+  id: number,
+  nombre: string,
   apellido: string,
-  nacimiento: string,
-  piso_dpto: string,
-  esEscuela: false,
+  fechaNacimiento: string,
   telefono: string,
+  domicilio: Domicilio,
+  pisoDepartamento: string,
 }
