@@ -74,7 +74,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       >
         { paradas.map((parada) => 
           <Marker
-            key={parada.id + parada.esEscuela}
+            key={parada.id.toString() + parada.esEscuela}
             coordinate={parada.coordenadas}
             title={parada.esEscuela ? parada.nombre : parada.domicilio}
             image={parada.esEscuela ? require('../../assets/marker-school.png') : require('../../assets/marker-house.png')}/>
