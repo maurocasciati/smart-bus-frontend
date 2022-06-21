@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { EscuelaSeleccionProps } from '../components/Navigation';
@@ -7,32 +7,57 @@ import { Escuela } from '../domain/Escuela';
 import { escuelasMock } from '../mocks';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
+import { getListadoEscuelas } from '../services/escuela.service';
+import { AuthContext } from '../auth/AuthProvider';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccionProps) {
   const { dataRecorrido, recorrido } = route.params;
-  const [idEscuela, setIdEscuela] = useState<string | null>(recorrido?.escuela?.id || null);
-  const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>(escuelasMock);
+  const [idEscuela, setIdEscuela] = useState<number | null>(recorrido?.escuela?.id || null);
+  const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
+
+  const { token } = useContext(AuthContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      let componentIsFocused = true;
+
+      (async () => {
+        try {
+          const escuelas = await getListadoEscuelas(token);
+          if (componentIsFocused && escuelas) {
+            setListadoEscuelas(escuelas);
+          }
+        } catch(error) {
+          setMensajeError(error as string);
+        }
+      })();
+
+      return () => { componentIsFocused = false; };
+    }, [])
+  );
 
   const filtrarEscuela = (nombre: string) => {
     setListadoEscuelas(escuelasMock.filter((escuela) => escuela.nombre.toLowerCase().includes(nombre.toLowerCase())));
   };
 
-  const seleccionarEscuela = (id: string) => {
+  const seleccionarEscuela = (id: number) => {
     setMensajeError(null);
     setIdEscuela(id);
   };
 
   const crearEscuela = () => {
-    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido });
+    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido: null });
   };
 
   const guardarRecorrido = () => {
-    if (recorrido) {
+    if (recorrido && idEscuela) {
+      dataRecorrido.idEscuela = idEscuela;
       //TODO: Pegarle directamente al back y guardar el recorrido con la nueva escuela seleccionada
       console.log({dataRecorrido});
       Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
-      navigation.navigate('RecorridoListado');
+      navigation.navigate('RecorridoDetalle', { recorrido });
     }
   };
 
@@ -78,7 +103,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
       </View>
 
       <SafeAreaView style={styles.list}>
-        <FlatList data={listadoEscuelas} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={listadoEscuelas} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
       </SafeAreaView>
       
       <View style={styles.footer}>

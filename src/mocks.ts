@@ -5,7 +5,7 @@ import { Recorrido } from './domain/Recorrido';
 
 export const escuelasMock = [
   {
-    id: '1',
+    id: 3,
     nombre: 'Escuela Técnica N° 9',
     domicilio: 'Gral. Martín de Gainza 1050',
     telefono: '1122334455',
@@ -16,7 +16,7 @@ export const escuelasMock = [
     esEscuela: true,
   } as Escuela,
   {
-    id: '2',
+    id: 2,
     nombre: 'Colegio Marianista',
     domicilio: 'Avenida Rivadavia 5652',
     telefono: '1122334455',
@@ -27,7 +27,7 @@ export const escuelasMock = [
     esEscuela: true,
   } as Escuela,
   {
-    id: '3',
+    id: 5,
     nombre: 'Instituto Ferro Carril Oeste',
     domicilio: 'Bacacay 1050',
     telefono: '1122334455',
@@ -38,7 +38,7 @@ export const escuelasMock = [
     esEscuela: true,
   } as Escuela,
   {
-    id: '4',
+    id: 1002,
     nombre: 'Instituto Redemptrix Captivorum',
     domicilio: 'Espinosa 1220',
     telefono: '1122334455',
@@ -53,7 +53,7 @@ export const escuelasMock = [
 
 export const pasajerosMock = [
     {
-      id: '1',
+      id: 1,
       nombre: 'Mauro',
       apellido: 'Casciati',
       domicilio: 'Valle 1208',
@@ -63,7 +63,7 @@ export const pasajerosMock = [
       }
     } as Pasajero,
     {
-      id: '2',
+      id: 2,
       nombre: 'Nicolas',
       apellido: 'Espindola',
       domicilio: 'F. J. Seguí 638',
@@ -73,7 +73,7 @@ export const pasajerosMock = [
       }
     } as Pasajero,
     {
-      id: '3',
+      id: 3,
       nombre: 'Joaquin',
       apellido: 'Arnedo',
       domicilio: 'Thames 150',
@@ -87,7 +87,7 @@ export const pasajerosMock = [
 export const mockRecorridos: Recorrido[] = [];
 for (let i = 0; i < 4; i++) {
   mockRecorridos.push({
-    id: i.toString(),
+    id: i,
     nombre: escuelasMock[i].nombre.split(' ').slice(1).join(' '),
     escuela: escuelasMock[i],
     esIda: true,
@@ -95,7 +95,7 @@ for (let i = 0; i < 4; i++) {
     pasajeros: pasajerosMock,
   });
   mockRecorridos.push({
-    id: (i+4).toString(),
+    id: (i+4),
     nombre: escuelasMock[i].nombre.split(' ').slice(1).join(' ') + ' (regreso)',
     escuela: escuelasMock[i],
     esIda: false,

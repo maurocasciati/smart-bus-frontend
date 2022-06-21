@@ -37,7 +37,7 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.list}>
-        <FlatList data={recorrido.pasajeros} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={recorrido.pasajeros} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
       </SafeAreaView>
 
       <View style={styles.center}>

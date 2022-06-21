@@ -1,5 +1,28 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
+
+const textoErrorAutenticacion = 'Error de autenticación. Inicie sesión.';
+
+const getHeaders = (token: string) => {
+  return { headers: { Authorization: `Bearer ${token}` }};
+};
+
+export async function authPost<T>(url: string, data: unknown, token: string | null,) {
+  if (token) {
+    return axios.post<T>(url, data, getHeaders(token));
+  } else {
+    throw textoErrorAutenticacion;
+  }
+}
+
+export async function authGet<T>(url: string, token: string | null,) {
+  if (token) {
+    return axios.get<T>(url, getHeaders(token));
+  } else {
+    throw textoErrorAutenticacion;
+  }
+}
+
 export const throwError = (error: unknown) => {
   if(axios.isAxiosError(error)){
     const err = error as AxiosError;

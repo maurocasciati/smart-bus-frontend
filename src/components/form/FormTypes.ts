@@ -11,14 +11,13 @@ export type RecorridoFormType = {
     nombre: string,
     esIda: boolean,
     horario: string,
-    idPasajeros: string[],
-    idEscuela: string,
+    idPasajeros: number[],
+    idEscuela: number,
 };
 
 export type EscuelaFormType = {
     nombre: string,
-    domicilio: DomicilioFormType | null,
-    telefono: string,
+    direccion: DomicilioFormType | null,
 };
 
 export type PasajeroFormType = {
