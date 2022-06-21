@@ -62,7 +62,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
         const resp = await putRecorrido(token, dataRecorrido);
         if(resp){
           Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
-          navigation.navigate('RecorridoDetalle', { recorrido }); // TODO: Probar volver al detalle con RESP
+          navigation.navigate('RecorridoDetalle', { recorrido: resp });
         }
       } catch(error) {
         setMensajeError(error as string);
@@ -122,7 +122,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
           ? 
           <>
             <PrimaryButton name={'Cambiar Pasajeros'} action={seleccionarPasajeros} secondary={true}/>
-            <PrimaryButton name={'Guardar'} action={guardarRecorrido}/>
+            <PrimaryButton name={'Guardar Recorrido'} action={guardarRecorrido}/>
           </>
           : <PrimaryButton name={'Seleccionar Pasajeros'} action={seleccionarPasajeros}/>
         }

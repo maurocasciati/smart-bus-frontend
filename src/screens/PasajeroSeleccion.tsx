@@ -61,7 +61,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
       if(resp){
         Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue ${recorrido ? 'actualizado' : 'guardado'} con éxito`);
         recorrido
-          ? navigation.navigate('RecorridoDetalle', { recorrido }) // TODO probar devolver el RESP
+          ? navigation.navigate('RecorridoDetalle', { recorrido: resp })
           : navigation.navigate('RecorridoListado');
       }
     } catch(error) {
