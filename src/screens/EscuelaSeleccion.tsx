@@ -9,6 +9,7 @@ import ErrorText from '../components/ErrorText';
 import { getListadoEscuelas } from '../services/escuela.service';
 import { AuthContext } from '../auth/AuthProvider';
 import { useFocusEffect } from '@react-navigation/native';
+import { putRecorrido } from '../services/recorrido.service';
 
 export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccionProps) {
   const { dataRecorrido, recorrido } = route.params;
@@ -52,13 +53,20 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
     navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido });
   };
 
-  const guardarRecorrido = () => {
+  const guardarRecorrido = async () => {
     if (recorrido && idEscuela) {
-      dataRecorrido.idEscuela = idEscuela;
-      //TODO: Pegarle directamente al back y guardar el recorrido con la nueva escuela seleccionada
-      console.log({dataRecorrido});
-      Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
-      navigation.navigate('RecorridoDetalle', { recorrido });
+      setMensajeError(null);
+
+      try {
+        dataRecorrido.idEscuela = idEscuela;
+        const resp = await putRecorrido(token, dataRecorrido);
+        if(resp){
+          Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue actualizado con éxito`);
+          navigation.navigate('RecorridoDetalle', { recorrido }); // TODO: Probar volver al detalle con RESP
+        }
+      } catch(error) {
+        setMensajeError(error as string);
+      }
     }
   };
 

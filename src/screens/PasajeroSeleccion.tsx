@@ -10,6 +10,7 @@ import { Pasajero } from '../domain/Pasajero';
 import { AuthContext } from '../auth/AuthProvider';
 import { useFocusEffect } from '@react-navigation/native';
 import { getListadoPasajeros } from '../services/pasajero.service';
+import { postRecorrido, putRecorrido } from '../services/recorrido.service';
 
 export default function PasajeroSeleccion({ route, navigation }: PasajeroSeleccionProps) {
   const { dataRecorrido, recorrido } = route.params;
@@ -48,13 +49,23 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
       : setMensajeError('No se han seleccionado pasajeros.');
   };
 
-  const guardarRecorrido = () => {
-    dataRecorrido.idPasajeros = idPasajeros;
-    console.log(dataRecorrido);
-    Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue guardado con éxito`);
-    recorrido
-      ? navigation.navigate('RecorridoDetalle', { recorrido })
-      : navigation.navigate('RecorridoListado');
+  const guardarRecorrido = async () => {
+    setMensajeError(null);
+
+    try {
+      dataRecorrido.idPasajeros = idPasajeros;
+      const resp = recorrido
+        ? await putRecorrido(token, dataRecorrido)
+        : await postRecorrido(token, dataRecorrido);
+      if(resp){
+        Alert.alert('', `El recorrido ${dataRecorrido.nombre} fue ${recorrido ? 'actualizado' : 'guardado'} con éxito`);
+        recorrido
+          ? navigation.navigate('RecorridoDetalle', { recorrido }) // TODO probar devolver el RESP
+          : navigation.navigate('RecorridoListado');
+      }
+    } catch(error) {
+      setMensajeError(error as string);
+    }
   };
 
   const clickearPasajero = (id: number) => {
