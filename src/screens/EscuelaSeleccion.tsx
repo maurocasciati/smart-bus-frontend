@@ -4,7 +4,6 @@ import Checkbox from 'expo-checkbox';
 import { EscuelaSeleccionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import { Escuela } from '../domain/Escuela';
-import { escuelasMock } from '../mocks';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
 import { getListadoEscuelas } from '../services/escuela.service';
@@ -15,6 +14,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   const { dataRecorrido, recorrido } = route.params;
   const [idEscuela, setIdEscuela] = useState<number | null>(recorrido?.escuela?.id || null);
   const [listadoEscuelas, setListadoEscuelas] = useState<Escuela[]>([]);
+  const [listadoEscuelasFiltradas, setListadoEscuelasFiltradas] = useState<Escuela[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
   const { token } = useContext(AuthContext);
@@ -28,6 +28,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
           const escuelas = await getListadoEscuelas(token);
           if (componentIsFocused && escuelas) {
             setListadoEscuelas(escuelas);
+            setListadoEscuelasFiltradas(escuelas);
           }
         } catch(error) {
           setMensajeError(error as string);
@@ -39,7 +40,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   );
 
   const filtrarEscuela = (nombre: string) => {
-    setListadoEscuelas(escuelasMock.filter((escuela) => escuela.nombre.toLowerCase().includes(nombre.toLowerCase())));
+    setListadoEscuelasFiltradas(listadoEscuelas.filter((escuela) => escuela.nombre.toLowerCase().includes(nombre.toLowerCase())));
   };
 
   const seleccionarEscuela = (id: number) => {
@@ -48,7 +49,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
   };
 
   const crearEscuela = () => {
-    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido: null });
+    navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido });
   };
 
   const guardarRecorrido = () => {
@@ -78,7 +79,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
             {escuela.item.nombre}
           </Text>
           <Text style={styles.subtitle}>
-            {escuela.item.domicilio}
+            {escuela.item.direccion.domicilio}
           </Text>
         </View>
         <View style={{ alignSelf: 'center' }}>
@@ -103,7 +104,7 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
       </View>
 
       <SafeAreaView style={styles.list}>
-        <FlatList data={listadoEscuelas} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
+        <FlatList data={listadoEscuelasFiltradas} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
       </SafeAreaView>
       
       <View style={styles.footer}>

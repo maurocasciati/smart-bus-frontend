@@ -7,46 +7,46 @@ export const escuelasMock = [
   {
     id: 3,
     nombre: 'Escuela Técnica N° 9',
-    domicilio: 'Gral. Martín de Gainza 1050',
-    telefono: '1122334455',
-    coordenadas: {
-      latitude: -34.608751,
-      longitude: -58.446538,
+    direccion: {
+      domicilio: 'Gral. Martín de Gainza 1050',
+      coordenadas: {
+        latitude: -34.608751,
+        longitude: -58.446538,
+      },
     },
-    esEscuela: true,
   } as Escuela,
   {
     id: 2,
     nombre: 'Colegio Marianista',
-    domicilio: 'Avenida Rivadavia 5652',
-    telefono: '1122334455',
-    coordenadas: {
-      latitude: -34.622168,
-      longitude: -58.444967,
+    direccion: {
+      domicilio: 'Avenida Rivadavia 5652',
+      coordenadas: {
+        latitude: -34.622168,
+        longitude: -58.444967,
+      },
     },
-    esEscuela: true,
   } as Escuela,
   {
     id: 5,
     nombre: 'Instituto Ferro Carril Oeste',
-    domicilio: 'Bacacay 1050',
-    telefono: '1122334455',
-    coordenadas: {
-      latitude: -34.618994,
-      longitude: -58.444184,
+    direccion: {
+      domicilio: 'Bacacay 1050',
+      coordenadas: {
+        latitude: -34.618994,
+        longitude: -58.444184,
+      },
     },
-    esEscuela: true,
   } as Escuela,
   {
     id: 1002,
     nombre: 'Instituto Redemptrix Captivorum',
-    domicilio: 'Espinosa 1220',
-    telefono: '1122334455',
-    coordenadas: {
-      latitude: -34.609023,
-      longitude: -58.453580,
+    direccion: {
+      domicilio: 'Espinosa 1220',
+      coordenadas: {
+        latitude: -34.609023,
+        longitude: -58.453580,
+      },
     },
-    esEscuela: true,
   } as Escuela,
   
 ];
@@ -56,31 +56,37 @@ export const pasajerosMock = [
       id: 1,
       nombre: 'Mauro',
       apellido: 'Casciati',
-      domicilio: 'Valle 1208',
-      coordenadas: {
-        latitude: -34.625542,
-        longitude: -58.445162,
-      }
+      domicilio: {
+        domicilio: 'Valle 1208',
+        coordenadas: {
+          latitude: -34.625542,
+          longitude: -58.445162,
+        },
+      },
     } as Pasajero,
     {
       id: 2,
       nombre: 'Nicolas',
       apellido: 'Espindola',
-      domicilio: 'F. J. Seguí 638',
-      coordenadas: {
-        latitude: -34.617460,
-        longitude: -58.455455,
-      }
+      domicilio: {
+        domicilio: 'F. J. Seguí 638',
+        coordenadas: {
+          latitude: -34.617460,
+          longitude: -58.455455,
+        },
+      },
     } as Pasajero,
     {
       id: 3,
       nombre: 'Joaquin',
       apellido: 'Arnedo',
-      domicilio: 'Thames 150',
-      coordenadas: {
-        latitude: -34.598409,
-        longitude: -58.447132,
-      }
+      domicilio: {
+        domicilio: 'Thames 150',
+        coordenadas: {
+          latitude: -34.598409,
+          longitude: -58.447132,
+        },
+      },
     } as Pasajero,
 ];
 

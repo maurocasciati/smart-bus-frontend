@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { RecorridoEnCursoProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import MapView, { LatLng, Marker } from 'react-native-maps';
-import { Parada } from '../domain/Parada';
+import { Parada, mapEscuelaToParada, mapPasajerosToParada } from '../domain/Parada';
 import { getFocusedRegion } from '../utils/map.utils';
 import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import MapViewDirections from 'react-native-maps-directions';
@@ -29,9 +29,9 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       Location.watchPositionAsync({}, location => isMounted && setCurrentPosition(location.coords));
 
       setParadas([
-        ...esIda ? [] : [escuela],
-        ...pasajeros,
-        ...esIda ? [escuela] : [],
+        ...esIda ? [] : [mapEscuelaToParada(escuela)],
+        ...mapPasajerosToParada(pasajeros),
+        ...esIda ? [mapEscuelaToParada(escuela)] : [],
       ]);
 
       setLoading(false);

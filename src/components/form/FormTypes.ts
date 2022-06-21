@@ -23,10 +23,10 @@ export type EscuelaFormType = {
 export type PasajeroFormType = {
     nombre: string,
     apellido: string,
-    nacimiento: string,
-    domicilio: DomicilioFormType | null,
+    fechaNacimiento: string,
     telefono: string,
-    piso_dpto: string,
+    domicilio: DomicilioFormType | null,
+    pisoDepartamento: string,
 };
 
 export type DomicilioFormType = {

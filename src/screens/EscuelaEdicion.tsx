@@ -15,7 +15,7 @@ import { AuthContext } from '../auth/AuthProvider';
 export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProps) {
   const { escuela, dataRecorrido, recorrido } = route.params;
   
-  const [modoEdicion, setModoEdicion] = useState<boolean>(!recorrido);
+  const [modoEdicion, setModoEdicion] = useState<boolean>(!escuela);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
   const { token } = useContext(AuthContext);
@@ -23,9 +23,9 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
   const {control, handleSubmit, formState: {errors}} = useForm<EscuelaFormType>({
     defaultValues: {
       nombre: escuela?.nombre || '',
-      direccion: escuela?.domicilio ? {
-        domicilio: escuela?.domicilio || '',
-        coordenadas: escuela?.coordenadas || null,
+      direccion: escuela?.direccion ? {
+        domicilio: escuela?.direccion.domicilio || '',
+        coordenadas: escuela?.direccion.coordenadas || null,
       } : null,
     }
   });
@@ -61,7 +61,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           <View style={styles.inputView}>
             <TextInput
               style={styles.textInput}
-              value={escuela?.domicilio}
+              value={escuela?.direccion.domicilio}
               editable={false}
             />
           </View>

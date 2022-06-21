@@ -13,7 +13,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
   const [currentPosition, setCurrentPosition] = useState<LatLng>();
 
   const pointsList: LatLng[] = [
-    ...pasajeros.map((pasajero) => pasajero.coordenadas)
+    ...pasajeros.map((pasajero) => pasajero.domicilio.coordenadas)
   ];
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
     })();
   }, []);
 
-  const getRegion = () => getRegionForCoordinates([...pointsList, escuela.coordenadas]);
+  const getRegion = () => getRegionForCoordinates([...pointsList, escuela.direccion.coordenadas]);
 
   return (
     <MapView
@@ -33,24 +33,24 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
       showsUserLocation={true}
       region={getRegion()}
     >
-      <Marker coordinate={escuela.coordenadas} title={escuela.nombre} image={require('../../assets/marker-school.png')}/>
+      <Marker coordinate={escuela.direccion.coordenadas} title={escuela.nombre} image={require('../../assets/marker-school.png')}/>
       { currentPosition && <Marker coordinate={currentPosition} image={require('../../assets/marker-bus.png')}/> }
 
       { pasajeros.map((pasajero) => 
-        <Marker key={pasajero.id} coordinate={pasajero.coordenadas} title={pasajero.domicilio} image={require('../../assets/marker-house.png')}/>
+        <Marker key={pasajero.id} coordinate={pasajero.domicilio.coordenadas} title={pasajero.domicilio.domicilio} image={require('../../assets/marker-house.png')}/>
       )}
 
       <MapViewDirections
         origin={currentPosition}
-        destination={esIda ? pointsList[0] : escuela.coordenadas}
+        destination={esIda ? pointsList[0] : escuela.direccion.coordenadas}
         apikey={GOOGLE_API_KEY}
         strokeWidth={5}
         strokeColor='orange'
       />
 
       <MapViewDirections
-        origin={esIda ? pointsList[0] : escuela.coordenadas}
-        destination={esIda ? escuela.coordenadas : pointsList[pointsList.length - 1]}
+        origin={esIda ? pointsList[0] : escuela.direccion.coordenadas}
+        destination={esIda ? escuela.direccion.coordenadas : pointsList[pointsList.length - 1]}
         waypoints={pointsList}
         optimizeWaypoints={false} // Poner en true cuando tengamos order automatico.
         splitWaypoints={true}

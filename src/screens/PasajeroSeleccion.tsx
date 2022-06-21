@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { FlatList, SafeAreaView, View, Text, ListRenderItemInfo, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { PasajeroSeleccionProps } from '../components/Navigation';
@@ -7,12 +7,36 @@ import { pasajerosMock } from '../mocks';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorText from '../components/ErrorText';
 import { Pasajero } from '../domain/Pasajero';
+import { AuthContext } from '../auth/AuthProvider';
+import { useFocusEffect } from '@react-navigation/native';
+import { getListadoPasajeros } from '../services/pasajero.service';
 
 export default function PasajeroSeleccion({ route, navigation }: PasajeroSeleccionProps) {
   const { dataRecorrido, recorrido } = route.params;
   const [idPasajeros, setIdPasajeros] = useState<number[]>(recorrido?.pasajeros?.map(p => p.id) || []);
-  const [listadoPasajeros, setListadoPasajeros] = useState<Pasajero[]>(pasajerosMock);
+  const [listadoPasajeros, setListadoPasajeros] = useState<Pasajero[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
+
+  const { token } = useContext(AuthContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      let componentIsFocused = true;
+
+      (async () => {
+        try {
+          const pasajeros = await getListadoPasajeros(token);
+          if (componentIsFocused && pasajeros) {
+            setListadoPasajeros(pasajeros);
+          }
+        } catch(error) {
+          setMensajeError(error as string);
+        }
+      })();
+
+      return () => { componentIsFocused = false; };
+    }, [])
+  );
 
   const filtrarPasajeros = (texto: string) => {
     setListadoPasajeros(pasajerosMock.filter((escuela) => escuela.nombre.toLowerCase().includes(texto.toLowerCase()) || escuela.apellido.toLowerCase().includes(texto.toLowerCase())));
@@ -54,7 +78,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
             {pasajero.item.nombre} {pasajero.item.apellido}
           </Text>
           <Text style={styles.subtitle}>
-            {pasajero.item.domicilio}
+            {pasajero.item.domicilio.domicilio}
           </Text>
         </View>
         <View style={{ alignSelf: 'center' }}>
