@@ -43,7 +43,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
       const resp = await postPasajero(token, dataPasajero);
       if(resp){
         Alert.alert('', `El pasajero ${dataPasajero.nombre} ${dataPasajero.apellido} fue guardado con éxito`);
-        dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido, recorrido: null })
+        dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido, recorrido })
           : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
             : navigation.navigate('RecorridoListado');
       }

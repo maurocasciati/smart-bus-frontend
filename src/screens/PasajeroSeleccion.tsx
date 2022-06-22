@@ -76,7 +76,7 @@ export default function PasajeroSeleccion({ route, navigation }: PasajeroSelecci
   };
 
   const crearPasajero = () => {
-    navigation.navigate('PasajeroEdicion', { dataRecorrido, pasajero: null, recorrido: null });
+    navigation.navigate('PasajeroEdicion', { dataRecorrido, pasajero: null, recorrido });
   };
 
   const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => (
