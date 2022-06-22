@@ -12,6 +12,7 @@ import DoubleButton from '../components/DobleButton';
 import { AuthContext } from '../auth/AuthProvider';
 import ErrorText from '../components/ErrorText';
 import { postPasajero } from '../services/pasajero.service';
+import { mapDateTimeStringToYear } from '../utils/date.utils';
 
 export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
   const { pasajero, dataRecorrido, recorrido } = route.params;
@@ -25,7 +26,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
     defaultValues: {
       nombre: pasajero?.nombre || '',
       apellido: pasajero?.apellido || '',
-      fechaNacimiento: pasajero?.fechaNacimiento || '',
+      fechaNacimiento: pasajero ? mapDateTimeStringToYear(pasajero.fechaNacimiento) : '',
       telefono: pasajero?.telefono || '',
       pisoDepartamento: pasajero?.pisoDepartamento || '',
       domicilio: pasajero?.domicilio ? {
@@ -41,8 +42,8 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
     try {
       const resp = await postPasajero(token, dataPasajero);
       if(resp){
-        Alert.alert('', `El pasajero ${dataPasajero.nombre} fue guardado con éxito`);
-        dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido, recorrido: null })
+        Alert.alert('', `El pasajero ${dataPasajero.nombre} ${dataPasajero.apellido} fue guardado con éxito`);
+        dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido, recorrido })
           : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
             : navigation.navigate('RecorridoListado');
       }

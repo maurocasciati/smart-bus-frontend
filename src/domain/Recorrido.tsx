@@ -5,7 +5,7 @@ export type Recorrido = {
   id: number,
   nombre: string,
   esRecorridoDeIda: boolean,
-  horario: string,
+  horario: Date,
   pasajeros: Pasajero[],
   escuela: Escuela,
 }
