@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   doublebutton: {
     width: '80%',
     height: 50,
-    marginBottom: 10,
+    margin: 5,
     flexDirection: 'row',
   },
   button: {
