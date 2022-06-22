@@ -12,6 +12,7 @@ import ModalConfirmacion from '../components/ModalConfirmacion';
 import { AuthContext } from '../auth/AuthProvider';
 import ErrorText from '../components/ErrorText';
 import { deleteRecorrido, putRecorrido } from '../services/recorrido.service';
+import { mapDateTimeStringToTime } from '../utils/date.utils';
 
 export default function RecorridoEdicion({ route, navigation }: RecorridoEdicionProps) {
   const { recorrido } = route.params;
@@ -26,7 +27,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
       id: recorrido?.id,
       nombre: recorrido?.nombre || '',
       esRecorridoDeIda: recorrido?.esRecorridoDeIda || false,
-      horario: recorrido?.horario || '',
+      horario: recorrido ? mapDateTimeStringToTime(recorrido.horario) : '',
       idPasajeros: recorrido?.pasajeros?.map(p => p.id) || [],
       idEscuela: recorrido?.escuela?.id,
       idChofer: 1,

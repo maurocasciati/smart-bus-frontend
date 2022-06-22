@@ -4,7 +4,7 @@ export type Pasajero = {
   id: number,
   nombre: string,
   apellido: string,
-  fechaNacimiento: string,
+  fechaNacimiento: Date,
   telefono: string,
   domicilio: Domicilio,
   pisoDepartamento: string,

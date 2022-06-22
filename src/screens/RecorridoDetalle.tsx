@@ -6,7 +6,7 @@ import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
 import SecondaryButton from '../components/SecondaryButton';
 import MapViewRecorrido from '../components/MapViewRecorrido';
-import { mapDateTimeStringToHours } from '../utils/date.utils';
+import { mapDateTimeStringToTime } from '../utils/date.utils';
 
 export default function RecorridoDetalle({ route, navigation }: RecorridoDetalleProps) {
   const { recorrido } = route.params;
@@ -30,7 +30,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
           </View>
           <View style={{ paddingHorizontal: 20, alignContent: 'center' }}>
             <Text style={localstyles.type}>{recorrido.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
-            <Text style={localstyles.hour}>{mapDateTimeStringToHours(recorrido.horario)}</Text>
+            <Text style={localstyles.hour}>{mapDateTimeStringToTime(recorrido.horario)}</Text>
           </View>
           <View>
             <View style={{ height: 30, width: 100, alignContent: 'center' }}>

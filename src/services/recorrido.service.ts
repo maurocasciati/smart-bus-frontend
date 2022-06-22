@@ -14,7 +14,7 @@ export const getListadoRecorridos = async (token: string | null) => {
 
 export const postRecorrido = async (token: string | null, data: RecorridoFormType) => {
   try {
-    // data.horario = `2022-06-21T${data.horario}:58.473`;
+    data.horario = `2022-06-21T${data.horario}:00`;
     const resp = await authPost<Recorrido>(`${baseUrl}/Recorrido`, data, token);
     return resp.data;
   } catch(error) {
@@ -24,7 +24,7 @@ export const postRecorrido = async (token: string | null, data: RecorridoFormTyp
 
 export const putRecorrido = async (token: string | null, data: RecorridoFormType) => {
   try {
-    // data.horario = `2022-06-21T${data.horario}:58.473`;
+    data.horario = `2022-06-21T${data.horario}:00`;
     const resp = await authPut<Recorrido>(`${baseUrl}/Recorrido`, data, token);
     return resp.data;
   } catch(error) {
