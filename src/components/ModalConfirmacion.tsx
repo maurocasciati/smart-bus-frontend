@@ -20,6 +20,7 @@ export default function ModalConfirmacion(props: { visible: boolean, text: strin
           <DoubleButton 
             name1="Volver"
             action1={cancel}
+            secondary1={true}
             name2="Aceptar"
             action2={confirm}
           />

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Alert, TextInput, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { PasajeroEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -13,6 +13,7 @@ import { AuthContext } from '../auth/AuthProvider';
 import ErrorText from '../components/ErrorText';
 import { postPasajero } from '../services/pasajero.service';
 import { mapDateTimeStringToYear } from '../utils/date.utils';
+import CustomText from '../components/form/CustomText';
 
 export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
   const { pasajero, dataRecorrido, recorrido } = route.params;
@@ -87,15 +88,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           rules={VALIDACIONES.TELEFONO}
           editable={modoEdicion}
         />
-        { pasajero &&
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.textInput}
-              value={pasajero?.domicilio.domicilio} 
-              editable={false}
-            />
-          </View>
-        }
+        { pasajero && <CustomText value={pasajero.domicilio.domicilio}/> }
         { modoEdicion &&
           <CustomGoogleAutocomplete
             control={control}
@@ -125,9 +118,10 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
             <DoubleButton 
               name1="Establecer ausencia"
               action1={() => recorrido && pasajero && navigation.navigate('EventualidadAusencia', { recorrido, pasajero })}
+              secondary1={true}
               name2="Establecer cambio de domicilio"
               action2={() => recorrido && pasajero && navigation.navigate('EventualidadDomicilio', { recorrido, pasajero })}
-              secondary={true} />
+              secondary2={true} />
             <PrimaryButton name="Editar Pasajero" action={() => setModoEdicion(true)} />
           </>
         }

@@ -32,8 +32,8 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
             <Text style={localstyles.type}>{recorrido.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
             <Text style={localstyles.hour}>{mapDateTimeStringToTime(recorrido.horario)}</Text>
           </View>
-          <View>
-            <View style={{ height: 30, width: 100, alignContent: 'center' }}>
+          <View style={localstyles.columns}>
+            <View style={localstyles.botonContainer}>
               <SecondaryButton name='Editar' action={() => navigation.navigate('RecorridoEdicion', { recorrido } )}></SecondaryButton>
             </View>
           </View>
@@ -43,15 +43,15 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
             <Text style={localstyles.title}>{ recorrido.escuela.nombre }</Text>
             <Text style={localstyles.subtitle}>{ recorrido.escuela.direccion.domicilio }</Text>
           </View>
-          <View>
-            <View style={{ height: 30, width: 100 }}>
+          <View style={localstyles.columns}>
+            <View style={localstyles.botonContainer}>
               <SecondaryButton name='Ver escuela' action={() => navigation.navigate('EscuelaEdicion', { recorrido, dataRecorrido: null, escuela: recorrido.escuela } )}></SecondaryButton>
             </View>
           </View>
         </View>
         <View style={localstyles.pasajerosContainer}>
           <Text style={localstyles.pasajerosText}>Cantidad de pasajeros: {recorrido.pasajeros.length}</Text>
-          <View style={{ height: 30, width: 100 }}>
+          <View style={localstyles.botonContainer}>
             <SecondaryButton name='Ver listado' action={() => navigation.navigate('PasajeroListado', { recorrido })}></SecondaryButton>
           </View>
         </View>
@@ -65,7 +65,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
 
 const localstyles = StyleSheet.create({
   detailsContainer: {
-    marginTop: -230,
+    marginTop: -250,
     borderRadius: 20,
     elevation: 6,
     backgroundColor: '#fff',
@@ -75,35 +75,45 @@ const localstyles = StyleSheet.create({
   recorridoContainer: {
     flexDirection: 'row',
     padding: 10,
-    flex: 5,
+    paddingBottom: 10,
+    flex: 4,
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
   },
   escuelaContainer: {
     flexDirection: 'row',
-    padding: 10,
-    flex: 5,
+    paddingVertical: 0,
+    paddingHorizontal: 10,
+    flex: 7,
+    borderBottomColor: 'lightgray',
+    borderBottomWidth: 1,
   },
   pasajerosContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 10,
-    flex: 2,
+    paddingTop: 5,
+    paddingHorizontal: 10,
+    flex: 3,
+  },
+  botonContainer: {
+    height: 40,
+    width: 100,
+  },
+  columns: {
+    justifyContent: 'center'
   },
   title: {
     fontSize: 16,
-    alignContent: 'center',
   },
   subtitle: {
     fontSize: 14,
-    alignContent: 'center',
   },
   pasajerosText: {
-    marginTop: -5,
+    marginTop: 5,
     fontSize: 16,
     flex: 3,
   },
   footerButton: {
+    marginBottom: -10,
     alignItems: 'center',
     elevation: 6,
   },

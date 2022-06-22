@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Alert, TextInput, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { EscuelaEdicionProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import PrimaryButton from '../components/PrimaryButton';
@@ -11,6 +11,7 @@ import { EscuelaFormType } from '../components/form/FormTypes';
 import ErrorText from '../components/ErrorText';
 import { postEscuela } from '../services/escuela.service';
 import { AuthContext } from '../auth/AuthProvider';
+import CustomText from '../components/form/CustomText';
 
 export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProps) {
   const { escuela, dataRecorrido, recorrido } = route.params;
@@ -57,15 +58,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
           rules={VALIDACIONES.TEXTO_NO_VACIO}
           editable={modoEdicion}
         />
-        { escuela &&
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.textInput}
-              value={escuela?.direccion.domicilio}
-              editable={false}
-            />
-          </View>
-        }
+        { escuela && <CustomText value={escuela.direccion.domicilio}/> }
         { modoEdicion &&
           <CustomGoogleAutocomplete
             control={control}

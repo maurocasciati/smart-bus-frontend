@@ -4,7 +4,11 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 export default function PrimaryButton(props: { name: string, secondary?: boolean, action: (t: any) => void}) {
   return (
     <TouchableOpacity
-      style={{ ...styles.primaryBtn, backgroundColor: props.secondary ? '#9c9c9c' : 'darkorange'}}
+      style={{
+        ...styles.primaryBtn,
+        backgroundColor: props.secondary ? '#9c9c9c' : 'darkorange',
+        margin: props.secondary ? 4: 15,
+      }}
       onPress={props.action}>
       <Text style={styles.primaryBtnText}>{ props.name }</Text>
     </TouchableOpacity>
@@ -18,7 +22,6 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 10,
   },
   primaryBtnText: {
     color: '#fff',
