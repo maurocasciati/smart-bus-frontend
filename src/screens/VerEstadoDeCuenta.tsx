@@ -14,7 +14,7 @@ export default function VerEstadoDeCuenta({ route, navigation }: EstadoDeCuentaP
 
   const guardarCambios = () => {
     console.log(estadoDeCuenta);
-    Alert.alert('', `El estado de cuenta del pasajero ${pasajero.nombre} del recorrido ${recorrido.nombre} fue guardado con éxito`);
+    Alert.alert('', `El estado de cuenta del pasajero ${pasajero.nombre} ${pasajero.apellido} del recorrido ${recorrido.nombre} fue guardado con éxito`);
     navigation.navigate('PasajeroEdicion', { dataRecorrido: null, pasajero, recorrido });
   };
 
