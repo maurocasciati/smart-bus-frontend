@@ -18,10 +18,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'peachpuff',
+    backgroundColor: '#9c9c9c',
   },
   text: {
-    color: 'darkgray',
+    color: 'white',
     fontSize: 16,
   },
 });
