@@ -1,10 +1,10 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-export default function ActionButton(props: { name: string, action: () => void}) {
+export default function ActionButton(props: { name: string, secondary?: boolean, action: () => void}) {
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={{ ...styles.container, backgroundColor: props.secondary ? '#9c9c9c' : 'darkorange'}}
       onPress={props.action}>
       <Text style={styles.text}>{ props.name }</Text>
     </TouchableOpacity>
@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'darkorange',
   },
   text: {
     color: 'white',
