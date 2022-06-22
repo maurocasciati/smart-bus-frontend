@@ -32,7 +32,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
             <Text style={localstyles.type}>{recorrido.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
             <Text style={localstyles.hour}>{mapDateTimeStringToTime(recorrido.horario)}</Text>
           </View>
-          <View>
+          <View style={localstyles.columns}>
             <View style={localstyles.botonContainer}>
               <SecondaryButton name='Editar' action={() => navigation.navigate('RecorridoEdicion', { recorrido } )}></SecondaryButton>
             </View>
@@ -43,7 +43,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
             <Text style={localstyles.title}>{ recorrido.escuela.nombre }</Text>
             <Text style={localstyles.subtitle}>{ recorrido.escuela.direccion.domicilio }</Text>
           </View>
-          <View>
+          <View style={localstyles.columns}>
             <View style={localstyles.botonContainer}>
               <SecondaryButton name='Ver escuela' action={() => navigation.navigate('EscuelaEdicion', { recorrido, dataRecorrido: null, escuela: recorrido.escuela } )}></SecondaryButton>
             </View>
@@ -75,44 +75,45 @@ const localstyles = StyleSheet.create({
   recorridoContainer: {
     flexDirection: 'row',
     padding: 10,
-    paddingBottom: 5,
+    paddingBottom: 10,
     flex: 4,
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
   },
   escuelaContainer: {
     flexDirection: 'row',
-    paddingVertical: 5,
+    paddingVertical: 0,
     paddingHorizontal: 10,
-    flex: 4,
+    flex: 7,
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
   },
   pasajerosContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     paddingTop: 5,
     paddingHorizontal: 10,
-    flex: 4,
+    flex: 3,
   },
   botonContainer: {
     height: 40,
     width: 100,
   },
+  columns: {
+    justifyContent: 'center'
+  },
   title: {
     fontSize: 16,
-    alignContent: 'center',
   },
   subtitle: {
     fontSize: 14,
-    alignContent: 'center',
   },
   pasajerosText: {
-    marginTop: -5,
+    marginTop: 5,
     fontSize: 16,
     flex: 3,
   },
   footerButton: {
+    marginBottom: -10,
     alignItems: 'center',
     elevation: 6,
   },
