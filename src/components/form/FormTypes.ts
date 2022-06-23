@@ -24,6 +24,7 @@ export type EscuelaFormType = {
 };
 
 export type PasajeroFormType = {
+    id: number,
     nombre: string,
     apellido: string,
     fechaNacimiento: string,

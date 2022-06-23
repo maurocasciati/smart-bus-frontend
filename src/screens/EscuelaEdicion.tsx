@@ -12,8 +12,6 @@ import ErrorText from '../components/ErrorText';
 import { postEscuela, putEscuela } from '../services/escuela.service';
 import { AuthContext } from '../auth/AuthProvider';
 import CustomText from '../components/form/CustomText';
-import { Recorrido } from '../domain/Recorrido';
-import { Escuela } from '../domain/Escuela';
 
 export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProps) {
   const { escuela, dataRecorrido, recorrido } = route.params;

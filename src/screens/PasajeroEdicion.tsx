@@ -11,9 +11,11 @@ import { PasajeroFormType } from '../components/form/FormTypes';
 import DoubleButton from '../components/DobleButton';
 import { AuthContext } from '../auth/AuthProvider';
 import ErrorText from '../components/ErrorText';
-import { postPasajero } from '../services/pasajero.service';
+import { postPasajero, putPasajero } from '../services/pasajero.service';
 import { mapDateTimeStringToYear } from '../utils/date.utils';
 import CustomText from '../components/form/CustomText';
+import { Recorrido } from '../domain/Recorrido';
+import { Pasajero } from '../domain/Pasajero';
 
 export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
   const { pasajero, dataRecorrido, recorrido } = route.params;
@@ -25,6 +27,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
   
   const {control, handleSubmit, formState: {errors}} = useForm<PasajeroFormType>({
     defaultValues: {
+      id: pasajero?.id,
       nombre: pasajero?.nombre || '',
       apellido: pasajero?.apellido || '',
       fechaNacimiento: pasajero ? mapDateTimeStringToYear(pasajero.fechaNacimiento) : '',
@@ -37,15 +40,24 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
     }
   });
 
+  const getRecorridoActualizado = (recorrido: Recorrido, nuevoPasajero: Pasajero) => {
+    return {
+      ...recorrido,
+      pasajeros: recorrido.pasajeros.filter(p => p.id != nuevoPasajero.id).concat(nuevoPasajero),
+    } as Recorrido;
+  };
+
   const guardarPasajero = async (dataPasajero: PasajeroFormType) => {
     setMensajeError(null);
 
     try {
-      const resp = await postPasajero(token, dataPasajero);
+      const resp = recorrido
+        ? await putPasajero(token, dataPasajero)
+        : await postPasajero(token, dataPasajero);
       if(resp){
         Alert.alert('', `El pasajero ${dataPasajero.nombre} ${dataPasajero.apellido} fue guardado con éxito`);
         dataRecorrido ? navigation.navigate('PasajeroSeleccion', { dataRecorrido, recorrido })
-          : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
+          : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido: getRecorridoActualizado(recorrido, resp) })
             : navigation.navigate('RecorridoListado');
       }
     } catch(error) {
