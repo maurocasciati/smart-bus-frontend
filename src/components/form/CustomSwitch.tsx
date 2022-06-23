@@ -46,6 +46,6 @@ const localstyles = StyleSheet.create({
     flex: 2,
     color: 'black',
     alignSelf: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
   },
 });

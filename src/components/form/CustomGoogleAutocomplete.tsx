@@ -75,5 +75,6 @@ const localstyles = StyleSheet.create({
     width: '70%',
     height: 200,
     marginBottom: 20,
+    elevation: 4,
   },
 });

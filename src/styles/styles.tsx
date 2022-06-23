@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
     width: '70%',
     height: 45,
     marginBottom: 20,
+    elevation: 4,
   },
   textInput: {
     color: 'black',
