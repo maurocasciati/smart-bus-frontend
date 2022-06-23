@@ -61,9 +61,9 @@ const mapstyles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   listView: {
-    marginHorizontal: 10,
-    paddingHorizontal: 10,
-    borderRadius: 30,
+    marginTop: -10,
+    marginBottom: 3,
+    marginHorizontal: 15,
   },
 });
 
@@ -73,7 +73,7 @@ const localstyles = StyleSheet.create({
     position: 'relative',
     backgroundColor: '#fff',
     width: '70%',
-    height: 200,
+    height: 120,
     marginBottom: 20,
     elevation: 4,
   },
