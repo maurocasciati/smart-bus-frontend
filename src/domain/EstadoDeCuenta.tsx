@@ -13,6 +13,23 @@ export type EstadoDeCuenta = {
   pagoDiciembre: boolean,
 };
 
+export type EstadoDeCuentaFormType = {
+  idRecorrido: number,
+  idPasajero: number,
+  pagoEnero: boolean,
+  pagoFebrero: boolean,
+  pagoMarzo: boolean,
+  pagoAbril: boolean,
+  pagoMayo: boolean,
+  pagoJunio: boolean,
+  pagoJulio: boolean,
+  pagoAgosto: boolean,
+  pagoSeptiembre: boolean,
+  pagoOctubre: boolean,
+  pagoNoviembre: boolean,
+  pagoDiciembre: boolean,
+};
+
 export const EstadoDeCuentaTexto = {
   pagoEnero: 'Enero',
   pagoFebrero: 'Febrero',
