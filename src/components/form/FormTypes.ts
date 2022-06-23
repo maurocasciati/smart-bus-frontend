@@ -18,6 +18,7 @@ export type RecorridoFormType = {
 };
 
 export type EscuelaFormType = {
+    id: number,
     nombre: string,
     direccion: DomicilioFormType | null,
 };

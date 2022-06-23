@@ -9,9 +9,11 @@ import { useForm } from 'react-hook-form';
 import CustomGoogleAutocomplete from '../components/form/CustomGoogleAutocomplete';
 import { EscuelaFormType } from '../components/form/FormTypes';
 import ErrorText from '../components/ErrorText';
-import { postEscuela } from '../services/escuela.service';
+import { postEscuela, putEscuela } from '../services/escuela.service';
 import { AuthContext } from '../auth/AuthProvider';
 import CustomText from '../components/form/CustomText';
+import { Recorrido } from '../domain/Recorrido';
+import { Escuela } from '../domain/Escuela';
 
 export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProps) {
   const { escuela, dataRecorrido, recorrido } = route.params;
@@ -23,6 +25,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
 
   const {control, handleSubmit, formState: {errors}} = useForm<EscuelaFormType>({
     defaultValues: {
+      id: escuela?.id,
       nombre: escuela?.nombre || '',
       direccion: escuela?.direccion ? {
         domicilio: escuela?.direccion.domicilio || '',
@@ -35,11 +38,13 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
     setMensajeError(null);
 
     try {
-      const resp = await postEscuela(token, dataEscuela);
+      const resp = recorrido
+        ? await putEscuela(token, dataEscuela)
+        : await postEscuela(token, dataEscuela);
       if(resp){
         Alert.alert('', `La escuela ${dataEscuela.nombre} fue guardada con éxito`);
         dataRecorrido ? navigation.navigate('EscuelaSeleccion', { dataRecorrido, recorrido })
-          : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido })
+          : recorrido ? navigation.navigate('RecorridoDetalle', { recorrido: { ...recorrido, escuela: resp }})
             : navigation.navigate('RecorridoListado');
       }
     } catch(error) {
