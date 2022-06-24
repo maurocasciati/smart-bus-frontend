@@ -44,19 +44,11 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
 
   const toggleModalEliminar = () => setShowModalEliminar(!showModalEliminar);
 
-  const eliminarPasajero = async () => {
-    toggleModalEliminar();
-
-    try {
-      const resp = !!pasajero && await deletePasajero(token, pasajero.id);
-      if(resp){
-        Alert.alert('', `El pasajero ${pasajero.nombre} ${pasajero.apellido} fue eliminado con éxito`);
-        recorrido ? navigation.navigate('RecorridoDetalle', { recorrido: getRecorridoActualizado(recorrido, resp) })
-          : navigation.navigate('RecorridoListado');
-      }
-    } catch(error) {
-      setMensajeError(error as string);
-    }
+  const getRecorridoSinPasajero = (recorrido: Recorrido, pasajeroEliminado: Pasajero) => {
+    return {
+      ...recorrido,
+      pasajeros: recorrido.pasajeros.filter(p => p.id != pasajeroEliminado.id),
+    } as Recorrido;
   };
 
   const getRecorridoActualizado = (recorrido: Recorrido, nuevoPasajero: Pasajero) => {
@@ -64,6 +56,27 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
       ...recorrido,
       pasajeros: recorrido.pasajeros.filter(p => p.id != nuevoPasajero.id).concat(nuevoPasajero),
     } as Recorrido;
+  };
+
+  const eliminarPasajero = async () => {
+    toggleModalEliminar();
+
+    try {
+      const resp = !!pasajero && await deletePasajero(token, pasajero.id);
+      if(resp){
+        Alert.alert(
+          '', `El pasajero ${pasajero.nombre} ${pasajero.apellido} fue eliminado con éxito`,
+          [{ 
+            text: 'OK',
+            onPress: () => recorrido
+              ? navigation.navigate('RecorridoDetalle', { recorrido: getRecorridoSinPasajero(recorrido, resp) })
+              : navigation.navigate('RecorridoListado')
+          }]
+        );
+      }
+    } catch(error) {
+      setMensajeError(error as string);
+    }
   };
 
   const guardarPasajero = async (dataPasajero: PasajeroFormType) => {

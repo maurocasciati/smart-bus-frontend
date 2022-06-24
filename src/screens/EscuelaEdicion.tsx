@@ -42,9 +42,14 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
     try {
       const resp = !!escuela && await deleteEscuela(token, escuela.id);
       if(resp){
-        Alert.alert('', `La escuela ${escuela?.nombre} fue eliminada con éxito`);
-        recorrido ? navigation.navigate('RecorridoDetalle', { recorrido: { ...recorrido, escuela: resp }})
-          : navigation.navigate('RecorridoListado');
+        Alert.alert(
+          '', `La escuela ${escuela?.nombre} fue eliminada con éxito`,
+          [{ 
+            text: 'OK',
+            onPress: () => recorrido ? navigation.navigate('RecorridoDetalle', { recorrido: { ...recorrido, escuela: null }})
+              : navigation.navigate('RecorridoListado')
+          }]
+        );
       }
     } catch(error) {
       setMensajeError(error as string);
@@ -55,7 +60,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
     setMensajeError(null);
 
     try {
-      const resp = recorrido
+      const resp = escuela
         ? await putEscuela(token, dataEscuela)
         : await postEscuela(token, dataEscuela);
       if(resp){

@@ -44,22 +44,22 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
       )}
 
       { mostrarDirecciones() && <MapViewDirections
-        origin={currentPosition}
-        destination={esRecorridoDeIda ? pointsList[0] : escuela.direccion.coordenadas}
-        apikey={GOOGLE_API_KEY}
-        strokeWidth={5}
-        strokeColor='orange'
-      /> }
-
-      { mostrarDirecciones() && <MapViewDirections
-        origin={esRecorridoDeIda ? pointsList[0] : escuela.direccion.coordenadas}
-        destination={esRecorridoDeIda ? escuela.direccion.coordenadas : pointsList[pointsList.length - 1]}
+        origin={esRecorridoDeIda ? pointsList[0] : escuela?.direccion.coordenadas}
+        destination={esRecorridoDeIda ? escuela?.direccion.coordenadas : pointsList[pointsList.length - 1]}
         waypoints={pointsList}
         optimizeWaypoints={false} // Poner en true cuando tengamos order automatico.
         splitWaypoints={true}
         apikey={GOOGLE_API_KEY}
         strokeWidth={5}
         strokeColor='#f2c777'
+      /> }
+
+      { mostrarDirecciones() && <MapViewDirections
+        origin={currentPosition}
+        destination={esRecorridoDeIda ? pointsList[0] : escuela?.direccion.coordenadas}
+        apikey={GOOGLE_API_KEY}
+        strokeWidth={5}
+        strokeColor='orange'
       /> }
     </MapView>
   );
