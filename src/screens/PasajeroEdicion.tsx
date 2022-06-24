@@ -70,7 +70,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
     setMensajeError(null);
 
     try {
-      const resp = recorrido
+      const resp = pasajero
         ? await putPasajero(token, dataPasajero)
         : await postPasajero(token, dataPasajero);
       if(resp){

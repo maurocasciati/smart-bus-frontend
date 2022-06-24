@@ -23,9 +23,10 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
     })();
   }, []);
 
-  const getRegion = () => getRegionForCoordinates([...pointsList, escuela.direccion.coordenadas]);
-
   const mostrarDirecciones = () => escuela && pointsList.length > 0;
+  const getRegion = () => escuela
+    ? getRegionForCoordinates([...pointsList, escuela.direccion.coordenadas])
+    : getRegionForCoordinates(pointsList);
 
   return (
     <MapView

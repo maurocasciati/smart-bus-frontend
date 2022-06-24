@@ -7,6 +7,7 @@ import PrimaryButton from '../components/PrimaryButton';
 import SecondaryButton from '../components/SecondaryButton';
 import MapViewRecorrido from '../components/MapViewRecorrido';
 import { mapDateTimeStringToTime } from '../utils/date.utils';
+import ModalConfirmacion from '../components/ModalConfirmacion';
 
 export default function RecorridoDetalle({ route, navigation }: RecorridoDetalleProps) {
   const { recorrido } = route.params;
@@ -17,12 +18,16 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
     })();
   }, []);
 
+  const tieneEscuela = !!recorrido.escuela;
+  const tienePasajeros = !!recorrido.pasajeros && recorrido.pasajeros.length > 0;
+
   return (
     <View style={styles.container}>
       <View>
         <MapViewRecorrido recorrido={recorrido} />
       </View>
 
+      { tieneEscuela && tienePasajeros &&
       <View style={localstyles.detailsContainer}>
         <View style={localstyles.recorridoContainer}>
           <View style={{ flex: 1 }}>
@@ -59,6 +64,14 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
           <PrimaryButton name={'INICIAR'} action={() => navigation.navigate('RecorridoEnCurso', { recorrido })}/>
         </View>
       </View>
+      }
+
+      <ModalConfirmacion
+        visible={!tieneEscuela || !tienePasajeros}
+        text={`El recorrido ${recorrido.nombre} está incompleto. ¿Desea editarlo para completarlo ahora?`}
+        cancel={() => navigation.navigate('RecorridoListado')}
+        confirm={() => navigation.navigate('RecorridoEdicion', { recorrido } )}
+      />
     </View>
   );
 }
@@ -125,4 +138,19 @@ const localstyles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  warning: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  warningtext: {
+    padding: 5,
+    paddingHorizontal: 50,
+    margin: 8,
+    color: 'red',
+    borderColor: 'red',
+    borderRadius: 30,
+    borderWidth: 1,
+    flexDirection: 'row',
+    textAlign: 'center',
+  }
 });

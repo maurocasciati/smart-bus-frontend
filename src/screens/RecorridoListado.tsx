@@ -45,7 +45,7 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
       >
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>{recorrido.item.nombre}</Text>
-          <Text style={styles.subtitle}>{recorrido.item.escuela.nombre}</Text>
+          <Text style={styles.subtitle}>{recorrido.item.escuela?.nombre}</Text>
         </View>
         <View>
           <Text style={styles.type}>{recorrido.item.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
