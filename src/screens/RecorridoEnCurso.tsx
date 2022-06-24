@@ -85,7 +85,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
           destination={paradas[0].coordenadas}
           apikey={GOOGLE_API_KEY}
           strokeWidth={5}
-          strokeColor='orange'
+          strokeColor='#c74c5e'
         /> }
 
         { esUltimaParada() && <MapViewDirections
@@ -96,7 +96,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
           splitWaypoints={true}
           apikey={GOOGLE_API_KEY}
           strokeWidth={2}
-          strokeColor='orange'
+          strokeColor='#c74c5e'
         /> }
       </MapView>
     );

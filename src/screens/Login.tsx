@@ -14,7 +14,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <View style={styles.center}>
-        <Image style={styles.image} source={require('../../assets/logo.png')}/>
+        <Image style={styles.image} source={require('../../assets/bus.png')}/>
 
         { toggleScreen ? <SignIn/> : <SignUp toggleLogin={handleToggle}/> }
 

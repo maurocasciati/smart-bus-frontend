@@ -50,8 +50,8 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
         optimizeWaypoints={false} // Poner en true cuando tengamos order automatico.
         splitWaypoints={true}
         apikey={GOOGLE_API_KEY}
-        strokeWidth={5}
-        strokeColor='#f2c777'
+        strokeWidth={2}
+        strokeColor='#c74c5e'
       /> }
 
       { mostrarDirecciones() && <MapViewDirections
@@ -59,7 +59,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
         destination={esRecorridoDeIda ? pointsList[0] : escuela?.direccion.coordenadas}
         apikey={GOOGLE_API_KEY}
         strokeWidth={5}
-        strokeColor='orange'
+        strokeColor='#c74c5e'
       /> }
     </MapView>
   );
