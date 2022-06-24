@@ -40,13 +40,8 @@ export type DomicilioFormType = {
     coordenadas: LatLng | null,
 };
 
-export type EventualidadAusenciaFormType = {
-    desde: string,
-    hasta: string,
-};
-
-export type EventualidadDomicilioFormType = {
-    desde: string,
-    hasta: string,
-    domicilio: DomicilioFormType | null,
+export type EventualidadFormType = {
+    fechaInicio: string,
+    fechaFin: string,
+    direccion: DomicilioFormType | null,
 };
