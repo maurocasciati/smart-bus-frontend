@@ -18,11 +18,13 @@ export type RecorridoFormType = {
 };
 
 export type EscuelaFormType = {
+    id: number,
     nombre: string,
     direccion: DomicilioFormType | null,
 };
 
 export type PasajeroFormType = {
+    id: number,
     nombre: string,
     apellido: string,
     fechaNacimiento: string,

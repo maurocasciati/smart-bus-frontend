@@ -17,7 +17,6 @@ export const postRecorrido = async (token: string | null, data: RecorridoFormTyp
   try {
     data.horario = mapTimeToDateTimeString(data.horario);
     const resp = await authPost<Recorrido>(`${baseUrl}/Recorrido`, data, token);
-    console.log({resp});
     return resp.data;
   } catch(error) {
     throwError(error);

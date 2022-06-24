@@ -28,7 +28,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       await Location.requestForegroundPermissionsAsync();
       Location.watchPositionAsync({}, location => isMounted && setCurrentPosition(location.coords));
 
-      setParadas([
+      escuela && setParadas([
         ...esRecorridoDeIda ? [] : [mapEscuelaToParada(escuela)],
         ...mapPasajerosToParada(pasajeros),
         ...esRecorridoDeIda ? [mapEscuelaToParada(escuela)] : [],

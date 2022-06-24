@@ -44,7 +44,7 @@ const localstyles = StyleSheet.create({
     },
     shadowOpacity: 0.9,
     shadowRadius: 4,
-    elevation: 4,
+    elevation: 6,
   },
   modalText: {
     fontSize: 18,

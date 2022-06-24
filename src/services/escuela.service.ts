@@ -1,7 +1,7 @@
 import { REACT_APP_BASE_URL as baseUrl } from '@env';
 import { EscuelaFormType } from '../components/form/FormTypes';
 import { Escuela } from '../domain/Escuela';
-import { authGet, authPost, throwError } from '../utils/service.utils';
+import { authDelete, authGet, authPost, authPut, throwError } from '../utils/service.utils';
 
 export const getListadoEscuelas = async (token: string | null) => {
   try {
@@ -15,6 +15,24 @@ export const getListadoEscuelas = async (token: string | null) => {
 export const postEscuela = async (token: string | null, data: EscuelaFormType) => {
   try {
     const resp = await authPost<Escuela>(`${baseUrl}/Escuela`, data, token);
+    return resp.data;
+  } catch(error) {
+    throwError(error);
+  }
+};
+
+export const putEscuela = async (token: string | null, data: EscuelaFormType) => {
+  try {
+    const resp = await authPut<Escuela>(`${baseUrl}/Escuela`, data, token);
+    return resp.data;
+  } catch(error) {
+    throwError(error);
+  }
+};
+
+export const deleteEscuela = async (token: string | null, id: number) => {
+  try {
+    const resp = await authDelete<Escuela>(`${baseUrl}/Escuela`, id, token);
     return resp.data;
   } catch(error) {
     throwError(error);

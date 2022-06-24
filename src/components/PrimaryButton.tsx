@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 4,
   },
   primaryBtnText: {
     color: '#fff',

@@ -49,12 +49,14 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
     setIdEscuela(id);
   };
 
+  const hayEscuelaSeleccionada = idEscuela && listadoEscuelas.some(escuela => escuela.id === idEscuela);
+
   const crearEscuela = () => {
     navigation.navigate('EscuelaEdicion', { dataRecorrido, escuela: null, recorrido });
   };
 
   const guardarRecorrido = async () => {
-    if (recorrido && idEscuela) {
+    if (hayEscuelaSeleccionada && recorrido) {
       setMensajeError(null);
 
       try {
@@ -67,11 +69,13 @@ export default function EscuelaSeleccion({ route, navigation }: EscuelaSeleccion
       } catch(error) {
         setMensajeError(error as string);
       }
+    } else {
+      setMensajeError('Debe seleccionar una escuela del listado.');
     }
   };
 
   const seleccionarPasajeros = () => {
-    idEscuela
+    hayEscuelaSeleccionada
       ? navigation.navigate('PasajeroSeleccion', { dataRecorrido: { ...dataRecorrido, idEscuela }, recorrido })
       : setMensajeError('Debe seleccionar una escuela del listado.');
   };

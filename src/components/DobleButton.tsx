@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 4,
   },
   btnText: {
     color: '#fff',
