@@ -11,15 +11,17 @@ import { PasajeroFormType } from '../components/form/FormTypes';
 import DoubleButton from '../components/DobleButton';
 import { AuthContext } from '../auth/AuthProvider';
 import ErrorText from '../components/ErrorText';
-import { postPasajero, putPasajero } from '../services/pasajero.service';
+import { deletePasajero, postPasajero, putPasajero } from '../services/pasajero.service';
 import { mapDateTimeStringToYear } from '../utils/date.utils';
 import CustomText from '../components/form/CustomText';
 import { Recorrido } from '../domain/Recorrido';
 import { Pasajero } from '../domain/Pasajero';
+import ModalConfirmacion from '../components/ModalConfirmacion';
 
 export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionProps) {
   const { pasajero, dataRecorrido, recorrido } = route.params;
 
+  const [showModalEliminar, setShowModalEliminar] = useState<boolean>(false);
   const [modoEdicion, setModoEdicion] = useState<boolean>(!pasajero);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
@@ -39,6 +41,23 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
       } : null,
     }
   });
+
+  const toggleModalEliminar = () => setShowModalEliminar(!showModalEliminar);
+
+  const eliminarPasajero = async () => {
+    toggleModalEliminar();
+
+    try {
+      const resp = !!pasajero && await deletePasajero(token, pasajero.id);
+      if(resp){
+        Alert.alert('', `El pasajero ${pasajero.nombre} ${pasajero.apellido} fue eliminado con éxito`);
+        recorrido ? navigation.navigate('RecorridoDetalle', { recorrido: getRecorridoActualizado(recorrido, resp) })
+          : navigation.navigate('RecorridoListado');
+      }
+    } catch(error) {
+      setMensajeError(error as string);
+    }
+  };
 
   const getRecorridoActualizado = (recorrido: Recorrido, nuevoPasajero: Pasajero) => {
     return {
@@ -121,7 +140,11 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
 
         { mensajeError && ErrorText(mensajeError) }
         { modoEdicion
-          ? <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
+          ? 
+          <>
+            { pasajero && <PrimaryButton name="Eliminar Pasajero" action={toggleModalEliminar} secondary={true} /> }
+            <PrimaryButton name="Guardar Pasajero" action={handleSubmit(guardarPasajero)} />
+          </>
           :
           <>
             <PrimaryButton 
@@ -138,6 +161,13 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           </>
         }
       </View>
+
+      <ModalConfirmacion
+        visible={!!pasajero && showModalEliminar}
+        text={`¿Está seguro de eliminar el pasajero ${pasajero?.nombre} ${pasajero?.apellido}?`}
+        cancel={toggleModalEliminar}
+        confirm={eliminarPasajero}
+      />
     </View>
   );
 }

@@ -36,7 +36,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
 
   const toggleModalEliminar = () => setShowModalEliminar(!showModalEliminar);
 
-  const eliminarRecorrido = async () => {
+  const eliminarEscuela = async () => {
     toggleModalEliminar();
 
     try {
@@ -103,7 +103,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
         visible={!!escuela && showModalEliminar}
         text={`¿Está seguro de eliminar la escuela ${escuela?.nombre}?`}
         cancel={toggleModalEliminar}
-        confirm={eliminarRecorrido}
+        confirm={eliminarEscuela}
       />
     </View>
   );
