@@ -25,6 +25,8 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
 
   const getRegion = () => getRegionForCoordinates([...pointsList, escuela.direccion.coordenadas]);
 
+  const mostrarDirecciones = () => escuela && pointsList.length > 0;
+
   return (
     <MapView
       style={styles.map}
@@ -33,22 +35,22 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
       showsUserLocation={true}
       region={getRegion()}
     >
-      <Marker coordinate={escuela.direccion.coordenadas} title={escuela.nombre} image={require('../../assets/marker-school.png')}/>
+      { escuela && <Marker coordinate={escuela.direccion.coordenadas} title={escuela.nombre} image={require('../../assets/marker-school.png')}/> }
       { currentPosition && <Marker coordinate={currentPosition} image={require('../../assets/marker-bus.png')}/> }
 
       { pasajeros.map((pasajero) => 
         <Marker key={pasajero.id} coordinate={pasajero.domicilio.coordenadas} title={pasajero.domicilio.domicilio} image={require('../../assets/marker-house.png')}/>
       )}
 
-      <MapViewDirections
+      { mostrarDirecciones() && <MapViewDirections
         origin={currentPosition}
         destination={esRecorridoDeIda ? pointsList[0] : escuela.direccion.coordenadas}
         apikey={GOOGLE_API_KEY}
         strokeWidth={5}
         strokeColor='orange'
-      />
+      /> }
 
-      <MapViewDirections
+      { mostrarDirecciones() && <MapViewDirections
         origin={esRecorridoDeIda ? pointsList[0] : escuela.direccion.coordenadas}
         destination={esRecorridoDeIda ? escuela.direccion.coordenadas : pointsList[pointsList.length - 1]}
         waypoints={pointsList}
@@ -57,7 +59,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
         apikey={GOOGLE_API_KEY}
         strokeWidth={5}
         strokeColor='#f2c777'
-      />
+      /> }
     </MapView>
   );
 }
