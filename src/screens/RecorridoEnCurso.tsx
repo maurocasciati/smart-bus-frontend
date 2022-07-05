@@ -10,15 +10,14 @@ import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import MapViewDirections from 'react-native-maps-directions';
 import ActionButton from '../components/ActionButton';
 import PrimaryButton from '../components/PrimaryButton';
-import { Recorrido } from '../domain/Recorrido';
 import { getRecorrido } from '../services/recorrido.service';
 import { AuthContext } from '../auth/AuthProvider';
 import NotFound from '../components/NotFound';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
-  const { pasajeros, escuela, esRecorridoDeIda } = recorrido;
   const [currentPosition, setCurrentPosition] = useState<LatLng>({ longitude: 0, latitude: 0 });
+  const [esRecorridoDeIda, setEsRecorridoDeIda] = useState<boolean>();
   const [paradas, setParadas] = useState<Parada[]>([]);
   const [waypoints, setWaypoints] = useState<LatLng[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,15 +34,16 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     (async () => {
       await Location.requestForegroundPermissionsAsync();
       Location.watchPositionAsync({}, location => isMounted && setCurrentPosition(location.coords));
-      setMensajeError('Error al traer recorrido');
 
       try {
-        // const { pasajeros, escuela, esRecorridoDeIda } = await getRecorrido(token, recorrido.id);
+        const recorridoResponse = await getRecorrido(token, recorrido.id);
 
-        escuela && setParadas([
-          ...esRecorridoDeIda ? [] : [mapEscuelaToParada(escuela)],
-          ...mapPasajerosToParada(pasajeros),
-          ...esRecorridoDeIda ? [mapEscuelaToParada(escuela)] : [],
+        setEsRecorridoDeIda(recorridoResponse?.esRecorridoDeIda);
+
+        recorridoResponse?.escuela && setParadas([
+          ...recorridoResponse.esRecorridoDeIda ? [] : [mapEscuelaToParada(recorridoResponse.escuela)],
+          ...mapPasajerosToParada(recorridoResponse.pasajeros),
+          ...recorridoResponse.esRecorridoDeIda ? [mapEscuelaToParada(recorridoResponse.escuela)] : [],
         ]);
       } catch(error) {
         setLoading(false);
