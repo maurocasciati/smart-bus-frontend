@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { RecorridoEnCursoProps } from '../components/Navigation';
@@ -10,6 +10,10 @@ import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import MapViewDirections from 'react-native-maps-directions';
 import ActionButton from '../components/ActionButton';
 import PrimaryButton from '../components/PrimaryButton';
+import { Recorrido } from '../domain/Recorrido';
+import { getRecorrido } from '../services/recorrido.service';
+import { AuthContext } from '../auth/AuthProvider';
+import NotFound from '../components/NotFound';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -19,7 +23,11 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const [waypoints, setWaypoints] = useState<LatLng[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [toggleFocus, setToggleFocus] = useState<boolean>(true);
+
+  const [mensajeError, setMensajeError] = useState<string | null>(null);
   
+  const { token } = useContext(AuthContext);
+
   const mapRef = useRef<MapView>(null);
 
   useEffect(() => {
@@ -27,13 +35,20 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     (async () => {
       await Location.requestForegroundPermissionsAsync();
       Location.watchPositionAsync({}, location => isMounted && setCurrentPosition(location.coords));
+      setMensajeError('Error al traer recorrido');
 
-      escuela && setParadas([
-        ...esRecorridoDeIda ? [] : [mapEscuelaToParada(escuela)],
-        ...mapPasajerosToParada(pasajeros),
-        ...esRecorridoDeIda ? [mapEscuelaToParada(escuela)] : [],
-      ]);
+      try {
+        // const { pasajeros, escuela, esRecorridoDeIda } = await getRecorrido(token, recorrido.id);
 
+        escuela && setParadas([
+          ...esRecorridoDeIda ? [] : [mapEscuelaToParada(escuela)],
+          ...mapPasajerosToParada(pasajeros),
+          ...esRecorridoDeIda ? [mapEscuelaToParada(escuela)] : [],
+        ]);
+      } catch(error) {
+        setLoading(false);
+        setMensajeError(error as string);
+      }
       setLoading(false);
     })();
     return () => { isMounted = false; };
@@ -148,24 +163,29 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
 
   return loading ? null : (
     <View style={styles.container}>
-      { renderMap() }
+      { mensajeError
+        ? <NotFound error={mensajeError} />
+        : <>
+          { renderMap() }
 
-      <View style={localstyles.detailsContainer}>
-        { finalizarHabilitado()
-          ? renderFinalizarRecorrido()
-          : <>
-            <View style={localstyles.recorridoContainer}>
-              { paradas[0].esEscuela ? renderBotonEscuela() : renderBotonesPasajeros() }
-            </View>
-            <TouchableOpacity
-              style={localstyles.pasajerosContainer}
-              onPress={() => setToggleFocus(!toggleFocus)}
-            >
-              <Text style={localstyles.pasajerosText}>Siguiente: {paradas[0].domicilio}</Text>
-            </TouchableOpacity>
-          </>
-        }
-      </View>
+          <View style={localstyles.detailsContainer}>
+            { finalizarHabilitado()
+              ? renderFinalizarRecorrido()
+              : <>
+                <View style={localstyles.recorridoContainer}>
+                  { paradas[0].esEscuela ? renderBotonEscuela() : renderBotonesPasajeros() }
+                </View>
+                <TouchableOpacity
+                  style={localstyles.pasajerosContainer}
+                  onPress={() => setToggleFocus(!toggleFocus)}
+                >
+                  <Text style={localstyles.pasajerosText}>Siguiente: {paradas[0].domicilio}</Text>
+                </TouchableOpacity>
+              </>
+            }
+          </View>
+        </>
+      }
     </View>
   );
 }
