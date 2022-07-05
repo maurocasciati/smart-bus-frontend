@@ -40,7 +40,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
         coordenadas: pasajero?.domicilio.coordenadas || null,
       } : null,
       emailTutor: undefined,
-      emailTutores: [],
+      emailTutores: pasajero?.tutores?.map(t => t.email) || [],
     }
   });
 
@@ -83,7 +83,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
 
   const guardarPasajero = async (dataPasajero: PasajeroFormType) => {
     setMensajeError(null);
-    dataPasajero.emailTutores.push(dataPasajero.emailTutor);
+    dataPasajero.emailTutor && dataPasajero.emailTutores.push(dataPasajero.emailTutor);
 
     try {
       const resp = pasajero
