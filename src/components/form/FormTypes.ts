@@ -41,6 +41,8 @@ export type DomicilioFormType = {
 };
 
 export type EventualidadFormType = {
+    idPasajero: number,
+    idRecorrido: number,
     fechaInicio: string,
     fechaFin: string,
     direccion: DomicilioFormType | null,

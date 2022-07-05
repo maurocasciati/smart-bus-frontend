@@ -20,6 +20,8 @@ export default function EventualidadAusencia({ route, navigation }: Eventualidad
   
   const {control, handleSubmit, formState: {errors}} = useForm<EventualidadFormType>({
     defaultValues: {
+      idPasajero: pasajero.id,
+      idRecorrido: recorrido.id,
       fechaInicio: '',
       fechaFin: '',
       direccion: null,

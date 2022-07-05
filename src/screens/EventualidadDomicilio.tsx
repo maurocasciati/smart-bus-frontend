@@ -21,6 +21,8 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
   
   const {control, handleSubmit, formState: {errors}} = useForm<EventualidadFormType>({
     defaultValues: {
+      idPasajero: pasajero.id,
+      idRecorrido: recorrido.id,
       fechaInicio: '',
       fechaFin: '',
       direccion: null,
