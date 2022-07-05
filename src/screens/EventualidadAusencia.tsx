@@ -29,8 +29,6 @@ export default function EventualidadAusencia({ route, navigation }: Eventualidad
   });
 
   const guardarEventualidad = async (dataEventualidad: EventualidadFormType) => {
-    console.log({ dataEventualidad });
-
     setMensajeError(null);
 
     try {

@@ -30,8 +30,6 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
   });
 
   const guardarEventualidad = async (dataEventualidad: EventualidadFormType) => {
-    console.log({ dataEventualidad });
-
     setMensajeError(null);
 
     try {
