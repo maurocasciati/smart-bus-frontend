@@ -13,6 +13,15 @@ export const getListadoRecorridos = async (token: string | null) => {
   }
 };
 
+export const getRecorrido = async (token: string | null, idRecorrido: number) => {
+  try {
+    const resp = await authGet<Recorrido>(`${baseUrl}/Recorrido/${idRecorrido}`, token);
+    return resp.data;
+  } catch(error) {
+    throwError(error);
+  }
+};
+
 export const postRecorrido = async (token: string | null, data: RecorridoFormType) => {
   try {
     data.horario = mapTimeToDateTimeString(data.horario);
