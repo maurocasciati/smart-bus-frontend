@@ -31,6 +31,8 @@ export type PasajeroFormType = {
     telefono: string,
     domicilio: DomicilioFormType | null,
     pisoDepartamento: string,
+    emailTutor: string,
+    emailTutores: string[],
 };
 
 export type DomicilioFormType = {

@@ -1,4 +1,5 @@
 import { Domicilio } from './Domicilio';
+import { Tutor } from './Tutor';
 
 export type Pasajero = {
   id: number,
@@ -8,4 +9,5 @@ export type Pasajero = {
   telefono: string,
   domicilio: Domicilio,
   pisoDepartamento: string,
+  tutores: Tutor[],
 }

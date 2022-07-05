@@ -39,6 +39,8 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
         domicilio: pasajero?.domicilio.domicilio || '',
         coordenadas: pasajero?.domicilio.coordenadas || null,
       } : null,
+      emailTutor: undefined,
+      emailTutores: pasajero?.tutores?.map(t => t.email) || [],
     }
   });
 
@@ -81,6 +83,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
 
   const guardarPasajero = async (dataPasajero: PasajeroFormType) => {
     setMensajeError(null);
+    dataPasajero.emailTutor && dataPasajero.emailTutores.push(dataPasajero.emailTutor);
 
     try {
       const resp = pasajero
@@ -150,6 +153,16 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           rules={{}}
           editable={modoEdicion}
         />
+        { !pasajero && 
+          <CustomTextInput
+            control={control}
+            name='emailTutor'
+            errors={errors}
+            placeholder='Email del tutor'
+            rules={VALIDACIONES.EMAIL}
+            editable={modoEdicion}
+          />
+        }
 
         { mensajeError && ErrorText(mensajeError) }
         { modoEdicion
