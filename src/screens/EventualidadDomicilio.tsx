@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { EventualidadDomicilioProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
@@ -6,25 +6,41 @@ import PrimaryButton from '../components/PrimaryButton';
 import CustomTextInput from '../components/form/CustomTextInput';
 import { VALIDACIONES } from '../domain/Validaciones';
 import { useForm } from 'react-hook-form';
-import { EventualidadDomicilioFormType } from '../components/form/FormTypes';
+import { EventualidadFormType } from '../components/form/FormTypes';
 import CustomGoogleAutocomplete from '../components/form/CustomGoogleAutocomplete';
+import ErrorText from '../components/ErrorText';
+import { postEventualidad } from '../services/eventualidad.service';
+import { AuthContext } from '../auth/AuthProvider';
 
 export default function EventualidadDomicilio({ route, navigation }: EventualidadDomicilioProps) {
   const { pasajero, recorrido } = route.params;
   
-  const {control, handleSubmit, formState: {errors}} = useForm<EventualidadDomicilioFormType>({
+  const [mensajeError, setMensajeError] = useState<string | null>(null);
+
+  const { token } = useContext(AuthContext);
+  
+  const {control, handleSubmit, formState: {errors}} = useForm<EventualidadFormType>({
     defaultValues: {
-      desde: '',
-      hasta: '',
-      domicilio: null,
+      idPasajero: pasajero.id,
+      idRecorrido: recorrido.id,
+      fechaInicio: '',
+      fechaFin: '',
+      direccion: null,
     }
   });
 
-  const guardarEventualidad = async (dataEventualidad: EventualidadDomicilioFormType) => {
-    console.log({ dataEventualidad });
-    // TODO: Pegarle al back para guardar eventualidad antes de esto: vvvvv
-    Alert.alert('', `Se guardó el cambio de domicilio temporal para el pasajero ${pasajero.nombre}`);
-    navigation.navigate('PasajeroEdicion', { dataRecorrido: null, recorrido, pasajero });
+  const guardarEventualidad = async (dataEventualidad: EventualidadFormType) => {
+    setMensajeError(null);
+
+    try {
+      const resp = await postEventualidad(token, dataEventualidad);
+      if(resp){
+        Alert.alert('', `Se guardó el cambio de domicilio temporal para el pasajero ${pasajero.nombre} ${pasajero.apellido}`);
+        navigation.navigate('PasajeroEdicion', { dataRecorrido: null, recorrido, pasajero });
+      }
+    } catch(error) {
+      setMensajeError(error as string);
+    }
   };
 
   return (
@@ -32,7 +48,7 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
       <View style={styles.center}>
         <CustomTextInput
           control={control}
-          name='desde'
+          name='fechaInicio'
           errors={errors}
           placeholder='Fecha desde'
           rules={VALIDACIONES.FECHA}
@@ -40,7 +56,7 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
         />
         <CustomTextInput
           control={control}
-          name='hasta'
+          name='fechaFin'
           errors={errors}
           placeholder='Fecha hasta'
           rules={VALIDACIONES.FECHA}
@@ -48,12 +64,13 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
         />
         <CustomGoogleAutocomplete
           control={control}
-          name='domicilio'
+          name='direccion'
           errors={errors}
           placeholder='Domicilio temporal'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
         />
 
+        { mensajeError && ErrorText(mensajeError) }
         <PrimaryButton name="Guardar" action={handleSubmit(guardarEventualidad)} />
       </View>
     </View>

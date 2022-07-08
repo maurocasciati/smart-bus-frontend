@@ -51,7 +51,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
         splitWaypoints={true}
         apikey={GOOGLE_API_KEY}
         strokeWidth={2}
-        strokeColor='#c74c5e'
+        strokeColor='orange'
       /> }
 
       { mostrarDirecciones() && <MapViewDirections
@@ -59,7 +59,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
         destination={esRecorridoDeIda ? pointsList[0] : escuela?.direccion.coordenadas}
         apikey={GOOGLE_API_KEY}
         strokeWidth={5}
-        strokeColor='#c74c5e'
+        strokeColor='orange'
       /> }
     </MapView>
   );

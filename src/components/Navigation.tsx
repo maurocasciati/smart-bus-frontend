@@ -5,7 +5,6 @@ import * as React from 'react';
 import { AuthContext } from '../auth/AuthProvider';
 import RecorridoDetalle from '../screens/RecorridoDetalle';
 import HomeScreen from '../screens/Home';
-import NotFound from '../screens/NotFound';
 import RecorridoListado from '../screens/RecorridoListado';
 import Login from '../screens/Login';
 import { Recorrido } from '../domain/Recorrido';
@@ -25,7 +24,6 @@ import VerEstadoDeCuenta from '../screens/VerEstadoDeCuenta';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
-  NotFound: undefined;
   Login: undefined;
   Inicio: undefined;
   RecorridoListado: undefined;
@@ -81,7 +79,6 @@ export default function NavigationComponent() {
             <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>
             <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
             <Stack.Screen name="EstadoDeCuenta" component={VerEstadoDeCuenta} options={{ title: 'Estado de cuenta' }}/>
-            <Stack.Screen name="NotFound" component={NotFound} />
           </>
         ) : (
           <>

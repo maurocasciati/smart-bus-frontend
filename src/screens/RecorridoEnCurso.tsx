@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { RecorridoEnCursoProps } from '../components/Navigation';
@@ -10,16 +10,23 @@ import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import MapViewDirections from 'react-native-maps-directions';
 import ActionButton from '../components/ActionButton';
 import PrimaryButton from '../components/PrimaryButton';
+import { getRecorrido } from '../services/recorrido.service';
+import { AuthContext } from '../auth/AuthProvider';
+import NotFound from '../components/NotFound';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
-  const { pasajeros, escuela, esRecorridoDeIda } = recorrido;
   const [currentPosition, setCurrentPosition] = useState<LatLng>({ longitude: 0, latitude: 0 });
+  const [esRecorridoDeIda, setEsRecorridoDeIda] = useState<boolean>();
   const [paradas, setParadas] = useState<Parada[]>([]);
   const [waypoints, setWaypoints] = useState<LatLng[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [toggleFocus, setToggleFocus] = useState<boolean>(true);
+
+  const [mensajeError, setMensajeError] = useState<string | null>(null);
   
+  const { token } = useContext(AuthContext);
+
   const mapRef = useRef<MapView>(null);
 
   useEffect(() => {
@@ -28,12 +35,20 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       await Location.requestForegroundPermissionsAsync();
       Location.watchPositionAsync({}, location => isMounted && setCurrentPosition(location.coords));
 
-      escuela && setParadas([
-        ...esRecorridoDeIda ? [] : [mapEscuelaToParada(escuela)],
-        ...mapPasajerosToParada(pasajeros),
-        ...esRecorridoDeIda ? [mapEscuelaToParada(escuela)] : [],
-      ]);
+      try {
+        const recorridoResponse = await getRecorrido(token, recorrido.id);
 
+        setEsRecorridoDeIda(recorridoResponse?.esRecorridoDeIda);
+
+        recorridoResponse?.escuela && setParadas([
+          ...recorridoResponse.esRecorridoDeIda ? [] : [mapEscuelaToParada(recorridoResponse.escuela)],
+          ...mapPasajerosToParada(recorridoResponse.pasajeros),
+          ...recorridoResponse.esRecorridoDeIda ? [mapEscuelaToParada(recorridoResponse.escuela)] : [],
+        ]);
+      } catch(error) {
+        setLoading(false);
+        setMensajeError(error as string);
+      }
       setLoading(false);
     })();
     return () => { isMounted = false; };
@@ -85,7 +100,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
           destination={paradas[0].coordenadas}
           apikey={GOOGLE_API_KEY}
           strokeWidth={5}
-          strokeColor='#c74c5e'
+          strokeColor='orange'
         /> }
 
         { esUltimaParada() && <MapViewDirections
@@ -96,7 +111,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
           splitWaypoints={true}
           apikey={GOOGLE_API_KEY}
           strokeWidth={2}
-          strokeColor='#c74c5e'
+          strokeColor='orange'
         /> }
       </MapView>
     );
@@ -148,24 +163,29 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
 
   return loading ? null : (
     <View style={styles.container}>
-      { renderMap() }
+      { mensajeError
+        ? <NotFound error={mensajeError} />
+        : <>
+          { renderMap() }
 
-      <View style={localstyles.detailsContainer}>
-        { finalizarHabilitado()
-          ? renderFinalizarRecorrido()
-          : <>
-            <View style={localstyles.recorridoContainer}>
-              { paradas[0].esEscuela ? renderBotonEscuela() : renderBotonesPasajeros() }
-            </View>
-            <TouchableOpacity
-              style={localstyles.pasajerosContainer}
-              onPress={() => setToggleFocus(!toggleFocus)}
-            >
-              <Text style={localstyles.pasajerosText}>Siguiente: {paradas[0].domicilio}</Text>
-            </TouchableOpacity>
-          </>
-        }
-      </View>
+          <View style={localstyles.detailsContainer}>
+            { finalizarHabilitado()
+              ? renderFinalizarRecorrido()
+              : <>
+                <View style={localstyles.recorridoContainer}>
+                  { paradas[0].esEscuela ? renderBotonEscuela() : renderBotonesPasajeros() }
+                </View>
+                <TouchableOpacity
+                  style={localstyles.pasajerosContainer}
+                  onPress={() => setToggleFocus(!toggleFocus)}
+                >
+                  <Text style={localstyles.pasajerosText}>Siguiente: {paradas[0].domicilio}</Text>
+                </TouchableOpacity>
+              </>
+            }
+          </View>
+        </>
+      }
     </View>
   );
 }
