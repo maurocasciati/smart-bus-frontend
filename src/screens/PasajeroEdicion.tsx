@@ -178,7 +178,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
               action1={() => recorrido && pasajero && navigation.navigate('EstadoDeCuenta', { pasajero, recorrido })}
               secondary1={true}
               name2="Ver tutores"
-              action2={() => recorrido && pasajero && navigation.navigate('TutorListado', { pasajero })}
+              action2={() => recorrido && pasajero && navigation.navigate('TutorListado', { pasajero, recorrido })}
               secondary2={true} />
             <DoubleButton 
               name1="Establecer ausencia"
