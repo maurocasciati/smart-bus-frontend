@@ -39,7 +39,7 @@ export type RootStackParamList = {
   EventualidadAusencia: { recorrido: Recorrido, pasajero: Pasajero };
   EventualidadDomicilio: { recorrido: Recorrido, pasajero: Pasajero };
   EstadoDeCuenta: { recorrido: Recorrido, pasajero: Pasajero };
-  TutorListado: { pasajero: Pasajero };
+  TutorListado: { pasajero: Pasajero, recorrido: Recorrido };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
