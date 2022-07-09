@@ -21,6 +21,7 @@ import PasajeroEdicion from '../screens/PasajeroEdicion';
 import EventualidadAusencia from '../screens/EventualidadAusencia';
 import EventualidadDomicilio from '../screens/EventualidadDomicilio';
 import VerEstadoDeCuenta from '../screens/VerEstadoDeCuenta';
+import TutorListado from '../screens/TutorListado';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -38,6 +39,7 @@ export type RootStackParamList = {
   EventualidadAusencia: { recorrido: Recorrido, pasajero: Pasajero };
   EventualidadDomicilio: { recorrido: Recorrido, pasajero: Pasajero };
   EstadoDeCuenta: { recorrido: Recorrido, pasajero: Pasajero };
+  TutorListado: { pasajero: Pasajero };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
@@ -54,6 +56,7 @@ export type EscuelaSeleccionProps = NativeStackScreenProps<RootStackParamList, '
 export type EventualidadAusenciaProps = NativeStackScreenProps<RootStackParamList, 'EventualidadAusencia'>;
 export type EventualidadDomicilioProps = NativeStackScreenProps<RootStackParamList, 'EventualidadDomicilio'>;
 export type EstadoDeCuentaProps = NativeStackScreenProps<RootStackParamList, 'EstadoDeCuenta'>;
+export type TutorListadoProps = NativeStackScreenProps<RootStackParamList, 'TutorListado'>;
 
 // Declaración del stack de pantallas que se va a usar dentro del componente de navegación
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -79,6 +82,7 @@ export default function NavigationComponent() {
             <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>
             <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
             <Stack.Screen name="EstadoDeCuenta" component={VerEstadoDeCuenta} options={{ title: 'Estado de cuenta' }}/>
+            <Stack.Screen name="TutorListado" component={TutorListado} options={{ title: 'Listado de tutores' }}/>
           </>
         ) : (
           <>
