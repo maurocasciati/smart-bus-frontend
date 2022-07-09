@@ -159,7 +159,7 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
             name='emailTutor'
             errors={errors}
             placeholder='Email del tutor'
-            rules={VALIDACIONES.EMAIL}
+            rules={VALIDACIONES.EMAIL_NO_REQUERIDO}
             editable={modoEdicion}
           />
         }
@@ -173,9 +173,13 @@ export default function PasajeroEdicion({ route, navigation }: PasajeroEdicionPr
           </>
           :
           <>
-            <PrimaryButton 
-              name="Ver estado de cuenta"
-              action={() => recorrido && pasajero && navigation.navigate('EstadoDeCuenta', { pasajero, recorrido })} secondary={true} />
+            <DoubleButton 
+              name1="Ver estado de cuenta"
+              action1={() => recorrido && pasajero && navigation.navigate('EstadoDeCuenta', { pasajero, recorrido })}
+              secondary1={true}
+              name2="Ver tutores"
+              action2={() => recorrido && pasajero && navigation.navigate('TutorListado', { pasajero })}
+              secondary2={true} />
             <DoubleButton 
               name1="Establecer ausencia"
               action1={() => recorrido && pasajero && navigation.navigate('EventualidadAusencia', { recorrido, pasajero })}
