@@ -11,7 +11,7 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState<string | null>(null);
-  const { saveToken } = useContext(AuthContext);
+  const { saveToken, saveRol } = useContext(AuthContext);
 
   const onLogin = async (e: GestureResponderEvent) => {
     e.preventDefault();
@@ -20,9 +20,8 @@ export default function SignIn() {
     
     try {
       const resp = await signIn(email, password);
-      if(resp?.data.token){
-        saveToken(resp.data.token);
-      }
+      resp?.data.token ? saveToken(resp.data.token) : setLoginError('Usuario no autorizado');
+      resp?.data.idTipoDeUsuario ? saveRol(resp.data.idTipoDeUsuario) : setLoginError('Tipo de usuario inválido');
     } catch(error) {
       setLoginError(error as string);
     }
