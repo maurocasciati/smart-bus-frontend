@@ -4,7 +4,6 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { AuthContext } from '../auth/AuthProvider';
 import RecorridoDetalle from '../screens/RecorridoDetalle';
-import HomeScreen from '../screens/Home';
 import RecorridoListado from '../screens/RecorridoListado';
 import Login from '../screens/Login';
 import { Recorrido } from '../domain/Recorrido';
@@ -22,6 +21,7 @@ import EventualidadAusencia from '../screens/EventualidadAusencia';
 import EventualidadDomicilio from '../screens/EventualidadDomicilio';
 import VerEstadoDeCuenta from '../screens/VerEstadoDeCuenta';
 import TutorListado from '../screens/TutorListado';
+import { RolUsuario } from '../domain/RolUsuario';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -62,14 +62,17 @@ export type TutorListadoProps = NativeStackScreenProps<RootStackParamList, 'Tuto
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function NavigationComponent() {
-  const { token } = React.useContext(AuthContext);
+  const { token, rol } = React.useContext(AuthContext);
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        { token ? (
+        { !token || !rol ? (
           <>
-            {/* <Stack.Screen name="Inicio" component={HomeScreen} /> */}
+            <Stack.Screen name="Login" component={Login} options={{ title: 'Ingresar' }}/>
+          </>
+        ) : rol.valueOf() === RolUsuario.CHOFER ? (
+          <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en curso' }}/>
@@ -84,11 +87,15 @@ export default function NavigationComponent() {
             <Stack.Screen name="EstadoDeCuenta" component={VerEstadoDeCuenta} options={{ title: 'Estado de cuenta' }}/>
             <Stack.Screen name="TutorListado" component={TutorListado} options={{ title: 'Listado de tutores' }}/>
           </>
-        ) : (
+        ) : rol.valueOf() == RolUsuario.TUTOR ? (
           <>
-            <Stack.Screen name="Login" component={Login} options={{ title: 'Ingresar' }}/>
+            <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
           </>
-        )}
+        ) : rol.valueOf() == RolUsuario.ESCUELA ? (
+          <>
+            <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
+          </>
+        ) : <></>}
       </Stack.Navigator>
       <StatusBar style='auto' />
     </NavigationContainer>

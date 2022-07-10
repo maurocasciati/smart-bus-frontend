@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import { VALIDACIONES } from '../domain/Validaciones';
 import { signUp } from '../services/login.service';
 import ErrorText from './ErrorText';
+import RolDropdown from './form/RolDropdown';
 import CustomTextInput from './form/CustomTextInput';
 import { SignUpFormType } from './form/FormTypes';
 import PrimaryButton from './PrimaryButton';
@@ -16,7 +17,8 @@ export default function SignUp(props: { toggleLogin: () => void}) {
       nombre: '',
       apellido: '',
       email: '',
-      contraseña: ''
+      contraseña: '',
+      tipoDeUsuario: undefined,
     }
   });
 
@@ -71,6 +73,14 @@ export default function SignUp(props: { toggleLogin: () => void}) {
         rules={VALIDACIONES.TEXTO_NO_VACIO}
         ocultarTexto={true}
         editable={true}
+      />
+
+      <RolDropdown
+        control={control}
+        name="tipoDeUsuario"
+        errors={errors}
+        placeholder="Tipo de usuario"
+        rules={VALIDACIONES.TEXTO_NO_VACIO}
       />
 
       {signUpError && ErrorText(signUpError)}

@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    marginBottom: 40,
+    marginBottom: 14,
   },
   list: {
     flex: 1,

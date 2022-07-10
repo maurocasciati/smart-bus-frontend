@@ -4,7 +4,8 @@ export type SignUpFormType = {
     nombre: string,
     apellido: string,
     email: string,
-    contraseña: string
+    contraseña: string,
+    tipoDeUsuario: number,
 };
 
 export type RecorridoFormType = {
