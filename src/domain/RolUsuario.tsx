@@ -3,3 +3,9 @@ export enum RolUsuario {
   TUTOR = 2,
   ESCUELA = 3,
 }
+
+export const getTipoUsuario = {
+  [RolUsuario.CHOFER]: 'Chofer',
+  [RolUsuario.TUTOR]: 'Tutor',
+  [RolUsuario.ESCUELA]: 'Escuela',
+};
