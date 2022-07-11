@@ -11,13 +11,14 @@ import CustomGoogleAutocomplete from '../components/form/CustomGoogleAutocomplet
 import ErrorText from '../components/ErrorText';
 import { postEventualidad } from '../services/eventualidad.service';
 import { AuthContext } from '../auth/AuthProvider';
+import { RolUsuario } from '../domain/RolUsuario';
 
 export default function EventualidadDomicilio({ route, navigation }: EventualidadDomicilioProps) {
   const { pasajero, recorrido } = route.params;
   
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const { token } = useContext(AuthContext);
+  const { token, rol } = useContext(AuthContext);
   
   const {control, handleSubmit, formState: {errors}} = useForm<EventualidadFormType>({
     defaultValues: {
@@ -36,7 +37,9 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
       const resp = await postEventualidad(token, dataEventualidad);
       if(resp){
         Alert.alert('', `Se guardó el cambio de domicilio temporal para el pasajero ${pasajero.nombre} ${pasajero.apellido}`);
-        navigation.navigate('PasajeroEdicion', { dataRecorrido: null, recorrido, pasajero });
+        rol?.valueOf() === RolUsuario.CHOFER
+          ? navigation.navigate('PasajeroEdicion', { dataRecorrido: null, recorrido, pasajero })
+          : navigation.navigate('PasajeroDetalleTutor', { recorrido, pasajero });
       }
     } catch(error) {
       setMensajeError(error as string);
