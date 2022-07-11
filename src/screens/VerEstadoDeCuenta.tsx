@@ -7,6 +7,7 @@ import ErrorText from '../components/ErrorText';
 import { EstadoDeCuentaProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
 import { EstadoDeCuenta, EstadoDeCuentaTexto } from '../domain/EstadoDeCuenta';
+import { RolUsuario } from '../domain/RolUsuario';
 import { mockEstadoDeCuenta } from '../mocks';
 import { getEstadoDeCuenta, putEstadoDeCuenta } from '../services/estadoDeCuenta.service';
 import { styles } from '../styles/styles';
@@ -18,7 +19,7 @@ export default function VerEstadoDeCuenta({ route, navigation }: EstadoDeCuentaP
   const [estadoDeCuentaEditado, setEstadoDeCuentaEditado] = useState<EstadoDeCuenta>(mockEstadoDeCuenta);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const { token } = useContext(AuthContext);
+  const { token, rol } = useContext(AuthContext);
 
   useFocusEffect(
     useCallback(() => {
@@ -73,9 +74,13 @@ export default function VerEstadoDeCuenta({ route, navigation }: EstadoDeCuentaP
           </Text>
         </View>
         <View style={{ alignSelf: 'center' }}>
-          <Checkbox 
-            value={estadoDeCuentaEditado[key.item as keyof EstadoDeCuenta]}
-            color={'orange'}/>
+          { rol?.valueOf() === RolUsuario.CHOFER ?
+            <Checkbox 
+              value={estadoDeCuentaEditado[key.item as keyof EstadoDeCuenta]}
+              color={'orange'}/>
+            : 
+            <Text style={{ ...styles.title, color: 'orange' }} > {estadoDeCuenta[key.item as keyof EstadoDeCuenta] ? 'Pagado' : ''} </Text>
+          }
         </View>
       </TouchableOpacity>
     </View>
@@ -89,7 +94,9 @@ export default function VerEstadoDeCuenta({ route, navigation }: EstadoDeCuentaP
 
       <View style={styles.footer}>
         { mensajeError && ErrorText(mensajeError) }
-        <PrimaryButton name={'Guardar cambios'} action={guardarCambios}/>
+        { rol?.valueOf() === RolUsuario.CHOFER &&
+          <PrimaryButton name={'Guardar cambios'} action={guardarCambios}/>
+        }
       </View>
     </View>
   );
