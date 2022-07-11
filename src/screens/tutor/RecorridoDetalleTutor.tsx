@@ -13,9 +13,9 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
     <View style={styles.line}>
       <TouchableOpacity
         style={styles.itemsmall}
-        // onPress={() => navigation.navigate('PasajeroDetalleTutor', {
-        //   pasajero: pasajero.item,
-        // })}
+        onPress={() => navigation.navigate('PasajeroDetalleTutor', {
+          pasajero: pasajero.item, recorrido
+        })}
       >
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>{pasajero.item.nombre} {pasajero.item.apellido}</Text>
