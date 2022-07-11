@@ -10,13 +10,14 @@ import { EventualidadFormType } from '../components/form/FormTypes';
 import { AuthContext } from '../auth/AuthProvider';
 import { postEventualidad } from '../services/eventualidad.service';
 import ErrorText from '../components/ErrorText';
+import { RolUsuario } from '../domain/RolUsuario';
 
 export default function EventualidadAusencia({ route, navigation }: EventualidadAusenciaProps) {
   const { pasajero, recorrido } = route.params;
   
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const { token } = useContext(AuthContext);
+  const { token, rol } = useContext(AuthContext);
   
   const {control, handleSubmit, formState: {errors}} = useForm<EventualidadFormType>({
     defaultValues: {
@@ -35,7 +36,9 @@ export default function EventualidadAusencia({ route, navigation }: Eventualidad
       const resp = await postEventualidad(token, dataEventualidad);
       if(resp){
         Alert.alert('', `Se guardó la ausencia para el pasajero ${pasajero.nombre} ${pasajero.apellido}`);
-        navigation.navigate('PasajeroEdicion', { dataRecorrido: null, recorrido, pasajero });
+        rol?.valueOf() === RolUsuario.CHOFER
+          ? navigation.navigate('PasajeroEdicion', { dataRecorrido: null, recorrido, pasajero })
+          : navigation.navigate('PasajeroDetalleTutor', { recorrido, pasajero });
       }
     } catch(error) {
       setMensajeError(error as string);

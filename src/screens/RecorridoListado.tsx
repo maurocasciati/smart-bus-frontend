@@ -6,6 +6,7 @@ import ErrorText from '../components/ErrorText';
 import { RecorridoListadoProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
 import { Recorrido } from '../domain/Recorrido';
+import { RolUsuario } from '../domain/RolUsuario';
 import { getListadoRecorridos } from '../services/recorrido.service';
 import { styles } from '../styles/styles';
 import { mapDateTimeStringToTime } from '../utils/date.utils';
@@ -14,7 +15,7 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
   const [listadoRecorridos, setListadoRecorridos] = useState<Recorrido[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const { token } = useContext(AuthContext);
+  const { token, rol } = useContext(AuthContext);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,13 +36,17 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
     }, [])
   );
 
+  const verDetalleRecorrido = (recorrido: Recorrido) => {
+    rol?.valueOf() === RolUsuario.CHOFER ? navigation.navigate('RecorridoDetalle', { recorrido })
+      : rol?.valueOf() === RolUsuario.TUTOR ? navigation.navigate('RecorridoDetalleTutor', { recorrido })
+        : null;
+  };
+
   const renderItem = (recorrido: ListRenderItemInfo<Recorrido>) => (
     <View style={styles.line}>
       <TouchableOpacity
         style={styles.item}
-        onPress={() => navigation.navigate('RecorridoDetalle', {
-          recorrido: recorrido.item,
-        })}
+        onPress={() => verDetalleRecorrido(recorrido.item)}
       >
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>{recorrido.item.nombre}</Text>
@@ -63,7 +68,9 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
 
       <View style={styles.center}>
         { mensajeError && ErrorText(mensajeError) }
-        <PrimaryButton name={'Crear Recorrido'} action={() => navigation.navigate('RecorridoEdicion', { recorrido: null } )}/>
+        { rol?.valueOf() === RolUsuario.CHOFER && 
+          <PrimaryButton name={'Crear Recorrido'} action={() => navigation.navigate('RecorridoEdicion', { recorrido: null } )}/>
+        }
       </View>
     </View>
   );

@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { AuthContext } from '../auth/AuthProvider';
 import RecorridoDetalle from '../screens/RecorridoDetalle';
+import RecorridoDetalleTutor from '../screens/tutor/RecorridoDetalleTutor';
 import RecorridoListado from '../screens/RecorridoListado';
 import Login from '../screens/Login';
 import { Recorrido } from '../domain/Recorrido';
@@ -22,6 +23,7 @@ import EventualidadDomicilio from '../screens/EventualidadDomicilio';
 import VerEstadoDeCuenta from '../screens/VerEstadoDeCuenta';
 import TutorListado from '../screens/TutorListado';
 import { RolUsuario } from '../domain/RolUsuario';
+import PasajeroDetalleTutor from '../screens/tutor/PasajeroDetalleTutor';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -29,8 +31,10 @@ export type RootStackParamList = {
   Inicio: undefined;
   RecorridoListado: undefined;
   RecorridoDetalle: { recorrido: Recorrido };
+  RecorridoDetalleTutor: { recorrido: Recorrido };
   RecorridoEnCurso: { recorrido: Recorrido };
   RecorridoEdicion: { recorrido: Recorrido | null };
+  PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
   PasajeroListado: { recorrido: Recorrido };
   PasajeroSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
@@ -48,6 +52,7 @@ export type RecorridoListadoProps = NativeStackScreenProps<RootStackParamList, '
 export type RecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalle'>;
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
 export type RecorridoEdicionProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEdicion'>;
+export type PasajeroDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'PasajeroDetalleTutor'>;
 export type PasajeroEdicionProps = NativeStackScreenProps<RootStackParamList, 'PasajeroEdicion'>;
 export type PasajeroListadoProps = NativeStackScreenProps<RootStackParamList, 'PasajeroListado'>;
 export type PasajeroSeleccionProps = NativeStackScreenProps<RootStackParamList, 'PasajeroSeleccion'>;
@@ -90,6 +95,11 @@ export default function NavigationComponent() {
         ) : rol.valueOf() == RolUsuario.TUTOR ? (
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
+            <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
+            <Stack.Screen name="PasajeroDetalleTutor" component={PasajeroDetalleTutor} options={{ title: 'Detalles del pasajero' }}/>
+            <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>
+            <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
+            <Stack.Screen name="EstadoDeCuenta" component={VerEstadoDeCuenta} options={{ title: 'Estado de cuenta' }}/>
           </>
         ) : rol.valueOf() == RolUsuario.ESCUELA ? (
           <>

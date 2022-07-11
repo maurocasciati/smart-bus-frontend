@@ -5,7 +5,7 @@ import { throwError } from '../utils/service.utils';
 
 export const signIn = async (email: string, password: string) => {
   try {
-    return await axios.post<{token: string, idTipoDeUsuario: number}>(`${baseUrl}/Usuario/autenticar`, {email, password});
+    return await axios.post<{token: string, idTipoDeUsuario: number, id: number}>(`${baseUrl}/Usuario/autenticar`, {email, password});
   } catch(error) {
     throwError(error);
   }
