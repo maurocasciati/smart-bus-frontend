@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { AuthContext } from '../auth/AuthProvider';
 import RecorridoDetalle from '../screens/RecorridoDetalle';
+import RecorridoDetalleTutor from '../screens/tutor/RecorridoDetalleTutor';
 import RecorridoListado from '../screens/RecorridoListado';
 import Login from '../screens/Login';
 import { Recorrido } from '../domain/Recorrido';
@@ -29,6 +30,7 @@ export type RootStackParamList = {
   Inicio: undefined;
   RecorridoListado: undefined;
   RecorridoDetalle: { recorrido: Recorrido };
+  RecorridoDetalleTutor: { recorrido: Recorrido };
   RecorridoEnCurso: { recorrido: Recorrido };
   RecorridoEdicion: { recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
@@ -90,6 +92,7 @@ export default function NavigationComponent() {
         ) : rol.valueOf() == RolUsuario.TUTOR ? (
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
+            <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
           </>
         ) : rol.valueOf() == RolUsuario.ESCUELA ? (
           <>

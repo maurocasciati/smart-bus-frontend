@@ -77,4 +77,14 @@ export const styles = StyleSheet.create({
     marginTop: -20,
     marginBottom: 20,
   },
+  detallesRecorrido: {
+    padding: 20,
+    paddingBottom: 5,
+    borderBottomColor: 'lightgray',
+    borderBottomWidth: 1,
+  },
+  itemsmall: {
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+  },
 });
