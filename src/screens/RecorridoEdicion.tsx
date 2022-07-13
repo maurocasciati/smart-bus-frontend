@@ -20,7 +20,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
   const [showModalEliminar, setShowModalEliminar] = useState<boolean>(false);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
   
-  const { token } = useContext(AuthContext);
+  const { token, id } = useContext(AuthContext);
   
   const {control, handleSubmit, formState: {errors}} = useForm<RecorridoFormType>({
     defaultValues: {
@@ -30,7 +30,7 @@ export default function RecorridoEdicion({ route, navigation }: RecorridoEdicion
       horario: recorrido ? mapDateTimeStringToTime(recorrido.horario) : '',
       idPasajeros: recorrido?.pasajeros?.map(p => p.id) || [],
       idEscuela: recorrido?.escuela?.id,
-      idChofer: 1,
+      idChofer: id || undefined,
     }
   });
 
