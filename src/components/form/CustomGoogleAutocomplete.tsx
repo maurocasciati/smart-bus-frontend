@@ -33,7 +33,7 @@ export default function CustomGoogleAutocomplete({control, name, rules, placehol
                 if (details?.geometry?.location) {
                   const { lat, lng } = details.geometry.location;
                   onChange({
-                    domicilio: data.description,
+                    domicilio: details.formatted_address,
                     coordenadas: { latitude: lat, longitude: lng } as LatLng,
                   });
                 }
