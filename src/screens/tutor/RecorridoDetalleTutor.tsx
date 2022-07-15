@@ -62,6 +62,9 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
           <Text style={styles.subtitle}>Horario:</Text>
           <Text style={styles.title}>{mapDateTimeStringToTime(recorrido.horario)} {recorrido.esRecorridoDeIda ? '(Ida)' : '(Vuelta)'}</Text>
           <Text style={styles.subtitle}></Text>
+          <Text style={styles.subtitle}>Chofer:</Text>
+          <Text style={styles.title}>{recorrido.chofer.nombre} {recorrido.chofer.apellido}</Text>
+          <Text style={styles.subtitle}></Text>
           <Text style={styles.subtitle}>Pasajeros:</Text>
         </View>
         <FlatList data={recorrido.pasajeros} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
