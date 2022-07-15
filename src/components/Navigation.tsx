@@ -31,7 +31,7 @@ export type RootStackParamList = {
   Inicio: undefined;
   RecorridoListado: undefined;
   RecorridoDetalle: { recorrido: Recorrido };
-  RecorridoDetalleTutor: { recorrido: Recorrido };
+  RecorridoDetalleTutor: { recorrido: Recorrido, estaEnCurso: boolean };
   RecorridoEnCurso: { recorrido: Recorrido };
   RecorridoEdicion: { recorrido: Recorrido | null };
   PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
@@ -50,6 +50,7 @@ export type RootStackParamList = {
 export type InicioProps = NativeStackScreenProps<RootStackParamList, 'Inicio'>;
 export type RecorridoListadoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoListado'>;
 export type RecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalle'>;
+export type RecorridoDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalleTutor'>;
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
 export type RecorridoEdicionProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEdicion'>;
 export type PasajeroDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'PasajeroDetalleTutor'>;

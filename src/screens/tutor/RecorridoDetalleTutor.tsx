@@ -1,13 +1,37 @@
-import React from 'react';
+import { usePubNub } from 'pubnub-react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity } from 'react-native';
-import { RecorridoDetalleProps } from '../../components/Navigation';
+import { RecorridoDetalleTutorProps } from '../../components/Navigation';
 import PrimaryButton from '../../components/PrimaryButton';
 import { Pasajero } from '../../domain/Pasajero';
+import { PubNubEvent } from '../../domain/PubNubEvent';
 import { styles } from '../../styles/styles';
 import { mapDateTimeStringToTime } from '../../utils/date.utils';
 
-export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDetalleProps) {
-  const { recorrido } = route.params;
+export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDetalleTutorProps) {
+  const { recorrido, estaEnCurso } = route.params;
+
+  const [enCurso, setEnCurso] = useState<boolean>(estaEnCurso);
+
+  const pubnub = usePubNub();
+  const channel = recorrido.id.toString();
+
+  const handleMessage = (event: PubNubEvent) => {
+    setEnCurso(event.message.enCurso);
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    (() => {
+      if (isMounted) {
+        pubnub.subscribe({ channels: [channel], withPresence: true });
+        pubnub.addListener({ message: handleMessage });
+      }
+    })();
+    
+    return () => { isMounted = false; };
+  }, [pubnub]);
 
   const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => (
     <View style={styles.line}>
@@ -45,8 +69,10 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
 
       <View style={styles.center}>
         <PrimaryButton name={'Ver historial del recorrido'} action={() => null} secondary= {true}/>
-        {/* TODO: Ocultar si el recorrido no esta inciado */}
-        <PrimaryButton name={'Ver recorrido en curso'} action={() => null}/>
+        { enCurso
+          ? <PrimaryButton name={'Ver recorrido en curso'} action={() => null} />
+          : <View style={{ padding: 20 }}></View>
+        }
       </View>
     </View>
   );
