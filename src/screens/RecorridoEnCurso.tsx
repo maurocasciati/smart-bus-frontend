@@ -13,6 +13,7 @@ import PrimaryButton from '../components/PrimaryButton';
 import { getRecorrido } from '../services/recorrido.service';
 import { AuthContext } from '../auth/AuthProvider';
 import NotFound from '../components/NotFound';
+import { usePubNub } from 'pubnub-react';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -28,6 +29,8 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const { token } = useContext(AuthContext);
 
   const mapRef = useRef<MapView>(null);
+  const pubnub = usePubNub();
+  const channel = recorrido.id.toString();
 
   useEffect(() => {
     let isMounted = true;
@@ -66,9 +69,11 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
 
   useEffect(() => {
     toggleFocus && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition));
+    pubnub.publish({ channel, message: { enCurso: true, posicionChofer: currentPosition } });
   }, [currentPosition]);
 
   const finalizarRecorrido = () => {
+    pubnub.publish({ channel, message: { enCurso: false, posicionChofer: null }});
     Alert.alert('', `El recorrido ${recorrido.nombre} finalizó con éxito`);
     navigation.navigate('RecorridoDetalle', { recorrido });
   };
