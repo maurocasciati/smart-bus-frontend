@@ -24,6 +24,7 @@ import VerEstadoDeCuenta from '../screens/VerEstadoDeCuenta';
 import TutorListado from '../screens/TutorListado';
 import { RolUsuario } from '../domain/RolUsuario';
 import PasajeroDetalleTutor from '../screens/tutor/PasajeroDetalleTutor';
+import RecorridoEnCursoTutor from '../screens/tutor/RecorridoEnCursoTutor';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -33,6 +34,7 @@ export type RootStackParamList = {
   RecorridoDetalle: { recorrido: Recorrido };
   RecorridoDetalleTutor: { recorrido: Recorrido, estaEnCurso: boolean };
   RecorridoEnCurso: { recorrido: Recorrido };
+  RecorridoEnCursoTutor: { recorrido: Recorrido };
   RecorridoEdicion: { recorrido: Recorrido | null };
   PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
@@ -97,6 +99,7 @@ export default function NavigationComponent() {
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
+            <Stack.Screen name="RecorridoEnCursoTutor" component={RecorridoEnCursoTutor} options={{ title: 'Recorrido en curso' }}/>
             <Stack.Screen name="PasajeroDetalleTutor" component={PasajeroDetalleTutor} options={{ title: 'Detalles del pasajero' }}/>
             <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>
             <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
