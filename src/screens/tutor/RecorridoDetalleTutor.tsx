@@ -9,16 +9,28 @@ import { styles } from '../../styles/styles';
 import { mapDateTimeStringToTime } from '../../utils/date.utils';
 
 export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDetalleTutorProps) {
-  const { recorrido, estaEnCurso } = route.params;
+  const { recorrido } = route.params;
 
-  const [enCurso, setEnCurso] = useState<boolean>(estaEnCurso);
+  const [evento, setEvento] = useState<PubNubEvent | null>(null);
 
   const pubnub = usePubNub();
   const channel = recorrido.id.toString();
 
-  const handleMessage = (event: PubNubEvent) => {
-    setEnCurso(event.message.enCurso);
-  };
+  useEffect(() => {
+    let isMounted = true;
+    (() => {
+      if (isMounted) {
+        pubnub.fetchMessages(
+          {
+            channels: [channel],
+            count: 1,
+          },
+          (status, { channels }) => setEvento(channels[channel][0] as PubNubEvent)
+        );
+      }
+    })();
+    return () => { isMounted = false; };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -26,28 +38,31 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
     (() => {
       if (isMounted) {
         pubnub.subscribe({ channels: [channel], withPresence: true });
-        pubnub.addListener({ message: handleMessage });
+        pubnub.addListener({ message: (event: PubNubEvent) => setEvento(event) });
       }
     })();
     
     return () => { isMounted = false; };
   }, [pubnub]);
 
-  const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => (
-    <View style={styles.line}>
-      <TouchableOpacity
-        style={styles.itemsmall}
-        onPress={() => navigation.navigate('PasajeroDetalleTutor', {
-          pasajero: pasajero.item, recorrido
-        })}
-      >
-        <View style={{ flex: 1 }}>
-          <Text style={styles.title}>{pasajero.item.nombre} {pasajero.item.apellido}</Text>
-          <Text style={styles.subtitle}>{pasajero.item.domicilio.domicilio}</Text>
+  const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => 
+  // TODO: Eliminar linea de abajo cuando este el filtro de getRecorridos
+    pasajero.item.id != 2 ? <></> : 
+      (
+        <View style={styles.line}>
+          <TouchableOpacity
+            style={styles.itemsmall}
+            onPress={() => navigation.navigate('PasajeroDetalleTutor', {
+              pasajero: pasajero.item, recorrido
+            })}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={styles.title}>{pasajero.item.nombre} {pasajero.item.apellido}</Text>
+              <Text style={styles.subtitle}>{pasajero.item.domicilio.domicilio}</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
-    </View>
-  );
+      );
   
   return (
     <View style={styles.container}>
@@ -72,8 +87,8 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
 
       <View style={styles.center}>
         <PrimaryButton name={'Ver historial del recorrido'} action={() => null} secondary= {true}/>
-        { enCurso
-          ? <PrimaryButton name={'Ver recorrido en curso'} action={() => navigation.navigate('RecorridoEnCursoTutor', { recorrido })} />
+        { evento?.message.enCurso
+          ? <PrimaryButton name={'Ver recorrido en curso'} action={() => navigation.navigate('RecorridoEnCursoTutor', { recorrido, eventoRecorrido: evento })} />
           : <View style={{ padding: 20 }}></View>
         }
       </View>

@@ -25,6 +25,7 @@ import TutorListado from '../screens/TutorListado';
 import { RolUsuario } from '../domain/RolUsuario';
 import PasajeroDetalleTutor from '../screens/tutor/PasajeroDetalleTutor';
 import RecorridoEnCursoTutor from '../screens/tutor/RecorridoEnCursoTutor';
+import { PubNubEvent } from '../domain/PubNubEvent';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -32,9 +33,9 @@ export type RootStackParamList = {
   Inicio: undefined;
   RecorridoListado: undefined;
   RecorridoDetalle: { recorrido: Recorrido };
-  RecorridoDetalleTutor: { recorrido: Recorrido, estaEnCurso: boolean };
+  RecorridoDetalleTutor: { recorrido: Recorrido };
   RecorridoEnCurso: { recorrido: Recorrido };
-  RecorridoEnCursoTutor: { recorrido: Recorrido };
+  RecorridoEnCursoTutor: { recorrido: Recorrido, eventoRecorrido: PubNubEvent };
   RecorridoEdicion: { recorrido: Recorrido | null };
   PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
@@ -54,6 +55,7 @@ export type RecorridoListadoProps = NativeStackScreenProps<RootStackParamList, '
 export type RecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalle'>;
 export type RecorridoDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalleTutor'>;
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
+export type RecorridoEnCursoTutorProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCursoTutor'>;
 export type RecorridoEdicionProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEdicion'>;
 export type PasajeroDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'PasajeroDetalleTutor'>;
 export type PasajeroEdicionProps = NativeStackScreenProps<RootStackParamList, 'PasajeroEdicion'>;

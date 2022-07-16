@@ -5,5 +5,6 @@ export type PubNubEvent = {
   message: {
     enCurso: boolean,
     posicionChofer: LatLng,
+    waypoints: LatLng[],
   },
 };

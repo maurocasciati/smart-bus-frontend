@@ -17,7 +17,7 @@ import { usePubNub } from 'pubnub-react';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
-  const [currentPosition, setCurrentPosition] = useState<LatLng>({ longitude: 0, latitude: 0 });
+  const [currentPosition, setCurrentPosition] = useState<LatLng>();
   const [esRecorridoDeIda, setEsRecorridoDeIda] = useState<boolean>();
   const [paradas, setParadas] = useState<Parada[]>([]);
   const [waypoints, setWaypoints] = useState<LatLng[]>([]);
@@ -35,45 +35,61 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   useEffect(() => {
     let isMounted = true;
     (async () => {
-      await Location.requestForegroundPermissionsAsync();
-      Location.watchPositionAsync({}, location => isMounted && setCurrentPosition(location.coords));
-
-      try {
-        const recorridoResponse = await getRecorrido(token, recorrido.id);
-
-        setEsRecorridoDeIda(recorridoResponse?.esRecorridoDeIda);
-
-        recorridoResponse?.escuela && setParadas([
-          ...recorridoResponse.esRecorridoDeIda ? [] : [mapEscuelaToParada(recorridoResponse.escuela)],
-          ...mapPasajerosToParada(recorridoResponse.pasajeros),
-          ...recorridoResponse.esRecorridoDeIda ? [mapEscuelaToParada(recorridoResponse.escuela)] : [],
-        ]);
-      } catch(error) {
+      if (isMounted) {
+        await Location.requestForegroundPermissionsAsync();
+        Location.watchPositionAsync({}, location => setCurrentPosition(location.coords));
+        
+        try {
+          const recorridoResponse = await getRecorrido(token, recorrido.id);
+          
+          setEsRecorridoDeIda(recorridoResponse?.esRecorridoDeIda);
+          
+          recorridoResponse?.escuela && setParadas([
+            ...recorridoResponse.esRecorridoDeIda ? [] : [mapEscuelaToParada(recorridoResponse.escuela)],
+            ...mapPasajerosToParada(recorridoResponse.pasajeros),
+            ...recorridoResponse.esRecorridoDeIda ? [mapEscuelaToParada(recorridoResponse.escuela)] : [],
+          ]);
+        } catch(error) {
+          setLoading(false);
+          setMensajeError(error as string);
+        }
         setLoading(false);
-        setMensajeError(error as string);
       }
-      setLoading(false);
     })();
     return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
-    setWaypoints(paradas.map((pasajero) => pasajero.coordenadas));
+    let isMounted = true;
+    (() => {
+      isMounted && setWaypoints(paradas.map((pasajero) => pasajero.coordenadas));
+    })();
+    return () => { isMounted = false; };
   }, [paradas]);
 
   useEffect(() => {
-    toggleFocus
-      ? mapRef.current?.animateToRegion(getFocusedRegion(currentPosition))
-      : mapRef.current?.animateToRegion(getFocusedRegion(paradas[0].coordenadas));
+    let isMounted = true;
+    (() => {
+      isMounted && currentPosition && toggleFocus
+        ? mapRef.current?.animateToRegion(getFocusedRegion(currentPosition))
+        : mapRef.current?.animateToRegion(getFocusedRegion(paradas[0].coordenadas));
+    })();
+    return () => { isMounted = false; };
   }, [toggleFocus]);
 
   useEffect(() => {
-    toggleFocus && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition));
-    pubnub.publish({ channel, message: { enCurso: true, posicionChofer: currentPosition } });
-  }, [currentPosition]);
+    let isMounted = true;
+    (() => {
+      if (isMounted) {
+        currentPosition && toggleFocus && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition));
+        currentPosition && pubnub.publish({ channel, message: { enCurso: true, posicionChofer: currentPosition, waypoints }});
+      }
+    })();
+    return () => { isMounted = false; };
+  }, [currentPosition, waypoints]);
 
   const finalizarRecorrido = () => {
-    pubnub.publish({ channel, message: { enCurso: false, posicionChofer: null }});
+    pubnub.publish({ channel, message: { enCurso: false, posicionChofer: currentPosition, waypoints: [] }});
     Alert.alert('', `El recorrido ${recorrido.nombre} finalizó con éxito`);
     navigation.navigate('RecorridoDetalle', { recorrido });
   };
@@ -81,10 +97,10 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const finalizarHabilitado = (): boolean => paradas.length === 0;
   const esUltimaParada = (): boolean => paradas.length > 1;
   const removerParada = (): void => setParadas(paradas.slice(1));
-  const animateToInitialRegion = (): void => mapRef.current?.animateToRegion(getFocusedRegion(currentPosition), 1);
+  const animateToInitialRegion = (): void => currentPosition && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition), 1);
 
   const renderMap = () => {
-    return loading ? null : (
+    return loading && currentPosition ? null : (
       <MapView
         ref={mapRef}
         style={styles.map}

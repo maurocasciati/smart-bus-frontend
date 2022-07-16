@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { RecorridoEnCursoProps } from '../../components/Navigation';
+import { View, StyleSheet } from 'react-native';
+import { RecorridoEnCursoTutorProps } from '../../components/Navigation';
 import { styles } from '../../styles/styles';
 import MapView, { LatLng, Marker } from 'react-native-maps';
 import { getRegionForCoordinates } from '../../utils/map.utils';
@@ -9,36 +9,18 @@ import MapViewDirections from 'react-native-maps-directions';
 import ActionButton from '../../components/ActionButton';
 import { usePubNub } from 'pubnub-react';
 import { PubNubEvent } from '../../domain/PubNubEvent';
+import ModalConfirmacion from '../../components/ModalConfirmacion';
 
-export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEnCursoProps) {
-  const { recorrido } = route.params;
-  const [enCurso, setEnCurso] = useState<boolean>(true);
-  const [posicionChofer, setPosicionChofer] = useState<LatLng>();
-  const [waypoints, setWaypoints] = useState<LatLng[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEnCursoTutorProps) {
+  const { recorrido, eventoRecorrido } = route.params;
 
-  const [mensajeError, setMensajeError] = useState<string | null>(null);
+  const [enCurso, setEnCurso] = useState<boolean>(eventoRecorrido.message.enCurso);
+  const [posicionChofer, setPosicionChofer] = useState<LatLng>(eventoRecorrido.message.posicionChofer);
+  const [waypoints, setWaypoints] = useState<LatLng[]>(eventoRecorrido.message.waypoints);
 
   const mapRef = useRef<MapView>(null);
   const pubnub = usePubNub();
   const channel = recorrido.id.toString();
-
-  const handleMessage = (event: PubNubEvent) => {
-    setEnCurso(event.message.enCurso);
-  };
-
-  useEffect(() => {
-    let isMounted = true;
-    
-    (() => {
-      if (isMounted) {
-        setWaypoints(recorrido.pasajeros.map((pasajero) => pasajero.domicilio.coordenadas));
-        setPosicionChofer({ latitude: -34.616771, longitude: -58.444594 });
-      }
-    })();
-    
-    return () => { isMounted = false; };
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -46,23 +28,35 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
     (() => {
       if (isMounted) {
         pubnub.subscribe({ channels: [channel], withPresence: true });
-        pubnub.addListener({ message: handleMessage });
+        pubnub.addListener({
+          message: (event: PubNubEvent) => {
+            setEnCurso(event.message.enCurso);
+            setWaypoints(event.message.waypoints);
+            setPosicionChofer(event.message.posicionChofer);
+          }
+        });
       }
     })();
     
     return () => { isMounted = false; };
   }, [pubnub]);
 
-  const focus = () => mapRef.current?.animateToRegion(
-    getRegionForCoordinates([
-      ...(posicionChofer ? [posicionChofer] : []),
-      ...(recorrido.escuela ? [recorrido.escuela.direccion.coordenadas] : []),
-      ...waypoints,
-    ])
-  );
+  useEffect(() => {
+    let isMounted = true;
+    
+    (() => {
+      if (isMounted) {
+        focus();
+      }
+    })();
+    
+    return () => { isMounted = false; };
+  }, [posicionChofer]);
+
+  const focus = () => mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
 
   const renderMap = () => {
-    return loading ? null : (
+    return (
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -71,9 +65,9 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
       >
         {/* TODO: Reemplazar por el que esta comentado cuando el get recorrido traiga filtados */}
         <Marker
-          key={recorrido.pasajeros[0].id.toString()}
-          coordinate={recorrido.pasajeros[2].domicilio.coordenadas}
-          title={recorrido.pasajeros[2].domicilio.domicilio}
+          key={recorrido.pasajeros[1].id.toString()}
+          coordinate={recorrido.pasajeros[1].domicilio.coordenadas}
+          title={recorrido.pasajeros[1].domicilio.domicilio}
           image={require('../../../assets/marker-house.png')}/>
         {/*
         { recorrido.pasajeros.map((pasajero) => 
@@ -115,26 +109,40 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
     );
   };
 
-  return loading ? null : (
+  return (
     <View style={styles.container}>
       { renderMap() }
 
       <View style={localstyles.detailsContainer}>
         <View style={localstyles.recorridoContainer}>
-          <View style={{ flex: 1, margin: 5 }}>
+          {/* <View style={{ flex: 1, margin: 5 }}>
             <ActionButton name='No sube' action={() => null} secondary={true}></ActionButton>
-          </View>
+          </View> */}
           <View style={{ flex: 3, margin: 5 }}>
-            <ActionButton name='Center' action={focus}></ActionButton>
+            <ActionButton name='Centrar mapa' action={focus}></ActionButton>
           </View>
         </View>
-        <TouchableOpacity
+        {/* 
+          Agregar mensaje cuando pasajero sube
+          Agregar mensaje cuando recorrido llega a la escuela
+          Ver diferencias entre ida y vuelta
+          Ver que mostrar apensa arranca/cuando no paso nada todavia
+        */}
+
+
+        {/* <TouchableOpacity
           style={localstyles.pasajerosContainer}
           onPress={() => null}
         >
           <Text style={localstyles.pasajerosText}>Siguiente: </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
+
+      <ModalConfirmacion
+        visible={!enCurso}
+        text={'El chofer ha finalizado el recorrido'}
+        cancel={() => navigation.navigate('RecorridoDetalleTutor', { recorrido })}
+      />
     </View>
   );
 }
