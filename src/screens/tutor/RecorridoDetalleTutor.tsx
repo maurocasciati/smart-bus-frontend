@@ -1,5 +1,6 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { usePubNub } from 'pubnub-react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity } from 'react-native';
 import { RecorridoDetalleTutorProps } from '../../components/Navigation';
 import PrimaryButton from '../../components/PrimaryButton';
@@ -16,33 +17,29 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
   const pubnub = usePubNub();
   const channel = recorrido.id.toString();
 
-  useEffect(() => {
-    let isMounted = true;
-    (() => {
-      if (isMounted) {
-        pubnub.fetchMessages(
-          {
-            channels: [channel],
-            count: 1,
-          },
-          (status, { channels }) => setEvento(channels[channel][0] as PubNubEvent)
-        );
-      }
-    })();
-    return () => { isMounted = false; };
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      pubnub.fetchMessages(
+        {
+          channels: [channel],
+          count: 1,
+        },
+        (status, { channels }) => setEvento(channels[channel][0] as PubNubEvent)
+      );
+    }, [])
+  );
 
   useEffect(() => {
-    let isMounted = true;
-    
-    (() => {
-      if (isMounted) {
-        pubnub.subscribe({ channels: [channel], withPresence: true });
-        pubnub.addListener({ message: (event: PubNubEvent) => setEvento(event) });
-      }
-    })();
-    
-    return () => { isMounted = false; };
+    const listener = { message: (event: PubNubEvent) => setEvento(event) };
+    const subscription = { channels: [channel], withPresence: true };
+
+    pubnub.addListener(listener);
+    pubnub.subscribe(subscription);
+
+    return () => {
+      pubnub.removeListener(listener);
+      pubnub.unsubscribe(subscription);
+    };
   }, [pubnub]);
 
   const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { RecorridoEnCursoTutorProps } from '../../components/Navigation';
 import { styles } from '../../styles/styles';
@@ -10,6 +10,7 @@ import ActionButton from '../../components/ActionButton';
 import { usePubNub } from 'pubnub-react';
 import { PubNubEvent } from '../../domain/PubNubEvent';
 import ModalConfirmacion from '../../components/ModalConfirmacion';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEnCursoTutorProps) {
   const { recorrido, eventoRecorrido } = route.params;
@@ -22,36 +23,33 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
   const pubnub = usePubNub();
   const channel = recorrido.id.toString();
 
-  useEffect(() => {
-    let isMounted = true;
-    
-    (() => {
-      if (isMounted) {
-        pubnub.subscribe({ channels: [channel], withPresence: true });
-        pubnub.addListener({
-          message: (event: PubNubEvent) => {
-            setEnCurso(event.message.enCurso);
-            event.message.waypoints && setWaypoints(event.message.waypoints);
-            event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
-          }
-        });
-      }
-    })();
-    
-    return () => { isMounted = false; };
-  }, [pubnub]);
+  useFocusEffect(
+    useCallback(() => {
+      const listener = {
+        message: (event: PubNubEvent) => {
+          setEnCurso(event.message.enCurso);
+          event.message.waypoints && setWaypoints(event.message.waypoints);
+          event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
+        }
+      };
+      const subscription = { channels: [channel], withPresence: true };
 
-  useEffect(() => {
-    let isMounted = true;
-    
-    (() => {
-      if (isMounted) {
-        mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
-      }
-    })();
-    
-    return () => { isMounted = false; };
-  }, [posicionChofer]);
+      pubnub.addListener(listener);
+      pubnub.subscribe(subscription);
+
+
+      return () => {
+        pubnub.removeListener(listener);
+        pubnub.unsubscribe(subscription);
+      };
+    }, [pubnub])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
+    }, [posicionChofer])
+  );
 
   const focus = () => mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
 
@@ -140,7 +138,7 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
       <ModalConfirmacion
         visible={!enCurso}
         text={'El chofer ha finalizado el recorrido'}
-        cancel={() => navigation.navigate('RecorridoDetalleTutor', { recorrido })}
+        cancel={() => navigation.navigate('RecorridoListado')}
       />
     </View>
   );

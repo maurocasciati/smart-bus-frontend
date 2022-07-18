@@ -94,7 +94,6 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   useEffect(() => {
     navigation.addListener('beforeRemove', (event: any) => {
       event.preventDefault();
-      console.log('posicion dentro es: ' + currentPosition);
   
       if (!quedanParadas) {
         pubnub.publish({ channel, message: { enCurso: false, posicionChofer: null, waypoints: [] }});
