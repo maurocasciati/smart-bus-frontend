@@ -31,8 +31,8 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
         pubnub.addListener({
           message: (event: PubNubEvent) => {
             setEnCurso(event.message.enCurso);
-            setWaypoints(event.message.waypoints);
-            setPosicionChofer(event.message.posicionChofer);
+            event.message.waypoints && setWaypoints(event.message.waypoints);
+            event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
           }
         });
       }
@@ -46,7 +46,7 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
     
     (() => {
       if (isMounted) {
-        focus();
+        mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
       }
     })();
     
@@ -128,7 +128,6 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
           Ver diferencias entre ida y vuelta
           Ver que mostrar apensa arranca/cuando no paso nada todavia
         */}
-
 
         {/* <TouchableOpacity
           style={localstyles.pasajerosContainer}

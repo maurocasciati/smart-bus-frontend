@@ -89,7 +89,7 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
         <PrimaryButton name={'Ver historial del recorrido'} action={() => null} secondary= {true}/>
         { evento?.message.enCurso
           ? <PrimaryButton name={'Ver recorrido en curso'} action={() => navigation.navigate('RecorridoEnCursoTutor', { recorrido, eventoRecorrido: evento })} />
-          : <View style={{ padding: 20 }}></View>
+          : <View style={{ padding: 5 }}></View>
         }
       </View>
     </View>
