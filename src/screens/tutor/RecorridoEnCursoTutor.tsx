@@ -35,14 +35,6 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
           event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
           if (event.message.waypoints) {
             setWaypoints(event.message.waypoints);
-            setSoloQuedaEscuela(event.message.waypoints.every((w) => !!recorrido.escuela && recorrido.escuela.direccion.coordenadas.latitude === w.latitude && recorrido.escuela.direccion.coordenadas.longitude === w.longitude));
-            setPasoPorEscuela(!event.message.waypoints.some((w) => !!recorrido.escuela && recorrido.escuela.direccion.coordenadas.latitude === w.latitude && recorrido.escuela.direccion.coordenadas.longitude === w.longitude));
-            setPasoPorDomicilio(!recorrido.pasajeros
-              .filter((p) => p.id === 2) // TODO: Borrar cuando el get recorrido tenga los filtros
-              .every((p) => event.message.waypoints.some((w) => w.latitude === p.domicilio.coordenadas.latitude && w.longitude === p.domicilio.coordenadas.longitude)));
-            setEsElSiguiente(recorrido.pasajeros
-              .filter((p) => p.id === 2) // TODO: Borrar cuando el get recorrido tenga los filtros
-              .some((p) => p.domicilio.coordenadas.latitude === event.message.waypoints[0].latitude && p.domicilio.coordenadas.longitude === event.message.waypoints[0].longitude));
           }
         }
       };
@@ -62,6 +54,19 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
     useCallback(() => {
       mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
     }, [posicionChofer])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      setSoloQuedaEscuela(waypoints.every((w) => !!recorrido.escuela && recorrido.escuela.direccion.coordenadas.latitude === w.latitude && recorrido.escuela.direccion.coordenadas.longitude === w.longitude));
+      setPasoPorEscuela(!waypoints.some((w) => !!recorrido.escuela && recorrido.escuela.direccion.coordenadas.latitude === w.latitude && recorrido.escuela.direccion.coordenadas.longitude === w.longitude));
+      setPasoPorDomicilio(!recorrido.pasajeros
+        .filter((p) => p.id === 2) // TODO: Borrar cuando el get recorrido tenga los filtros
+        .every((p) => waypoints.some((w) => w.latitude === p.domicilio.coordenadas.latitude && w.longitude === p.domicilio.coordenadas.longitude)));
+      setEsElSiguiente(waypoints[0] && recorrido.pasajeros
+        .filter((p) => p.id === 2) // TODO: Borrar cuando el get recorrido tenga los filtros
+        .some((p) => p.domicilio.coordenadas.latitude === waypoints[0].latitude && p.domicilio.coordenadas.longitude === waypoints[0].longitude));
+    }, [waypoints])
   );
 
   const focus = () => mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
@@ -148,7 +153,7 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
         </View>
         <View style={localstyles.recorridoContainer}>
           <Checkbox value={pasoPorDomicilio} color={'orange'}/>
-          <Text style={localstyles.item}>{ pasoPorEscuela ? pasoPorDomicilio ? '¡El micro llegó a casa!' : 'Los pasajeros están en camino a casa' : 'Los pasajeros todavía no salieron' }</Text>
+          <Text style={localstyles.item}>{ pasoPorEscuela ? pasoPorDomicilio ? '¡El micro llegó a casa!' : 'Los pasajeros van camino a casa' : 'Los pasajeros todavía no salieron' }</Text>
         </View>
       </View>
     );
