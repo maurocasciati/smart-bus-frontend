@@ -33,9 +33,7 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
         message: (event: PubNubEvent) => {
           setEnCurso(event.message.enCurso);
           event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
-          if (event.message.waypoints) {
-            setWaypoints(event.message.waypoints);
-          }
+          event.message.waypoints && setWaypoints(event.message.waypoints);
         }
       };
       const subscription = { channels: [channel], withPresence: true };
