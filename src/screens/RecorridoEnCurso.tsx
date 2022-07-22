@@ -92,13 +92,20 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   }, [currentPosition, waypoints]);
 
   useEffect(() => {
-    navigation.addListener('beforeRemove', (event: any) => {
+    const unsuscribe = navigation.addListener('beforeRemove', (event: any) => {
       event.preventDefault();
   
       if (!quedanParadas) {
-        pubnub.publish({ channel, message: { enCurso: false, posicionChofer: null, waypoints: [] }});
-        Alert.alert('', `El recorrido ${recorrido.nombre} finalizó con éxito`);
-        navigation.dispatch(event.data.action);
+        Alert.alert('', `El recorrido ${recorrido.nombre} finalizó con éxito`, [
+          {
+            text: 'Aceptar',
+            style: 'cancel',
+            onPress: () => {
+              pubnub.publish({ channel, message: { enCurso: false, posicionChofer: null, waypoints: [] }});
+              navigation.dispatch(event.data.action);
+            }
+          },
+        ]);
       } else {
         Alert.alert(
           'El recorrido sigue en curso',
@@ -119,6 +126,8 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
         );
       }
     });
+
+    return unsuscribe;
   }, [navigation, quedanParadas]);
 
   const finalizarRecorrido = () => navigation.navigate('RecorridoDetalle', { recorrido });

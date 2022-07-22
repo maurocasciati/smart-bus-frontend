@@ -1,16 +1,16 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { RecorridoEnCursoTutorProps } from '../../components/Navigation';
 import { styles } from '../../styles/styles';
 import MapView, { LatLng, Marker } from 'react-native-maps';
 import { getRegionForCoordinates } from '../../utils/map.utils';
 import { customMapStyle, GOOGLE_API_KEY } from '../../constants';
 import MapViewDirections from 'react-native-maps-directions';
-import ActionButton from '../../components/ActionButton';
 import { usePubNub } from 'pubnub-react';
 import { PubNubEvent } from '../../domain/PubNubEvent';
 import ModalConfirmacion from '../../components/ModalConfirmacion';
 import { useFocusEffect } from '@react-navigation/native';
+import Checkbox from 'expo-checkbox';
 
 export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEnCursoTutorProps) {
   const { recorrido, eventoRecorrido } = route.params;
@@ -18,6 +18,10 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
   const [enCurso, setEnCurso] = useState<boolean>(eventoRecorrido.message.enCurso);
   const [posicionChofer, setPosicionChofer] = useState<LatLng>(eventoRecorrido.message.posicionChofer);
   const [waypoints, setWaypoints] = useState<LatLng[]>(eventoRecorrido.message.waypoints);
+  const [pasoPorDomicilio, setPasoPorDomicilio] = useState<boolean>(false);
+  const [pasoPorEscuela, setPasoPorEscuela] = useState<boolean>(false);
+  const [soloQuedaEscuela, setSoloQuedaEscuela] = useState<boolean>(false);
+  const [esElSiguiente, setEsElSiguiente] = useState<boolean>(false);
 
   const mapRef = useRef<MapView>(null);
   const pubnub = usePubNub();
@@ -28,15 +32,24 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
       const listener = {
         message: (event: PubNubEvent) => {
           setEnCurso(event.message.enCurso);
-          event.message.waypoints && setWaypoints(event.message.waypoints);
           event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
+          if (event.message.waypoints) {
+            setWaypoints(event.message.waypoints);
+            setSoloQuedaEscuela(event.message.waypoints.every((w) => !!recorrido.escuela && recorrido.escuela.direccion.coordenadas.latitude === w.latitude && recorrido.escuela.direccion.coordenadas.longitude === w.longitude));
+            setPasoPorEscuela(!event.message.waypoints.some((w) => !!recorrido.escuela && recorrido.escuela.direccion.coordenadas.latitude === w.latitude && recorrido.escuela.direccion.coordenadas.longitude === w.longitude));
+            setPasoPorDomicilio(!recorrido.pasajeros
+              .filter((p) => p.id === 2) // TODO: Borrar cuando el get recorrido tenga los filtros
+              .every((p) => event.message.waypoints.some((w) => w.latitude === p.domicilio.coordenadas.latitude && w.longitude === p.domicilio.coordenadas.longitude)));
+            setEsElSiguiente(recorrido.pasajeros
+              .filter((p) => p.id === 2) // TODO: Borrar cuando el get recorrido tenga los filtros
+              .some((p) => p.domicilio.coordenadas.latitude === event.message.waypoints[0].latitude && p.domicilio.coordenadas.longitude === event.message.waypoints[0].longitude));
+          }
         }
       };
       const subscription = { channels: [channel], withPresence: true };
 
       pubnub.addListener(listener);
       pubnub.subscribe(subscription);
-
 
       return () => {
         pubnub.removeListener(listener);
@@ -107,33 +120,44 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
     );
   };
 
+  const renderDetalles = () => {
+    return recorrido.esRecorridoDeIda ? (
+      <View style={localstyles.detailsContainer}>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={true} color={'orange'}/>
+          <Text style={localstyles.item}>{'El chofer inició el recorrido'}</Text>
+        </View>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={pasoPorDomicilio} color={'orange'}/>
+          <Text style={localstyles.item}>{ pasoPorDomicilio ? 'El pasajero ya está en el micro' : esElSiguiente ? '¡El micro está en camino!' : 'Buscando otros pasajeros...' }</Text>
+        </View>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={pasoPorEscuela} color={'orange'}/>
+          <Text style={localstyles.item}>{ !soloQuedaEscuela ? 'El recorrido esta en curso' : pasoPorEscuela ? '¡El micro llegó a la Escuela!' : 'El micro está en camino a la escuela' }</Text>
+        </View>
+      </View>
+    ) : (
+      <View style={localstyles.detailsContainer}>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={true} color={'orange'}/>
+          <Text style={localstyles.item}>{'El chofer inició el recorrido'}</Text>
+        </View>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={pasoPorEscuela} color={'orange'}/>
+          <Text style={localstyles.item}>{ pasoPorEscuela ? '¡Todos a bordo del micro!' : 'El micro está en camino a la escuela' }</Text>
+        </View>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={pasoPorDomicilio} color={'orange'}/>
+          <Text style={localstyles.item}>{ pasoPorEscuela ? pasoPorDomicilio ? '¡El micro llegó a casa!' : 'Los pasajeros están en camino a casa' : 'Los pasajeros todavía no salieron' }</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       { renderMap() }
-
-      <View style={localstyles.detailsContainer}>
-        <View style={localstyles.recorridoContainer}>
-          {/* <View style={{ flex: 1, margin: 5 }}>
-            <ActionButton name='No sube' action={() => null} secondary={true}></ActionButton>
-          </View> */}
-          <View style={{ flex: 3, margin: 5 }}>
-            <ActionButton name='Centrar mapa' action={focus}></ActionButton>
-          </View>
-        </View>
-        {/* 
-          Agregar mensaje cuando pasajero sube
-          Agregar mensaje cuando recorrido llega a la escuela
-          Ver diferencias entre ida y vuelta
-          Ver que mostrar apensa arranca/cuando no paso nada todavia
-        */}
-
-        {/* <TouchableOpacity
-          style={localstyles.pasajerosContainer}
-          onPress={() => null}
-        >
-          <Text style={localstyles.pasajerosText}>Siguiente: </Text>
-        </TouchableOpacity> */}
-      </View>
+      { renderDetalles() }
 
       <ModalConfirmacion
         visible={!enCurso}
@@ -160,14 +184,10 @@ const localstyles = StyleSheet.create({
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
   },
-  pasajerosContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 10,
-    flex: 1,
-  },
-  pasajerosText: {
-    fontSize: 18,
+  item: {
+    paddingLeft: 10,
+    fontSize: 16,
     flex: 3,
+    alignItems: 'center'
   },
 });
