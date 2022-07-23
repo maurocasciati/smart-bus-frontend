@@ -14,6 +14,7 @@ import { getRecorrido } from '../services/recorrido.service';
 import { AuthContext } from '../auth/AuthProvider';
 import NotFound from '../components/NotFound';
 import { usePubNub } from 'pubnub-react';
+import { LocationPermissionResponse, LocationSubscription } from 'expo-location';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -36,10 +37,15 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
 
   useEffect(() => {
     let isMounted = true;
+    let watchPositionPromise: LocationSubscription;
+    let requestPermissionPromise: LocationPermissionResponse;
     (async () => {
       if (isMounted) {
-        await Location.requestForegroundPermissionsAsync();
-        Location.watchPositionAsync({}, location => setCurrentPosition(location.coords));
+        watchPositionPromise = await Location.watchPositionAsync({}, location => setCurrentPosition(location.coords));
+        requestPermissionPromise = await Location.requestForegroundPermissionsAsync();
+        if (!requestPermissionPromise.granted) {
+          setMensajeError('La aplicación no tiene permisos para usar la ubicación del dispositivo');
+        }
         
         try {
           const recorridoResponse = await getRecorrido(token, recorrido.id);
@@ -58,7 +64,10 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
         setLoading(false);
       }
     })();
-    return () => { isMounted = false; };
+    return () => { 
+      isMounted = false;
+      watchPositionPromise.remove();
+    };
   }, []);
 
   useEffect(() => {
