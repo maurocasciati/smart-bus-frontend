@@ -5,7 +5,7 @@ import { RecorridoEnCursoProps } from '../components/Navigation';
 import { styles } from '../styles/styles';
 import MapView, { LatLng, Marker } from 'react-native-maps';
 import { Parada, mapEscuelaToParada, mapPasajerosToParada } from '../domain/Parada';
-import { getFocusedRegion } from '../utils/map.utils';
+import { getDistance, getFocusedRegion } from '../utils/map.utils';
 import { customMapStyle, GOOGLE_API_KEY } from '../constants';
 import MapViewDirections from 'react-native-maps-directions';
 import ActionButton from '../components/ActionButton';
@@ -14,6 +14,7 @@ import { getRecorrido } from '../services/recorrido.service';
 import { AuthContext } from '../auth/AuthProvider';
 import NotFound from '../components/NotFound';
 import { usePubNub } from 'pubnub-react';
+import { LocationPermissionResponse, LocationSubscription } from 'expo-location';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -24,6 +25,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const [waypoints, setWaypoints] = useState<LatLng[]>();
   const [loading, setLoading] = useState<boolean>(true);
   const [toggleFocus, setToggleFocus] = useState<boolean>(true);
+  const [lejosDeProximaParada, setLejosDeProximaParada] = useState<boolean>(true);
 
   const [mensajeError, setMensajeError] = useState<string | null>(null);
   
@@ -35,10 +37,15 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
 
   useEffect(() => {
     let isMounted = true;
+    let watchPositionPromise: LocationSubscription;
+    let requestPermissionPromise: LocationPermissionResponse;
     (async () => {
       if (isMounted) {
-        await Location.requestForegroundPermissionsAsync();
-        Location.watchPositionAsync({}, location => setCurrentPosition(location.coords));
+        watchPositionPromise = await Location.watchPositionAsync({}, location => setCurrentPosition(location.coords));
+        requestPermissionPromise = await Location.requestForegroundPermissionsAsync();
+        if (!requestPermissionPromise.granted) {
+          setMensajeError('La aplicación no tiene permisos para usar la ubicación del dispositivo');
+        }
         
         try {
           const recorridoResponse = await getRecorrido(token, recorrido.id);
@@ -57,7 +64,10 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
         setLoading(false);
       }
     })();
-    return () => { isMounted = false; };
+    return () => { 
+      isMounted = false;
+      watchPositionPromise.remove();
+    };
   }, []);
 
   useEffect(() => {
@@ -84,6 +94,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     let isMounted = true;
     (() => {
       if (isMounted) {
+        setLejosDeProximaParada(!!currentPosition && !!waypoints && waypoints[0] && (getDistance(currentPosition, waypoints[0]) > 150));
         currentPosition && toggleFocus && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition));
         currentPosition && waypoints && pubnub.publish({ channel, message: { enCurso: true, posicionChofer: currentPosition, waypoints }});
       }
@@ -183,19 +194,19 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       ? (
         <>
           <View style={{ flex: 1, margin: 5 }}>
-            <ActionButton name='No sube' action={removerParada} secondary={true}></ActionButton>
+            <ActionButton name='No sube' action={removerParada} secondary={true} disabled={lejosDeProximaParada}></ActionButton>
           </View>
           <View style={{ flex: 3, margin: 5 }}>
-            <ActionButton name='Confirmar subida' action={removerParada}></ActionButton>
+            <ActionButton name='Confirmar subida' action={removerParada} disabled={lejosDeProximaParada}></ActionButton>
           </View>
         </>
       ) : (
         <>
           <View style={{ flex: 1, margin: 5 }}>
-            <ActionButton name='No baja' action={removerParada} secondary={true}></ActionButton>
+            <ActionButton name='No baja' action={removerParada} secondary={true} disabled={lejosDeProximaParada}></ActionButton>
           </View>
           <View style={{ flex: 3, margin: 5 }}>
-            <ActionButton name='Confirmar bajada' action={removerParada}></ActionButton>
+            <ActionButton name='Confirmar bajada' action={removerParada} disabled={lejosDeProximaParada}></ActionButton>
           </View>
         </>      
       );
@@ -205,11 +216,11 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     return esRecorridoDeIda
       ? (
         <View style={{ flex: 1, margin: 5 }}>
-          <ActionButton name={'Llegada a la escuela'} action={removerParada}/>
+          <ActionButton name={'Llegada a la escuela'} action={removerParada} disabled={lejosDeProximaParada}/>
         </View>
       ) : (
         <View style={{ flex: 1, margin: 5 }}>
-          <ActionButton name={'Salida de la escuela'} action={removerParada}/>
+          <ActionButton name={'Salida de la escuela'} action={removerParada} disabled={lejosDeProximaParada}/>
         </View>
       );
   };
