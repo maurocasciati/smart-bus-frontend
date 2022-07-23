@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
+import SignIn from '../components/login/SignIn';
+import SignUp from '../components/login/SignUp';
 import { styles } from '../styles/styles';
-import SignIn from '../components/SignIn';
-import SignUp from '../components/SignUp';
 
 export default function Login() {
   const [toggleScreen, setToggleScreen] = useState(true);
