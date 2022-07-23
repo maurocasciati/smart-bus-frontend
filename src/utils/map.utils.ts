@@ -42,3 +42,27 @@ export function getFocusedRegion(point: LatLng): Region {
     longitudeDelta: 0.008,
   };
 }
+
+export function getDistance(point1: LatLng, point2: LatLng): number {
+  const prevLatInRad = toRad(point1.latitude);
+  const prevLongInRad = toRad(point1.longitude);
+  const latInRad = toRad(point2.latitude);
+  const longInRad = toRad(point2.longitude);
+
+  const dis = (
+    6377.830272 * // Radio de la tierra en KMs
+    1000 * // Pasado a metros
+    Math.acos(
+      Math.sin(prevLatInRad) * Math.sin(latInRad) +
+        Math.cos(prevLatInRad) * Math.cos(latInRad) * Math.cos(longInRad - prevLongInRad),
+    )
+  );
+
+  console.log(dis);
+
+  return dis;
+}
+
+function toRad(angle: number) {
+  return (angle * Math.PI) / 180;
+}
