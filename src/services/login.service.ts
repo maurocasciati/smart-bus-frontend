@@ -13,7 +13,15 @@ export const signIn = async (email: string, password: string) => {
 
 export const signUp = async (data: SignUpFormType) => {
   try {
-    return await axios.post(`${baseUrl}/Usuario/registrar`, data);
+    return await axios.put(`${baseUrl}/Usuario/completarRegistro`, data);
+  } catch(error) {
+    throwError(error);
+  }
+};
+
+export const verificarEmail = async (email: string) => {
+  try {
+    return await axios.get(`${baseUrl}/Usuario/verificar-mail`, { params: { email } });
   } catch(error) {
     throwError(error);
   }

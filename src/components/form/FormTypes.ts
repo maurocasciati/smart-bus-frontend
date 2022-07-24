@@ -1,5 +1,11 @@
 import { LatLng } from 'react-native-maps';
 
+export type DataInicialRegistroType = {
+    fueActivado: boolean,
+    email: string,
+    tipoDeUsuario: number,
+};
+
 export type SignUpFormType = {
     nombre: string,
     apellido: string,
