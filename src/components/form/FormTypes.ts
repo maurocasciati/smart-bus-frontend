@@ -54,3 +54,20 @@ export type EventualidadFormType = {
     fechaFin: string,
     direccion: DomicilioFormType | null,
 };
+
+export type HistorialRecorridoType = {
+    idRecorrido: number,
+    fechaInicio: Date,
+    fechaFinalizacion?: Date,
+    fechaParadaEscuela?: Date,
+    paradas: {
+        idPasajero: number,
+        fechaParada: Date,
+        exito: boolean,
+    }[],
+    interrumpido: boolean,
+    irregularidades: {
+        fechaIrregularidad: Date,
+        description: string,
+    }[],
+}
