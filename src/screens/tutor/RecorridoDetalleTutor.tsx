@@ -42,24 +42,21 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
     };
   }, [pubnub]);
 
-  const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => 
-  // TODO: Eliminar linea de abajo cuando este el filtro de getRecorridos
-    pasajero.item.id != 2 ? <></> : 
-      (
-        <View style={styles.line}>
-          <TouchableOpacity
-            style={styles.itemsmall}
-            onPress={() => navigation.navigate('PasajeroDetalleTutor', {
-              pasajero: pasajero.item, recorrido
-            })}
-          >
-            <View style={{ flex: 1 }}>
-              <Text style={styles.title}>{pasajero.item.nombre} {pasajero.item.apellido}</Text>
-              <Text style={styles.subtitle}>{pasajero.item.domicilio.domicilio}</Text>
-            </View>
-          </TouchableOpacity>
+  const renderItem = (pasajero: ListRenderItemInfo<Pasajero>) => (
+    <View style={styles.line}>
+      <TouchableOpacity
+        style={styles.itemsmall}
+        onPress={() => navigation.navigate('PasajeroDetalleTutor', {
+          pasajero: pasajero.item, recorrido
+        })}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={styles.title}>{pasajero.item.nombre} {pasajero.item.apellido}</Text>
+          <Text style={styles.subtitle}>{pasajero.item.domicilio.domicilio}</Text>
         </View>
-      );
+      </TouchableOpacity>
+    </View>
+  );
   
   return (
     <View style={styles.container}>

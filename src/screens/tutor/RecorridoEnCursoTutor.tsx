@@ -59,10 +59,8 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
       setSoloQuedaEscuela(waypoints.every((w) => !!recorrido.escuela && recorrido.escuela.direccion.coordenadas.latitude === w.latitude && recorrido.escuela.direccion.coordenadas.longitude === w.longitude));
       setPasoPorEscuela(!waypoints.some((w) => !!recorrido.escuela && recorrido.escuela.direccion.coordenadas.latitude === w.latitude && recorrido.escuela.direccion.coordenadas.longitude === w.longitude));
       setPasoPorDomicilio(!recorrido.pasajeros
-        .filter((p) => p.id === 2) // TODO: Borrar cuando el get recorrido tenga los filtros
-        .every((p) => waypoints.some((w) => w.latitude === p.domicilio.coordenadas.latitude && w.longitude === p.domicilio.coordenadas.longitude)));
+        .some((p) => waypoints.some((w) => w.latitude === p.domicilio.coordenadas.latitude && w.longitude === p.domicilio.coordenadas.longitude)));
       setEsElSiguiente(waypoints[0] && recorrido.pasajeros
-        .filter((p) => p.id === 2) // TODO: Borrar cuando el get recorrido tenga los filtros
         .some((p) => p.domicilio.coordenadas.latitude === waypoints[0].latitude && p.domicilio.coordenadas.longitude === waypoints[0].longitude));
     }, [waypoints])
   );
@@ -77,13 +75,6 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
         customMapStyle={customMapStyle}
         onMapReady={focus}
       >
-        {/* TODO: Reemplazar por el que esta comentado cuando el get recorrido traiga filtados */}
-        <Marker
-          key={recorrido.pasajeros[1].id.toString()}
-          coordinate={recorrido.pasajeros[1].domicilio.coordenadas}
-          title={recorrido.pasajeros[1].domicilio.domicilio}
-          image={require('../../../assets/marker-house.png')}/>
-        {/*
         { recorrido.pasajeros.map((pasajero) => 
           <Marker
             key={pasajero.id.toString()}
@@ -91,8 +82,6 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
             title={pasajero.domicilio.domicilio}
             image={require('../../../assets/marker-house.png')}/>
         )}
-        */}
-        
 
         { recorrido.escuela &&
           <Marker
