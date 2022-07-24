@@ -15,6 +15,8 @@ import { AuthContext } from '../auth/AuthProvider';
 import NotFound from '../components/NotFound';
 import { usePubNub } from 'pubnub-react';
 import { LocationPermissionResponse, LocationSubscription } from 'expo-location';
+import { postHistorialRecorrido } from '../services/historialRecorrido.service';
+import { HistorialRecorridoType } from '../components/form/FormTypes';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -26,6 +28,15 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const [loading, setLoading] = useState<boolean>(true);
   const [toggleFocus, setToggleFocus] = useState<boolean>(true);
   const [lejosDeProximaParada, setLejosDeProximaParada] = useState<boolean>(true);
+  const [historialRecorrido, setHistorialRecorrido] = useState<HistorialRecorridoType>({
+    idRecorrido: recorrido.id,
+    fechaInicio: new Date(),
+    fechaFinalizacion: undefined,
+    fechaParadaEscuela: undefined,
+    paradas: [],
+    interrumpido: false,
+    irregularidades: [],
+  });
 
   const [mensajeError, setMensajeError] = useState<string | null>(null);
   
@@ -107,44 +118,71 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       event.preventDefault();
   
       if (!quedanParadas) {
-        Alert.alert('', `El recorrido ${recorrido.nombre} finalizó con éxito`, [
-          {
-            text: 'Aceptar',
-            style: 'cancel',
-            onPress: () => {
-              pubnub.publish({ channel, message: { enCurso: false, posicionChofer: null, waypoints: [] }});
-              navigation.dispatch(event.data.action);
-            }
-          },
-        ]);
+        finalizarRecorrido(event, false);
       } else {
         Alert.alert(
           'El recorrido sigue en curso',
           '¿Quiere interrumpirlo y darlo como finalizado?',
           [
             { text: 'Cancelar', style: 'cancel', onPress: () => null },
-            {
-              text: 'Interrumpir',
-              style: 'destructive',
-              onPress: () => {
-                pubnub.publish({ channel, message: { enCurso: false, posicionChofer: null, waypoints: [] }});
-                // TODO: Enviar notificacion a tutores de que el recorrido finalizo con interrupción
-                Alert.alert('', `El recorrido ${recorrido.nombre} fue interrumpido`);
-                navigation.dispatch(event.data.action);
-              }
-            },
+            { text: 'Interrumpir', style: 'destructive', onPress: () => finalizarRecorrido(event, true) },
           ]
         );
       }
     });
 
     return unsuscribe;
-  }, [navigation, quedanParadas]);
+  }, [navigation, quedanParadas, historialRecorrido]);
 
-  const finalizarRecorrido = () => navigation.navigate('RecorridoDetalle', { recorrido });
+  const finalizarRecorrido = async (navigationEvent: any, interrumpido: boolean) => {
+    try {
+      const resp = await postHistorialRecorrido(token, {
+        ...historialRecorrido,
+        fechaFinalizacion: new Date(),
+        interrumpido,
+      });
+      if (resp) {
+        if (interrumpido) {
+          // TODO: Enviar notificacion a tutores de que el recorrido finalizo con interrupción
+          Alert.alert('', `El recorrido ${recorrido.nombre} fue interrumpido`);
+        } else {
+          Alert.alert('', `El recorrido ${recorrido.nombre} finalizó con éxito`);
+        }
+        pubnub.publish({ channel, message: { enCurso: false, posicionChofer: null, waypoints: [] }});
+        navigation.dispatch(navigationEvent.data.action);
+      } else {
+        throw 'El servidor no responde';
+      }
+    } catch(error) {
+      Alert.alert('', `Error al finalizar el recorrido: ${error}`);
+    }
+  };
 
   const esUltimaParada = (): boolean => !!paradas && paradas.length <= 1;
   const animateToInitialRegion = (): void => currentPosition && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition), 1);
+  const paradaPasajero = (exito: boolean): void => {
+    if (paradas && paradas.length > 0) {
+      setHistorialRecorrido({
+        ...historialRecorrido,
+        paradas: [
+          ...historialRecorrido.paradas,
+          {
+            idPasajero: paradas[0].id,
+            fechaParada: new Date(),
+            exito,
+          },
+        ],
+      });
+    }
+    removerParada();
+  };
+  const paradaEscuela = (): void => {
+    setHistorialRecorrido({
+      ...historialRecorrido,
+      fechaParadaEscuela: new Date(),
+    });
+    removerParada();
+  };
   const removerParada = (): void => {
     paradas && paradas.length === 1 && setQuedanParadas(false);
     setParadas(paradas && paradas.slice(1));
@@ -194,19 +232,19 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       ? (
         <>
           <View style={{ flex: 1, margin: 5 }}>
-            <ActionButton name='No sube' action={removerParada} secondary={true} disabled={lejosDeProximaParada}></ActionButton>
+            <ActionButton name='No sube' action={() => paradaPasajero(false)} secondary={true} disabled={lejosDeProximaParada}></ActionButton>
           </View>
           <View style={{ flex: 3, margin: 5 }}>
-            <ActionButton name='Confirmar subida' action={removerParada} disabled={lejosDeProximaParada}></ActionButton>
+            <ActionButton name='Confirmar subida' action={() => paradaPasajero(true)} disabled={lejosDeProximaParada}></ActionButton>
           </View>
         </>
       ) : (
         <>
           <View style={{ flex: 1, margin: 5 }}>
-            <ActionButton name='No baja' action={removerParada} secondary={true} disabled={lejosDeProximaParada}></ActionButton>
+            <ActionButton name='No baja' action={() => paradaPasajero(false)} secondary={true} disabled={lejosDeProximaParada}></ActionButton>
           </View>
           <View style={{ flex: 3, margin: 5 }}>
-            <ActionButton name='Confirmar bajada' action={removerParada} disabled={lejosDeProximaParada}></ActionButton>
+            <ActionButton name='Confirmar bajada' action={() => paradaPasajero(true)} disabled={lejosDeProximaParada}></ActionButton>
           </View>
         </>      
       );
@@ -216,11 +254,11 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     return esRecorridoDeIda
       ? (
         <View style={{ flex: 1, margin: 5 }}>
-          <ActionButton name={'Llegada a la escuela'} action={removerParada} disabled={lejosDeProximaParada}/>
+          <ActionButton name={'Llegada a la escuela'} action={paradaEscuela} disabled={lejosDeProximaParada}/>
         </View>
       ) : (
         <View style={{ flex: 1, margin: 5 }}>
-          <ActionButton name={'Salida de la escuela'} action={removerParada} disabled={lejosDeProximaParada}/>
+          <ActionButton name={'Salida de la escuela'} action={paradaEscuela} disabled={lejosDeProximaParada}/>
         </View>
       );
   };
@@ -228,7 +266,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const renderFinalizarRecorrido = () => {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <PrimaryButton name={'Finalizar recorrido'} action={finalizarRecorrido}/>
+        <PrimaryButton name={'Finalizar recorrido'} action={() => navigation.navigate('RecorridoDetalle', { recorrido })}/>
       </View>
     );
   };
