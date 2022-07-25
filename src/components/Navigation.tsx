@@ -110,6 +110,8 @@ export default function NavigationComponent() {
         ) : rol.valueOf() == RolUsuario.ESCUELA ? (
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
+            <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
+            <Stack.Screen name="RecorridoEnCursoTutor" component={RecorridoEnCursoTutor} options={{ title: 'Recorrido en curso' }}/>
           </>
         ) : <></>}
       </Stack.Navigator>

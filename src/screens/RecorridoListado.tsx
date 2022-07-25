@@ -37,9 +37,9 @@ export default function RecorridoListado({ navigation }: RecorridoListadoProps) 
   );
 
   const verDetalleRecorrido = (recorrido: Recorrido) => {
-    rol?.valueOf() === RolUsuario.CHOFER ? navigation.navigate('RecorridoDetalle', { recorrido })
-      : rol?.valueOf() === RolUsuario.TUTOR ? navigation.navigate('RecorridoDetalleTutor', { recorrido })
-        : null;
+    rol?.valueOf() === RolUsuario.CHOFER
+      ? navigation.navigate('RecorridoDetalle', { recorrido })
+      : navigation.navigate('RecorridoDetalleTutor', { recorrido });
   };
 
   const renderItem = (recorrido: ListRenderItemInfo<Recorrido>) => (

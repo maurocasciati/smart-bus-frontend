@@ -1,11 +1,13 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { usePubNub } from 'pubnub-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity } from 'react-native';
+import { AuthContext } from '../../auth/AuthProvider';
 import { RecorridoDetalleTutorProps } from '../../components/Navigation';
 import PrimaryButton from '../../components/PrimaryButton';
 import { Pasajero } from '../../domain/Pasajero';
 import { PubNubEvent } from '../../domain/PubNubEvent';
+import { RolUsuario } from '../../domain/RolUsuario';
 import { styles } from '../../styles/styles';
 import { mapDateTimeStringToTime } from '../../utils/date.utils';
 
@@ -16,6 +18,8 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
 
   const pubnub = usePubNub();
   const channel = recorrido.id.toString();
+
+  const { rol } = useContext(AuthContext);
 
   useFocusEffect(
     useCallback(() => {
@@ -49,6 +53,7 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
         onPress={() => navigation.navigate('PasajeroDetalleTutor', {
           pasajero: pasajero.item, recorrido
         })}
+        disabled={rol?.valueOf() != RolUsuario.TUTOR}
       >
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>{pasajero.item.nombre} {pasajero.item.apellido}</Text>
