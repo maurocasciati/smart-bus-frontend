@@ -31,6 +31,8 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
         domicilio: escuela?.direccion.domicilio || '',
         coordenadas: escuela?.direccion.coordenadas || null,
       } : null,
+      emailUsuario: undefined,
+      emailUsuarios: escuela?.usuarios?.map(e => e.email) || [],
     }
   });
 
@@ -58,6 +60,7 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
 
   const guardarEscuela = async (dataEscuela: EscuelaFormType) => {
     setMensajeError(null);
+    dataEscuela.emailUsuarios.push(dataEscuela.emailUsuario);
 
     try {
       const resp = escuela
@@ -95,6 +98,14 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
             rules={VALIDACIONES.TEXTO_NO_VACIO}
           />
         }
+        <CustomTextInput
+          control={control}
+          name='emailUsuario'
+          errors={errors}
+          placeholder='Email del usuario'
+          rules={VALIDACIONES.EMAIL}
+          editable={modoEdicion}
+        />
 
         
         { modoEdicion && escuela && <PrimaryButton name="Eliminar Escuela" action={toggleModalEliminar} secondary={true} /> }
