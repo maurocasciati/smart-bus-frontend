@@ -17,6 +17,7 @@ import { usePubNub } from 'pubnub-react';
 import { LocationPermissionResponse, LocationSubscription } from 'expo-location';
 import { postHistorialRecorrido } from '../services/historialRecorrido.service';
 import { HistorialRecorridoType } from '../components/form/FormTypes';
+import ModalInput from '../components/ModalInput';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -28,6 +29,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const [loading, setLoading] = useState<boolean>(true);
   const [toggleFocus, setToggleFocus] = useState<boolean>(true);
   const [lejosDeProximaParada, setLejosDeProximaParada] = useState<boolean>(true);
+  const [mostrarNotificarIrregularidad, setMostrarNotificarIrregularidad] = useState<boolean>(false);
   const [historialRecorrido, setHistorialRecorrido] = useState<HistorialRecorridoType>({
     idRecorrido: recorrido.id,
     fechaInicio: new Date(),
@@ -159,7 +161,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   };
 
   const esUltimaParada = (): boolean => !!paradas && paradas.length <= 1;
-  const animateToInitialRegion = (): void => currentPosition && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition), 1);
+  const animateToInitialRegion = (): void => currentPosition && mapRef.current?.animateToRegion(getFocusedRegion(currentPosition));
   const paradaPasajero = (exito: boolean): void => {
     if (paradas && paradas.length > 0) {
       setHistorialRecorrido({
@@ -188,6 +190,14 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     setParadas(paradas && paradas.slice(1));
   };
 
+  const notificarIrregularidad = (texto: string): void => {
+    pubnub.publish({ channel, message: { enCurso: true, posicionChofer: currentPosition, waypoints, irregularidad: texto }});
+  };
+
+  const darAviso = (): void => {
+    paradas && paradas[0] && pubnub.publish({ channel, message: { enCurso: true, posicionChofer: currentPosition, waypoints, aviso: paradas[0].id }});
+  };
+
   const renderMap = () => {
     return loading && currentPosition ? null : (
       <MapView
@@ -195,6 +205,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
         style={styles.map}
         customMapStyle={customMapStyle}
         showsUserLocation={true}
+        showsMyLocationButton={false}
         onMapReady={animateToInitialRegion}
       >
         { paradas && paradas.map((parada) => 
@@ -271,32 +282,51 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     );
   };
 
-  return loading ? null : (
-    <View style={styles.container}>
-      { mensajeError
-        ? <NotFound error={mensajeError} />
-        : <>
-          { renderMap() }
+  return loading ? null : ( mensajeError
+    ? <NotFound error={mensajeError} />
+    : <>
+      <View style={styles.container}>
+        { renderMap() }
 
-          <View style={localstyles.detailsContainer}>
-            { !quedanParadas
-              ? renderFinalizarRecorrido()
-              : <>
-                <View style={localstyles.recorridoContainer}>
-                  { paradas && paradas[0].esEscuela ? renderBotonEscuela() : renderBotonesPasajeros() }
-                </View>
-                <TouchableOpacity
-                  style={localstyles.pasajerosContainer}
-                  onPress={() => setToggleFocus(!toggleFocus)}
-                >
-                  <Text style={localstyles.pasajerosText}>Siguiente: {paradas && paradas[0].domicilio}</Text>
-                </TouchableOpacity>
-              </>
-            }
+        <View style={localstyles.headerContainer}>
+          <View style={localstyles.botonHeader}>
+            <ActionButton name='Centrar' action={animateToInitialRegion} secondary={true}></ActionButton>
           </View>
-        </>
-      }
-    </View>
+          <View style={localstyles.botonHeader}>
+            <ActionButton name='Irregularidad' action={() => setMostrarNotificarIrregularidad(true)} secondary={true}></ActionButton>
+          </View>
+          <View style={localstyles.botonHeader}>
+            <ActionButton name='Dar aviso' action={darAviso} disabled={lejosDeProximaParada}></ActionButton>
+          </View>
+        </View>
+
+        <View style={localstyles.espacio}/>
+
+        <View style={localstyles.detailsContainer}>
+          { !quedanParadas
+            ? renderFinalizarRecorrido()
+            : <>
+              <View style={localstyles.recorridoContainer}>
+                { paradas && paradas[0].esEscuela ? renderBotonEscuela() : renderBotonesPasajeros() }
+              </View>
+              <TouchableOpacity
+                style={localstyles.pasajerosContainer}
+                onPress={() => setToggleFocus(!toggleFocus)}
+              >
+                <Text style={localstyles.pasajerosText}>Siguiente: {paradas && paradas[0].domicilio}</Text>
+              </TouchableOpacity>
+            </>
+          }
+        </View>
+
+        <ModalInput
+          visible={mostrarNotificarIrregularidad}
+          text={'Ingrese un texto para notificar'}
+          cancel={() => setMostrarNotificarIrregularidad(false)}
+          confirm={notificarIrregularidad}        
+        />
+      </View>
+    </>
   );
 }
 
@@ -325,5 +355,19 @@ const localstyles = StyleSheet.create({
   pasajerosText: {
     fontSize: 18,
     flex: 3,
+  },
+  headerContainer: {
+    marginTop: -720,
+    padding: 0,
+    marginHorizontal: 25,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  botonHeader: {
+    flex: 1,
+    padding: 10
+  },
+  espacio: {
+    flex: 10,
   },
 });
