@@ -12,6 +12,7 @@ import ModalConfirmacion from '../../components/ModalConfirmacion';
 import { useFocusEffect } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
 import Notificacion from '../../components/Notificacion';
+import ActionButton from '../../components/ActionButton';
 
 export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEnCursoTutorProps) {
   const { recorrido, eventoRecorrido } = route.params;
@@ -158,9 +159,20 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
     );
   };
 
-  return (
+  return (<>
     <View style={styles.container}>
       { renderMap() }
+
+      <View style={localstyles.headerContainer}>
+        <View style={localstyles.botonHeader} />
+        <View style={localstyles.botonHeader} />
+        <View style={localstyles.botonHeader}>
+          <ActionButton name='Centrar' action={focus} secondary={true}></ActionButton>
+        </View>
+      </View>
+
+      <View style={localstyles.espacio}/>
+
       { renderDetalles() }
 
       <ModalConfirmacion
@@ -187,7 +199,7 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
         text={textoNotificacion || ''}
       />
     </View>
-  );
+  </>);
 }
 
 const localstyles = StyleSheet.create({
@@ -211,5 +223,19 @@ const localstyles = StyleSheet.create({
     fontSize: 16,
     flex: 3,
     alignItems: 'center'
+  },
+  headerContainer: {
+    marginTop: -720,
+    padding: 0,
+    marginHorizontal: 15,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  botonHeader: {
+    flex: 1,
+    padding: 10
+  },
+  espacio: {
+    flex: 10,
   },
 });
