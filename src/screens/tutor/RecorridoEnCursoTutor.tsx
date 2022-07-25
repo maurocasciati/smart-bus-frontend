@@ -171,7 +171,8 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
 
       <ModalConfirmacion
         visible={!!textoIrregularidad}
-        text={textoIrregularidad || ''}
+        text={'Notificación del chofer:'}
+        subtext={textoIrregularidad || ''}
         cancel={() => setTextoIrregularidad(undefined)}
       />
 
