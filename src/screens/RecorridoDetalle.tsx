@@ -10,7 +10,7 @@ import { mapDateTimeStringToTime } from '../utils/date.utils';
 import ModalConfirmacion from '../components/ModalConfirmacion';
 import { Recorrido } from '../domain/Recorrido';
 import { AuthContext } from '../auth/AuthProvider';
-import { getRecorrido } from '../services/recorrido.service';
+import { getRecorridoOriginal } from '../services/recorrido.service';
 import ErrorText from '../components/ErrorText';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -29,7 +29,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
       (async () => {
         await Location.requestForegroundPermissionsAsync();
         try {
-          const recorridoFetchedResponse = await getRecorrido(token, recorrido.id);
+          const recorridoFetchedResponse = await getRecorridoOriginal(token, recorrido.id);
           if (componentIsFocused && recorridoFetchedResponse) {
             setRecorridoFetched(recorridoFetchedResponse);
           }

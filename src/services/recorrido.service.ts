@@ -13,6 +13,15 @@ export const getListadoRecorridos = async (token: string | null) => {
   }
 };
 
+export const getRecorridoOriginal = async (token: string | null, idRecorrido: number) => {
+  try {
+    const resp = await authGet<Recorrido[]>(`${baseUrl}/Recorrido`, token);
+    return resp.data.filter((r) => r.id === idRecorrido)[0];
+  } catch(error) {
+    throwError(error);
+  }
+};
+
 export const getRecorrido = async (token: string | null, idRecorrido: number) => {
   try {
     const resp = await authGet<Recorrido>(`${baseUrl}/Recorrido/${idRecorrido}`, token);

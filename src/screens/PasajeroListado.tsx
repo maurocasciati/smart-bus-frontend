@@ -6,7 +6,7 @@ import ErrorText from '../components/ErrorText';
 import { PasajeroListadoProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
 import { Pasajero } from '../domain/Pasajero';
-import { getRecorrido } from '../services/recorrido.service';
+import { getRecorridoOriginal } from '../services/recorrido.service';
 import { styles } from '../styles/styles';
 
 export default function PasajeroListado({ route, navigation }: PasajeroListadoProps) {
@@ -23,7 +23,7 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
 
       (async () => {
         try {
-          const recorridoResponse = await getRecorrido(token, recorrido.id);
+          const recorridoResponse = await getRecorridoOriginal(token, recorrido.id);
           if (componentIsFocused && recorridoResponse) {
             setListadoPasajeros(recorridoResponse.pasajeros);
           }
