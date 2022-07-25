@@ -6,5 +6,8 @@ export type PubNubEvent = {
     enCurso: boolean,
     posicionChofer: LatLng,
     waypoints: LatLng[],
+    // TODO: Borrar los ultimos dos cuando implementemos notificaciones push
+    irregularidad: string,
+    aviso: number,
   },
 };

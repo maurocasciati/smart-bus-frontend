@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import { RecorridoEnCursoTutorProps } from '../../components/Navigation';
 import { styles } from '../../styles/styles';
 import MapView, { LatLng, Marker } from 'react-native-maps';
-import { getRegionForCoordinates } from '../../utils/map.utils';
+import { getDistance, getRegionForCoordinates } from '../../utils/map.utils';
 import { customMapStyle, GOOGLE_API_KEY } from '../../constants';
 import MapViewDirections from 'react-native-maps-directions';
 import { usePubNub } from 'pubnub-react';
@@ -11,6 +11,8 @@ import { PubNubEvent } from '../../domain/PubNubEvent';
 import ModalConfirmacion from '../../components/ModalConfirmacion';
 import { useFocusEffect } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
+import Notificacion from '../../components/Notificacion';
+import ActionButton from '../../components/ActionButton';
 
 export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEnCursoTutorProps) {
   const { recorrido, eventoRecorrido } = route.params;
@@ -22,6 +24,9 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
   const [pasoPorEscuela, setPasoPorEscuela] = useState<boolean>(false);
   const [soloQuedaEscuela, setSoloQuedaEscuela] = useState<boolean>(false);
   const [esElSiguiente, setEsElSiguiente] = useState<boolean>(false);
+  const [textoNotificacion, setTextoNotificacion] = useState<string>();
+  const [textoIrregularidad, setTextoIrregularidad] = useState<string>();
+  const [avisoDelChofer, setAvisoDelChofer] = useState<boolean>(false);
 
   const mapRef = useRef<MapView>(null);
   const pubnub = usePubNub();
@@ -34,6 +39,8 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
           setEnCurso(event.message.enCurso);
           event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
           event.message.waypoints && setWaypoints(event.message.waypoints);
+          event.message.irregularidad && setTextoIrregularidad(event.message.irregularidad);
+          event.message.aviso && recorrido.pasajeros.some((p) => p.id === event.message.aviso) && setAvisoDelChofer(true);
         }
       };
       const subscription = { channels: [channel], withPresence: true };
@@ -50,8 +57,13 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
 
   useFocusEffect(
     useCallback(() => {
+      if (esElSiguiente && recorrido.pasajeros.some((p) => getDistance(posicionChofer, p.domicilio.coordenadas) < 500)) {
+        setTextoNotificacion('¡El micro está cerca!');
+      } else {
+        setTextoNotificacion(undefined);
+      }
       mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
-    }, [posicionChofer])
+    }, [posicionChofer, esElSiguiente])
   );
 
   useFocusEffect(
@@ -72,6 +84,7 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
       <MapView
         ref={mapRef}
         style={styles.map}
+        showsMyLocationButton={false}
         customMapStyle={customMapStyle}
         onMapReady={focus}
       >
@@ -146,9 +159,20 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
     );
   };
 
-  return (
+  return (<>
     <View style={styles.container}>
       { renderMap() }
+
+      <View style={localstyles.headerContainer}>
+        <View style={localstyles.botonHeader} />
+        <View style={localstyles.botonHeader} />
+        <View style={localstyles.botonHeader}>
+          <ActionButton name='Centrar' action={focus} secondary={true}></ActionButton>
+        </View>
+      </View>
+
+      <View style={localstyles.espacio}/>
+
       { renderDetalles() }
 
       <ModalConfirmacion
@@ -156,8 +180,26 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
         text={'El chofer ha finalizado el recorrido'}
         cancel={() => navigation.navigate('RecorridoListado')}
       />
+
+      <ModalConfirmacion
+        visible={!!textoIrregularidad}
+        text={'Notificación del chofer:'}
+        subtext={textoIrregularidad || ''}
+        cancel={() => setTextoIrregularidad(undefined)}
+      />
+
+      <ModalConfirmacion
+        visible={avisoDelChofer}
+        text={'¡El micro está en la puerta!'}
+        cancel={() => setAvisoDelChofer(false)}
+      />
+
+      <Notificacion
+        visible={!!textoNotificacion}
+        text={textoNotificacion || ''}
+      />
     </View>
-  );
+  </>);
 }
 
 const localstyles = StyleSheet.create({
@@ -181,5 +223,19 @@ const localstyles = StyleSheet.create({
     fontSize: 16,
     flex: 3,
     alignItems: 'center'
+  },
+  headerContainer: {
+    marginTop: -720,
+    padding: 0,
+    marginHorizontal: 15,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  botonHeader: {
+    flex: 1,
+    padding: 10
+  },
+  espacio: {
+    flex: 10,
   },
 });
