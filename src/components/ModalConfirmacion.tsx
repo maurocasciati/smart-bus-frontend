@@ -56,6 +56,7 @@ const localstyles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 4,
     elevation: 6,
+    alignItems: 'center',
   },
   modalText: {
     fontSize: 18,
