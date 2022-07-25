@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 6,
   },
   text: {
     color: 'white',
