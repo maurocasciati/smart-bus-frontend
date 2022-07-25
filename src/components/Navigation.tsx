@@ -26,6 +26,7 @@ import { RolUsuario } from '../domain/RolUsuario';
 import PasajeroDetalleTutor from '../screens/tutor/PasajeroDetalleTutor';
 import RecorridoEnCursoTutor from '../screens/tutor/RecorridoEnCursoTutor';
 import { PubNubEvent } from '../domain/PubNubEvent';
+import UsuarioListado from '../screens/UsuarioListado';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -47,6 +48,7 @@ export type RootStackParamList = {
   EventualidadDomicilio: { recorrido: Recorrido, pasajero: Pasajero };
   EstadoDeCuenta: { recorrido: Recorrido, pasajero: Pasajero };
   TutorListado: { pasajero: Pasajero, recorrido: Recorrido };
+  UsuarioListado: { escuela: Escuela, recorrido: Recorrido };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
@@ -67,6 +69,7 @@ export type EventualidadAusenciaProps = NativeStackScreenProps<RootStackParamLis
 export type EventualidadDomicilioProps = NativeStackScreenProps<RootStackParamList, 'EventualidadDomicilio'>;
 export type EstadoDeCuentaProps = NativeStackScreenProps<RootStackParamList, 'EstadoDeCuenta'>;
 export type TutorListadoProps = NativeStackScreenProps<RootStackParamList, 'TutorListado'>;
+export type UsuarioListadoProps = NativeStackScreenProps<RootStackParamList, 'UsuarioListado'>;
 
 // Declaración del stack de pantallas que se va a usar dentro del componente de navegación
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -96,6 +99,7 @@ export default function NavigationComponent() {
             <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
             <Stack.Screen name="EstadoDeCuenta" component={VerEstadoDeCuenta} options={{ title: 'Estado de cuenta' }}/>
             <Stack.Screen name="TutorListado" component={TutorListado} options={{ title: 'Listado de tutores' }}/>
+            <Stack.Screen name="UsuarioListado" component={UsuarioListado} options={{ title: 'Listado de usuarios' }}/>
           </>
         ) : rol.valueOf() == RolUsuario.TUTOR ? (
           <>

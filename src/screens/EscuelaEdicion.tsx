@@ -98,20 +98,28 @@ export default function EscuelaEdicion({ route, navigation }: EscuelaEdicionProp
             rules={VALIDACIONES.TEXTO_NO_VACIO}
           />
         }
-        <CustomTextInput
+        { !escuela && <CustomTextInput
           control={control}
           name='emailUsuario'
           errors={errors}
           placeholder='Email del usuario'
           rules={VALIDACIONES.EMAIL}
           editable={modoEdicion}
-        />
+        />}
 
-        
-        { modoEdicion && escuela && <PrimaryButton name="Eliminar Escuela" action={toggleModalEliminar} secondary={true} /> }
         { mensajeError && ErrorText(mensajeError) }
-        { modoEdicion && <PrimaryButton name="Guardar Escuela" action={handleSubmit(guardarEscuela)} /> }
-        { !modoEdicion && <PrimaryButton name="Editar Escuela" action={() => setModoEdicion(true)} /> }
+        { modoEdicion
+          ?
+          <>
+            { escuela && <PrimaryButton name="Eliminar Escuela" action={toggleModalEliminar} secondary={true} />}
+            <PrimaryButton name="Guardar Escuela" action={handleSubmit(guardarEscuela)} />
+          </>
+          :
+          <>
+            <PrimaryButton name="Ver usuarios" action={() => recorrido && escuela && navigation.navigate('UsuarioListado', { escuela, recorrido })} secondary={true} />
+            <PrimaryButton name="Editar Escuela" action={() => setModoEdicion(true)} />
+          </>
+        }
         
       </View>
 
