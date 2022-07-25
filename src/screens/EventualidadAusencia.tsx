@@ -12,6 +12,7 @@ import ErrorText from '../components/ErrorText';
 import { RolUsuario } from '../domain/RolUsuario';
 import CustomDatePicker from '../components/form/CustomDatePicker';
 import CustomNumberInput from '../components/form/CustomNumberInput';
+import { mapDateTimeStringToYear } from '../utils/date.utils';
 
 export default function EventualidadAusencia({ route, navigation }: EventualidadAusenciaProps) {
   const { pasajero, recorrido } = route.params;
@@ -24,8 +25,9 @@ export default function EventualidadAusencia({ route, navigation }: Eventualidad
     defaultValues: {
       idPasajero: pasajero.id,
       idRecorrido: recorrido.id,
-      fechaInicio: new Date(),
-      fechaFin: new Date(),
+      fechaInicio: '',
+      fechaFin: '',
+      inicio: new Date(),
       duracion: '1',
       direccion: null,
     }
@@ -33,7 +35,10 @@ export default function EventualidadAusencia({ route, navigation }: Eventualidad
 
   const guardarEventualidad = async (dataEventualidad: EventualidadFormType) => {
     setMensajeError(null);
-    dataEventualidad.fechaFin.setDate(dataEventualidad.fechaInicio.getDate() + +dataEventualidad.duracion);
+    const fechaFin = new Date();
+    fechaFin.setDate(dataEventualidad.inicio.getDate() + +dataEventualidad.duracion);
+    dataEventualidad.fechaFin = mapDateTimeStringToYear(fechaFin);
+    dataEventualidad.fechaInicio = mapDateTimeStringToYear(dataEventualidad.inicio);
 
     try {
       const resp = await postEventualidad(token, dataEventualidad);
@@ -53,7 +58,7 @@ export default function EventualidadAusencia({ route, navigation }: Eventualidad
       <View style={styles.center}>
         <CustomDatePicker
           control={control}
-          name='fechaInicio'
+          name='inicio'
           errors={errors}
           placeholder='Fecha desde'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
