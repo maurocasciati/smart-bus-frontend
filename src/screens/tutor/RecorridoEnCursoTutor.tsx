@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { RecorridoEnCursoTutorProps } from '../../components/Navigation';
 import { styles } from '../../styles/styles';
@@ -13,6 +13,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
 import Notificacion from '../../components/Notificacion';
 import ActionButton from '../../components/ActionButton';
+import { AuthContext } from '../../auth/AuthProvider';
+import { RolUsuario } from '../../domain/RolUsuario';
 
 export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEnCursoTutorProps) {
   const { recorrido, eventoRecorrido } = route.params;
@@ -32,6 +34,8 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
   const pubnub = usePubNub();
   const channel = recorrido.id.toString();
 
+  const { rol } = useContext(AuthContext);
+
   useFocusEffect(
     useCallback(() => {
       const listener = {
@@ -40,7 +44,9 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
           event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
           event.message.waypoints && setWaypoints(event.message.waypoints);
           event.message.irregularidad && setTextoIrregularidad(event.message.irregularidad);
-          event.message.aviso && recorrido.pasajeros.some((p) => p.id === event.message.aviso) && setAvisoDelChofer(true);
+          if (rol?.valueOf() === RolUsuario.TUTOR) {
+            event.message.aviso && recorrido.pasajeros.some((p) => p.id === event.message.aviso) && setAvisoDelChofer(true);
+          }
         }
       };
       const subscription = { channels: [channel], withPresence: true };
@@ -57,13 +63,15 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
 
   useFocusEffect(
     useCallback(() => {
-      if (esElSiguiente && recorrido.pasajeros.some((p) => getDistance(posicionChofer, p.domicilio.coordenadas) < 500)) {
-        setTextoNotificacion('¡El micro está cerca!');
-      } else {
-        setTextoNotificacion(undefined);
+      if (rol?.valueOf() === RolUsuario.TUTOR) {
+        if (esElSiguiente && waypoints && waypoints[0] && (getDistance(posicionChofer, waypoints[0]) < 500)) {
+          setTextoNotificacion('¡El micro está cerca!');
+        } else {
+          setTextoNotificacion(undefined);
+        }
       }
       mapRef.current?.animateToRegion(getRegionForCoordinates([...waypoints, posicionChofer]));
-    }, [posicionChofer, esElSiguiente])
+    }, [posicionChofer, esElSiguiente, waypoints])
   );
 
   useFocusEffect(
@@ -159,6 +167,40 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
     );
   };
 
+  const renderDetallesEscuela = () => {
+    return recorrido.esRecorridoDeIda ? (
+      <View style={localstyles.detailsContainer}>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={true} color={'orange'}/>
+          <Text style={localstyles.item}>{'El chofer inició el recorrido'}</Text>
+        </View>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={soloQuedaEscuela} color={'orange'}/>
+          <Text style={localstyles.item}>{ soloQuedaEscuela ? 'Los pasajeros estan en el micro' : 'Buscando a los pasajeros...' }</Text>
+        </View>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={pasoPorEscuela} color={'orange'}/>
+          <Text style={localstyles.item}>{ !soloQuedaEscuela ? 'El recorrido esta en curso' : pasoPorEscuela ? 'El micro llegó a la Escuela' : 'El micro está en camino a la escuela' }</Text>
+        </View>
+      </View>
+    ) : (
+      <View style={localstyles.detailsContainer}>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={true} color={'orange'}/>
+          <Text style={localstyles.item}>{'El chofer inició el recorrido'}</Text>
+        </View>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={pasoPorEscuela} color={'orange'}/>
+          <Text style={localstyles.item}>{ pasoPorEscuela ? 'El micro salió de la escuela' : 'El micro está en camino a la escuela' }</Text>
+        </View>
+        <View style={localstyles.recorridoContainer}>
+          <Checkbox value={waypoints.length === 0} color={'orange'}/>
+          <Text style={localstyles.item}>{ pasoPorEscuela ? (waypoints.length === 0) ? 'Los pasajeros llegaron a sus casas' : 'Los pasajeros van camino a casa' : 'Los pasajeros todavía no salieron' }</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (<>
     <View style={styles.container}>
       { renderMap() }
@@ -167,13 +209,13 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
         <View style={localstyles.botonHeader} />
         <View style={localstyles.botonHeader} />
         <View style={localstyles.botonHeader}>
-          <ActionButton name='Centrar' action={focus} secondary={true}></ActionButton>
+          { !textoNotificacion && <ActionButton name='Centrar' action={focus} secondary={true}></ActionButton> }
         </View>
       </View>
 
       <View style={localstyles.espacio}/>
 
-      { renderDetalles() }
+      { rol?.valueOf() === RolUsuario.TUTOR ? renderDetalles() : renderDetallesEscuela() }
 
       <ModalConfirmacion
         visible={!enCurso}

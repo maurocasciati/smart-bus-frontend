@@ -28,6 +28,8 @@ export type EscuelaFormType = {
     id: number,
     nombre: string,
     direccion: DomicilioFormType | null,
+    emailUsuario: string,
+    emailUsuarios: string[],
 };
 
 export type PasajeroFormType = {
