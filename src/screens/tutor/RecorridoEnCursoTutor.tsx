@@ -24,6 +24,8 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
   const [soloQuedaEscuela, setSoloQuedaEscuela] = useState<boolean>(false);
   const [esElSiguiente, setEsElSiguiente] = useState<boolean>(false);
   const [textoNotificacion, setTextoNotificacion] = useState<string>();
+  const [textoIrregularidad, setTextoIrregularidad] = useState<string>();
+  const [avisoDelChofer, setAvisoDelChofer] = useState<boolean>(false);
 
   const mapRef = useRef<MapView>(null);
   const pubnub = usePubNub();
@@ -36,6 +38,8 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
           setEnCurso(event.message.enCurso);
           event.message.posicionChofer && setPosicionChofer(event.message.posicionChofer);
           event.message.waypoints && setWaypoints(event.message.waypoints);
+          event.message.irregularidad && setTextoIrregularidad(event.message.irregularidad);
+          event.message.aviso && recorrido.pasajeros.some((p) => p.id === event.message.aviso) && setAvisoDelChofer(true);
         }
       };
       const subscription = { channels: [channel], withPresence: true };
@@ -79,6 +83,7 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
       <MapView
         ref={mapRef}
         style={styles.map}
+        showsMyLocationButton={false}
         customMapStyle={customMapStyle}
         onMapReady={focus}
       >
@@ -162,6 +167,18 @@ export default function RecorridoEnCursoTutor({ route, navigation }: RecorridoEn
         visible={!enCurso}
         text={'El chofer ha finalizado el recorrido'}
         cancel={() => navigation.navigate('RecorridoListado')}
+      />
+
+      <ModalConfirmacion
+        visible={!!textoIrregularidad}
+        text={textoIrregularidad || ''}
+        cancel={() => setTextoIrregularidad(undefined)}
+      />
+
+      <ModalConfirmacion
+        visible={avisoDelChofer}
+        text={'¡El micro está en la puerta!'}
+        cancel={() => setAvisoDelChofer(false)}
       />
 
       <Notificacion

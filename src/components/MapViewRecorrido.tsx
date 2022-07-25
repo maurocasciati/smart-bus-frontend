@@ -34,6 +34,7 @@ export default function MapViewRecorrido({ recorrido }: { recorrido: Recorrido }
       customMapStyle={customMapStyle}
       provider={PROVIDER_GOOGLE}
       showsUserLocation={true}
+      showsMyLocationButton={false}
       region={getRegion()}
     >
       { escuela && <Marker coordinate={escuela.direccion.coordenadas} title={escuela.nombre} image={require('../../assets/marker-school.png')}/> }
