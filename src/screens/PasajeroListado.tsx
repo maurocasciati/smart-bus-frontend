@@ -52,11 +52,6 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
             {pasajeroItem.item.pisoDepartamento ? pasajeroItem.item.domicilio.domicilio + ' ' + pasajeroItem.item.pisoDepartamento : pasajeroItem.item.domicilio.domicilio}
           </Text>
         </View>
-        {/* TODO: Mostrar de este lado los botones para cambiar el orden del listado de pasajeros
-      <View>  
-        <Text style={localstyles.type}>{recorrido.item.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
-        <Text style={localstyles.hour}>{recorrido.item.horario}</Text>
-      </View> */}
       </TouchableOpacity>
     </View>
   );
@@ -69,7 +64,7 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
 
       <View style={styles.center}>
         { mensajeError && ErrorText(mensajeError) }
-        <PrimaryButton name={'Volver'} action={() => navigation.navigate('RecorridoDetalle', { recorrido })}/>
+        <PrimaryButton name={'Ordenar paradas'} action={() => navigation.navigate('PasajeroOrden', { recorrido })}/>
       </View>
     </View>
   );
