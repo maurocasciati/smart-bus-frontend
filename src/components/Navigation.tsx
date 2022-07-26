@@ -27,6 +27,7 @@ import PasajeroDetalleTutor from '../screens/tutor/PasajeroDetalleTutor';
 import RecorridoEnCursoTutor from '../screens/tutor/RecorridoEnCursoTutor';
 import { PubNubEvent } from '../domain/PubNubEvent';
 import UsuarioListado from '../screens/UsuarioListado';
+import PasajeroOrden from '../screens/PasajeroOrden';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -41,6 +42,7 @@ export type RootStackParamList = {
   PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
   PasajeroListado: { recorrido: Recorrido };
+  PasajeroOrden: { recorrido: Recorrido };
   PasajeroSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
   EscuelaEdicion: { dataRecorrido: RecorridoFormType | null, escuela: Escuela | null, recorrido: Recorrido | null };
   EscuelaSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
@@ -92,6 +94,7 @@ export default function NavigationComponent() {
             <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="PasajeroEdicion" component={PasajeroEdicion} options={{ title: 'Pasajero' }}/>
             <Stack.Screen name="PasajeroListado" component={PasajeroListado} options={{ title: 'Listado de Pasajeros' }}/>
+            <Stack.Screen name="PasajeroOrden" component={PasajeroOrden} options={{ title: 'Ordenar Pasajeros' }}/>
             <Stack.Screen name="PasajeroSeleccion" component={PasajeroSeleccion} options={{ title: 'Seleccionar Pasajeros' }}/>
             <Stack.Screen name="EscuelaEdicion" component={EscuelaEdicion} options={{ title: 'Escuela' }}/>
             <Stack.Screen name="EscuelaSeleccion" component={EscuelaSeleccion} options={{ title: 'Seleccionar Escuela' }}/>

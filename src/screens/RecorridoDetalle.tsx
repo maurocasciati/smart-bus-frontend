@@ -45,10 +45,10 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
   const tieneEscuela = !!recorridoFetched?.escuela;
   const tienePasajeros = !!recorridoFetched?.pasajeros && recorridoFetched.pasajeros.length > 0;
 
-  return (
+  return (recorridoFetched ?
     <View style={styles.container}>
       <View>
-        <MapViewRecorrido recorrido={recorridoFetched || recorrido} />
+        <MapViewRecorrido recorrido={recorridoFetched} />
       </View>
 
       { tieneEscuela && tienePasajeros &&
@@ -98,6 +98,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
         confirm={() => navigation.navigate('RecorridoEdicion', { recorrido: recorridoFetched || recorrido } )}
       />
     </View>
+    : <></>
   );
 }
 
@@ -163,19 +164,4 @@ const localstyles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-  warning: {
-    alignItems: 'center',
-    width: '100%',
-  },
-  warningtext: {
-    padding: 5,
-    paddingHorizontal: 50,
-    margin: 8,
-    color: 'red',
-    borderColor: 'red',
-    borderRadius: 30,
-    borderWidth: 1,
-    flexDirection: 'row',
-    textAlign: 'center',
-  }
 });
