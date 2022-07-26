@@ -8,6 +8,9 @@ export type Parada = {
   domicilio: string,
   coordenadas: LatLng,
   esEscuela: boolean,
+  fechaParada: Date,
+  exito: boolean,
+  eventualidad: string
 }
 
 export const mapEscuelaToParada = (escuela: Escuela) => {
