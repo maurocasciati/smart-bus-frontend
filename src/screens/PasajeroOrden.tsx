@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity, StyleSheet, PanResponderInstance, Animated, PanResponder, Alert } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo, StyleSheet, PanResponderInstance, Animated, PanResponder, Alert } from 'react-native';
 import { AuthContext } from '../auth/AuthProvider';
 import ErrorText from '../components/ErrorText';
 import { RecorridoFormType } from '../components/form/FormTypes';
