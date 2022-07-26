@@ -53,6 +53,6 @@ const localstyles = StyleSheet.create({
   textInput: {
     color: 'black',
     textAlign: 'center',
-    flex: 2,
+    flex: 1,
   },
 });
