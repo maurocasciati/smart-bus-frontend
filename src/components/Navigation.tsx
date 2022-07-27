@@ -24,6 +24,9 @@ import VerEstadoDeCuenta from '../screens/VerEstadoDeCuenta';
 import TutorListado from '../screens/TutorListado';
 import { RolUsuario } from '../domain/RolUsuario';
 import PasajeroDetalleTutor from '../screens/tutor/PasajeroDetalleTutor';
+import HistorialRecorridoListado from '../screens/historial-recorrido/HistorialRecorridoListado';
+import { HistorialRecorrido } from '../domain/HistorialRecorrido';
+import HistorialRecorridoDetalle from '../screens/historial-recorrido/HistorialRecorridoDetalle';
 import RecorridoEnCursoTutor from '../screens/tutor/RecorridoEnCursoTutor';
 import { PubNubEvent } from '../domain/PubNubEvent';
 import UsuarioListado from '../screens/UsuarioListado';
@@ -39,6 +42,9 @@ export type RootStackParamList = {
   RecorridoEnCurso: { recorrido: Recorrido };
   RecorridoEnCursoTutor: { recorrido: Recorrido, eventoRecorrido: PubNubEvent };
   RecorridoEdicion: { recorrido: Recorrido | null };
+  HistorialRecorridoListado: { recorrido: Recorrido };
+  HistorialRecorridoDetalle: { historialRecorrido: HistorialRecorrido };
+  HistorialRecorridoDetalleTutor: { historialRecorrido: HistorialRecorrido };
   PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
   PasajeroListado: { recorrido: Recorrido };
@@ -61,6 +67,9 @@ export type RecorridoDetalleTutorProps = NativeStackScreenProps<RootStackParamLi
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
 export type RecorridoEnCursoTutorProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCursoTutor'>;
 export type RecorridoEdicionProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEdicion'>;
+export type HistorialRecorridoListadoProps = NativeStackScreenProps<RootStackParamList, 'HistorialRecorridoListado'>;
+export type HistorialRecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'HistorialRecorridoDetalle'>;
+export type HistorialRecorridoDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'HistorialRecorridoDetalleTutor'>;
 export type PasajeroDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'PasajeroDetalleTutor'>;
 export type PasajeroEdicionProps = NativeStackScreenProps<RootStackParamList, 'PasajeroEdicion'>;
 export type PasajeroListadoProps = NativeStackScreenProps<RootStackParamList, 'PasajeroListado'>;
@@ -92,6 +101,8 @@ export default function NavigationComponent() {
             <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en curso', headerBackVisible: false }}/>
             <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Recorrido' }}/>
+            <Stack.Screen name="HistorialRecorridoListado" component={HistorialRecorridoListado} options={{ title: 'Historial Recorrido' }}/>
+            <Stack.Screen name="HistorialRecorridoDetalle" component={HistorialRecorridoDetalle} options={{ title: 'Detalle Historial Recorrido' }}/>
             <Stack.Screen name="PasajeroEdicion" component={PasajeroEdicion} options={{ title: 'Pasajero' }}/>
             <Stack.Screen name="PasajeroListado" component={PasajeroListado} options={{ title: 'Listado de Pasajeros' }}/>
             <Stack.Screen name="PasajeroOrden" component={PasajeroOrden} options={{ title: 'Ordenar Pasajeros' }}/>
@@ -108,6 +119,7 @@ export default function NavigationComponent() {
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
+            {/* <Stack.Screen name="HistorialRecorridoDetalleTutor" component={HistorialRecorridoDetalleTutor} options={{ title: 'Detalle Historial Recorrido' }}/> */}
             <Stack.Screen name="RecorridoEnCursoTutor" component={RecorridoEnCursoTutor} options={{ title: 'Recorrido en curso' }}/>
             <Stack.Screen name="PasajeroDetalleTutor" component={PasajeroDetalleTutor} options={{ title: 'Detalles del pasajero' }}/>
             <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>

@@ -84,9 +84,15 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
             <SecondaryButton name='Ver listado' action={() => navigation.navigate('PasajeroListado', { recorrido: recorridoFetched })}></SecondaryButton>
           </View>
         </View>
-        <View style={localstyles.footerButton}>
-          { mensajeError && ErrorText(mensajeError) }
-          <PrimaryButton name={'INICIAR'} action={() => navigation.navigate('RecorridoEnCurso', { recorrido: recorridoFetched })}/>
+        <View style={localstyles.footerContainer}>
+          <View style={localstyles.footerButton}>
+            { mensajeError && ErrorText(mensajeError) }
+            <PrimaryButton name={'INICIAR'} action={() => navigation.navigate('RecorridoEnCurso', { recorrido: recorridoFetched })}/>
+          </View>
+          <View style={localstyles.historialButton}>
+            { mensajeError && ErrorText(mensajeError) }
+            <SecondaryButton name={'Historial'} action={() => navigation.navigate('HistorialRecorridoListado', { recorrido: recorridoFetched })}/>
+          </View>
         </View>
       </View>
       }
@@ -151,10 +157,20 @@ const localstyles = StyleSheet.create({
     fontSize: 16,
     flex: 3,
   },
+  footerContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexGrow: 1,
+    justifyContent: 'space-around'
+  },
+  historialButton:{
+    width: 100,
+    height: 50,
+    marginLeft: -80,
+    marginTop: 20
+  },
   footerButton: {
-    marginBottom: -10,
-    alignItems: 'center',
-    elevation: 6,
+    width: 500
   },
   type: {
     fontSize: 12,
