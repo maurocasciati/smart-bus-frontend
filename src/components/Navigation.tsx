@@ -44,7 +44,6 @@ export type RootStackParamList = {
   RecorridoEdicion: { recorrido: Recorrido | null };
   HistorialRecorridoListado: { recorrido: Recorrido };
   HistorialRecorridoDetalle: { historialRecorrido: HistorialRecorrido };
-  HistorialRecorridoDetalleTutor: { historialRecorrido: HistorialRecorrido };
   PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
   PasajeroListado: { recorrido: Recorrido };
@@ -69,7 +68,6 @@ export type RecorridoEnCursoTutorProps = NativeStackScreenProps<RootStackParamLi
 export type RecorridoEdicionProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEdicion'>;
 export type HistorialRecorridoListadoProps = NativeStackScreenProps<RootStackParamList, 'HistorialRecorridoListado'>;
 export type HistorialRecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'HistorialRecorridoDetalle'>;
-export type HistorialRecorridoDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'HistorialRecorridoDetalleTutor'>;
 export type PasajeroDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'PasajeroDetalleTutor'>;
 export type PasajeroEdicionProps = NativeStackScreenProps<RootStackParamList, 'PasajeroEdicion'>;
 export type PasajeroListadoProps = NativeStackScreenProps<RootStackParamList, 'PasajeroListado'>;
@@ -119,8 +117,9 @@ export default function NavigationComponent() {
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
-            {/* <Stack.Screen name="HistorialRecorridoDetalleTutor" component={HistorialRecorridoDetalleTutor} options={{ title: 'Detalle Historial Recorrido' }}/> */}
             <Stack.Screen name="RecorridoEnCursoTutor" component={RecorridoEnCursoTutor} options={{ title: 'Recorrido en curso' }}/>
+            <Stack.Screen name="HistorialRecorridoListado" component={HistorialRecorridoListado} options={{ title: 'Historial Recorrido' }}/>
+            <Stack.Screen name="HistorialRecorridoDetalle" component={HistorialRecorridoDetalle} options={{ title: 'Detalle Historial Recorrido' }}/>
             <Stack.Screen name="PasajeroDetalleTutor" component={PasajeroDetalleTutor} options={{ title: 'Detalles del pasajero' }}/>
             <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>
             <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
@@ -131,6 +130,8 @@ export default function NavigationComponent() {
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="RecorridoEnCursoTutor" component={RecorridoEnCursoTutor} options={{ title: 'Recorrido en curso' }}/>
+            <Stack.Screen name="HistorialRecorridoListado" component={HistorialRecorridoListado} options={{ title: 'Historial Recorrido' }}/>
+            <Stack.Screen name="HistorialRecorridoDetalle" component={HistorialRecorridoDetalle} options={{ title: 'Detalle Historial Recorrido' }}/>
           </>
         ) : <></>}
       </Stack.Navigator>

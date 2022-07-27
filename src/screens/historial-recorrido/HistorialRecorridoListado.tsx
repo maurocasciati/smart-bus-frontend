@@ -5,7 +5,6 @@ import { AuthContext } from '../../auth/AuthProvider';
 import ErrorText from '../../components/ErrorText';
 import { HistorialRecorridoListadoProps } from '../../components/Navigation';
 import { HistorialRecorrido } from '../../domain/HistorialRecorrido';
-import { RolUsuario } from '../../domain/RolUsuario';
 import { getHistorialRecorridos } from '../../services/historial.service';
 import { styles } from '../../styles/styles';
 import { mapDateTimeStringToDate, mapDateTimeStringToTime } from '../../utils/date.utils';
@@ -14,7 +13,7 @@ export default function HistorialRecorridoListado({ navigation }: HistorialRecor
   const [historialRecorridos, setHistorialRecorridos] = useState<HistorialRecorrido[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const { token, rol } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,11 +34,8 @@ export default function HistorialRecorridoListado({ navigation }: HistorialRecor
     }, [])
   );
 
-  const verDetalleHistorialRecorrido = (historialRecorrido: HistorialRecorrido) => {
-    rol?.valueOf() === RolUsuario.CHOFER ? navigation.navigate('HistorialRecorridoDetalle', { historialRecorrido })
-      : rol?.valueOf() === RolUsuario.TUTOR ? navigation.navigate('HistorialRecorridoDetalleTutor', { historialRecorrido })
-        : null;
-  };
+  const verDetalleHistorialRecorrido = (historialRecorrido: HistorialRecorrido) =>
+    navigation.navigate('HistorialRecorridoDetalle', { historialRecorrido });
 
   const renderItem = (historialItemContainer: ListRenderItemInfo<HistorialRecorrido>) => (
     <View style={styles.line}>

@@ -85,7 +85,7 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
       </SafeAreaView>
 
       <View style={styles.center}>
-        <PrimaryButton name={'Ver historial del recorrido'} action={() => null} secondary= {true}/>
+        <PrimaryButton name={'Ver historial del recorrido'} action={() => navigation.navigate('HistorialRecorridoListado', { recorrido })} secondary= {true}/>
         { evento?.message.enCurso
           ? <PrimaryButton name={'Ver recorrido en curso'} action={() => navigation.navigate('RecorridoEnCursoTutor', { recorrido, eventoRecorrido: evento })} />
           : <View style={{ padding: 5 }}></View>
