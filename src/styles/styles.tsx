@@ -83,6 +83,12 @@ export const styles = StyleSheet.create({
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
   },
+  detallesRecorridoIrregularidades: {
+    padding: 20,
+    paddingBottom: 5,
+    borderBottomColor: 'lightgray',
+    borderBottomWidth: 1,
+  },
   itemsmall: {
     paddingHorizontal: 30,
     paddingVertical: 10,

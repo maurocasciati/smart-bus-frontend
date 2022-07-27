@@ -6,10 +6,13 @@ import ErrorText from '../../components/ErrorText';
 import { HistorialRecorridoDetalleProps } from '../../components/Navigation';
 import PrimaryButton from '../../components/PrimaryButton';
 import { HistorialRecorrido } from '../../domain/HistorialRecorrido';
+import { IrregularidadHistorialRecorrido } from '../../domain/IrregularidadHistorialRecorrido';
 import { Parada } from '../../domain/Parada';
+import { ParadaHistorialRecorrido } from '../../domain/ParadaHistorialRecorrido';
 import { RolUsuario } from '../../domain/RolUsuario';
 import { getHistorialRecorridos } from '../../services/historial.service';
 import { styles } from '../../styles/styles';
+import { mapDateTimeStringToDate, mapDateTimeStringToTime } from '../../utils/date.utils';
 
 export default function HistorialRecorridoDetalle({ route, navigation }: HistorialRecorridoDetalleProps) {
   const { historialRecorrido } = route.params;
@@ -24,9 +27,9 @@ export default function HistorialRecorridoDetalle({ route, navigation }: Histori
     }, [])
   );
 
-  const verDetalleParada = (item : Parada) => null;
+  const verDetalleParada = (item : ParadaHistorialRecorrido) => null;
 
-  const renderItem = (paradaItemContainer: ListRenderItemInfo<Parada>) => (
+  const renderItem = (paradaItemContainer: ListRenderItemInfo<ParadaHistorialRecorrido>) => (
     <View style={styles.line}>
       <TouchableOpacity
         style={styles.item}
@@ -34,12 +37,23 @@ export default function HistorialRecorridoDetalle({ route, navigation }: Histori
       >
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>{paradaItemContainer.item.nombre}</Text>
-          <Text style={styles.subtitle}>{paradaItemContainer.item.exito ? 'El pasajero llego con exito' : paradaItemContainer.item.eventualidad}</Text>
+          <Text style={styles.subtitle}>{paradaItemContainer.item.exito ? 'El pasajero llego con exito' : 'El pasajero no llego con exito'}</Text>
         </View>
         <View>
           <Text style={styles.hour}>{paradaItemContainer.item.fechaParada}</Text>
         </View>
       </TouchableOpacity>
+    </View>
+  );
+
+  const renderItemIrregularidad = (paradaItemContainer: ListRenderItemInfo<IrregularidadHistorialRecorrido>) => (
+    <View style={styles.line}>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.title}>{paradaItemContainer.item.descripcion}</Text>
+      </View>
+      <View>
+        <Text style={styles.hour}>{paradaItemContainer.item.fechaIrregularidad}</Text>
+      </View>
     </View>
   );
   
@@ -50,15 +64,24 @@ export default function HistorialRecorridoDetalle({ route, navigation }: Histori
           <Text style={styles.subtitle}>Recorrido:</Text>
           <Text style={styles.title}>{historialRecorrido.recorrido?.nombre}</Text>
           <Text style={styles.subtitle}></Text>
-          <Text style={styles.subtitle}>Fecha Inicio:</Text>
-          <Text style={styles.title}>{historialRecorrido.fechaInicio}</Text>
+          <Text style={styles.subtitle}>Fecha:</Text>
+          <Text style={styles.title}>{mapDateTimeStringToDate(historialRecorrido.fechaInicio)}</Text>
           <Text style={styles.subtitle}></Text>
-          <Text style={styles.subtitle}>Fecha Fin:</Text>
-          <Text style={styles.title}>{historialRecorrido.fechaFinalizacion}</Text>
+          <Text style={styles.subtitle}>Hora Inicio:</Text>
+          <Text style={styles.title}>{mapDateTimeStringToTime(historialRecorrido.fechaInicio)}</Text>
+          <Text style={styles.subtitle}></Text>
+          <Text style={styles.subtitle}>Hora Fin:</Text>
+          <Text style={styles.title}>{mapDateTimeStringToTime(historialRecorrido.fechaFinalizacion)}</Text>
           <Text style={styles.subtitle}></Text>
           <Text style={styles.subtitle}>Paradas:</Text>
         </View>
         <FlatList data={historialRecorrido.paradas} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
+        <Text style={styles.subtitle}></Text>
+        <View style={styles.detallesRecorridoIrregularidades}>
+          <Text style={styles.subtitle}>Irregularidades:</Text>
+        </View>
+        <FlatList data={historialRecorrido.irregularidades} renderItem={renderItemIrregularidad} keyExtractor={item => item.id.toString()} />
+        
       </SafeAreaView>
     </View>
   );

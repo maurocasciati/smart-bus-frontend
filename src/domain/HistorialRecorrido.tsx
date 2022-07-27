@@ -1,4 +1,5 @@
-import { Parada } from './Parada';
+import { IrregularidadHistorialRecorrido } from './IrregularidadHistorialRecorrido';
+import { ParadaHistorialRecorrido } from './ParadaHistorialRecorrido';
 import { Recorrido } from './Recorrido';
 
 export type HistorialRecorrido = {
@@ -6,5 +7,8 @@ export type HistorialRecorrido = {
   recorrido: Recorrido,
   fechaInicio: Date,
   fechaFinalizacion: Date,
-  paradas: Parada[]
+  fechaParadaEscuela?: Date,
+  interrumpido: boolean,
+  irregularidades: IrregularidadHistorialRecorrido[],
+  paradas: ParadaHistorialRecorrido[]
 }
