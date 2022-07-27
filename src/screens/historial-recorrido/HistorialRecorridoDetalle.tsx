@@ -1,77 +1,98 @@
-import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useContext, useState } from 'react';
-import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacity } from 'react-native';
-import { AuthContext } from '../../auth/AuthProvider';
-import ErrorText from '../../components/ErrorText';
+import React from 'react';
+import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo } from 'react-native';
 import { HistorialRecorridoDetalleProps } from '../../components/Navigation';
-import PrimaryButton from '../../components/PrimaryButton';
-import { HistorialRecorrido } from '../../domain/HistorialRecorrido';
 import { IrregularidadHistorialRecorrido } from '../../domain/IrregularidadHistorialRecorrido';
-import { Parada } from '../../domain/Parada';
 import { ParadaHistorialRecorrido } from '../../domain/ParadaHistorialRecorrido';
-import { RolUsuario } from '../../domain/RolUsuario';
-import { getHistorialRecorridos } from '../../services/historial.service';
 import { styles } from '../../styles/styles';
-import { mapDateTimeStringToDate, mapDateTimeStringToTime } from '../../utils/date.utils';
+import { mapDateTimeStringToDate, mapDateTimeStringToTime, mapDateToDayNumber } from '../../utils/date.utils';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import ActionButton from '../../components/ActionButton';
 
-export default function HistorialRecorridoDetalle({ route, navigation }: HistorialRecorridoDetalleProps) {
+export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoDetalleProps) {
   const { historialRecorrido } = route.params;
-  const [mensajeError, setMensajeError] = useState<string | null>(null);
-
-  const { token, rol } = useContext(AuthContext);
-
-  useFocusEffect(
-    useCallback(() => {
-      let componentIsFocused = true;
-      return () => { componentIsFocused = false; };
-    }, [])
-  );
-
-  const verDetalleParada = (item : ParadaHistorialRecorrido) => null;
 
   const renderItem = (paradaItemContainer: ListRenderItemInfo<ParadaHistorialRecorrido>) => (
     <View style={styles.line}>
-      <TouchableOpacity
-        style={styles.item}
-        onPress={() => verDetalleParada(paradaItemContainer.item)}
-      >
-        <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row', paddingHorizontal: 20, paddingVertical: 5 }}>
+        <View style={{ flex: 12 }}>
           <Text style={styles.title}>{paradaItemContainer.item.nombre}</Text>
-          <Text style={styles.subtitle}>{paradaItemContainer.item.exito ? 'El pasajero llego con exito' : 'El pasajero no llego con exito'}</Text>
+          { !paradaItemContainer.item.exito && 
+            <Text style={{ ...styles.subtitle, color: 'darkorange'}}>
+              { historialRecorrido.recorrido.esRecorridoDeIda
+                ? 'El pasajero no subió al micro'
+                : 'El pasajero no bajó en la parada'
+              }
+            </Text>
+          }
         </View>
-        <View>
-          <Text style={styles.hour}>{paradaItemContainer.item.fechaParada}</Text>
+        <View style={{ flex: 3 }}>
+          <Text style={styles.hour}>{mapDateTimeStringToTime(paradaItemContainer.item.fechaParada)}</Text>
         </View>
-      </TouchableOpacity>
+        <View style={{ flex: 1 }}>
+          { paradaItemContainer.item.exito
+            ? <Ionicons name='checkmark-circle' size={22} color="darkgreen" />
+            : <Ionicons name='alert-circle' size={22} color="darkorange" />
+          }
+        </View>
+      </View>
     </View>
   );
 
   const renderItemIrregularidad = (paradaItemContainer: ListRenderItemInfo<IrregularidadHistorialRecorrido>) => (
     <View style={styles.line}>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.title}>{paradaItemContainer.item.descripcion}</Text>
-      </View>
-      <View>
-        <Text style={styles.hour}>{paradaItemContainer.item.fechaIrregularidad}</Text>
+      <View style={{ paddingHorizontal: 20, paddingVertical: 5 }}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.subtitle}>Mensaje a las {mapDateTimeStringToTime(paradaItemContainer.item.fechaIrregularidad)}:</Text>
+        </View>
+        <View>
+          <Text style={styles.title}>{paradaItemContainer.item.descripcion}</Text>
+        </View>
       </View>
     </View>
   );
+
+  const terminoTarde = () => historialRecorrido.recorrido.esRecorridoDeIda && !historialRecorrido.interrumpido && historialRecorrido.fechaFinalizacion
+    && mapDateToDayNumber(historialRecorrido.fechaFinalizacion) > mapDateToDayNumber(historialRecorrido.recorrido.horario);
   
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.list}>
         <View style={styles.detallesRecorrido}>
+          { historialRecorrido.interrumpido && <>
+            <Text style={{ ...styles.title, color: 'darkorange', textAlign: 'center', paddingBottom: 20}}>
+              Este recorrido fue interrumpido por el chofer antes de finalizar
+            </Text>
+          </>}
           <Text style={styles.subtitle}>Recorrido:</Text>
           <Text style={styles.title}>{historialRecorrido.recorrido?.nombre}</Text>
           <Text style={styles.subtitle}></Text>
-          <Text style={styles.subtitle}>Fecha:</Text>
-          <Text style={styles.title}>{mapDateTimeStringToDate(historialRecorrido.fechaInicio)}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 2 }}>
+              <Text style={styles.subtitle}>Fecha:</Text>
+              <Text style={styles.title}>{mapDateTimeStringToDate(historialRecorrido.fechaInicio)}</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Text style={styles.subtitle}>Hora Inicio:</Text>
+              <Text style={styles.title}>{mapDateTimeStringToTime(historialRecorrido.fechaInicio)}</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Text style={styles.subtitle}>Hora Fin:</Text>
+              <Text style={styles.title}>{mapDateTimeStringToTime(historialRecorrido.fechaFinalizacion)}</Text>
+            </View>
+          </View>
           <Text style={styles.subtitle}></Text>
-          <Text style={styles.subtitle}>Hora Inicio:</Text>
-          <Text style={styles.title}>{mapDateTimeStringToTime(historialRecorrido.fechaInicio)}</Text>
-          <Text style={styles.subtitle}></Text>
-          <Text style={styles.subtitle}>Hora Fin:</Text>
-          <Text style={styles.title}>{mapDateTimeStringToTime(historialRecorrido.fechaFinalizacion)}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 3 }}>
+              <Text style={styles.subtitle}>Escuela:</Text>
+              <Text style={styles.title}>{historialRecorrido.recorrido.escuela?.nombre}</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              { historialRecorrido.fechaParadaEscuela && <>
+                <Text style={styles.subtitle}>Hora llegada:</Text>
+                <Text style={styles.title}>{mapDateTimeStringToTime(historialRecorrido.fechaParadaEscuela)}</Text>
+              </>}
+            </View>
+          </View>
           <Text style={styles.subtitle}></Text>
           <Text style={styles.subtitle}>Paradas:</Text>
         </View>
@@ -81,7 +102,16 @@ export default function HistorialRecorridoDetalle({ route, navigation }: Histori
           <Text style={styles.subtitle}>Irregularidades:</Text>
         </View>
         <FlatList data={historialRecorrido.irregularidades} renderItem={renderItemIrregularidad} keyExtractor={item => item.id.toString()} />
-        
+        { terminoTarde() && <>
+          <View style={styles.item}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.subtitle}>Este recorrido llegó tarde a la escuela.</Text>
+            </View>
+            <View style={{ flex: 1, height: 36 }}>
+              <ActionButton name='Imprimir certificado' action={() => null} />
+            </View>
+          </View>
+        </>}
       </SafeAreaView>
     </View>
   );
