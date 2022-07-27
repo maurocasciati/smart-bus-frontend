@@ -9,7 +9,9 @@ import { getHistorialRecorridos } from '../../services/historial.service';
 import { styles } from '../../styles/styles';
 import { mapDateTimeStringToDate, mapDateTimeStringToTime } from '../../utils/date.utils';
 
-export default function HistorialRecorridoListado({ navigation }: HistorialRecorridoListadoProps) {
+export default function HistorialRecorridoListado({ route, navigation }: HistorialRecorridoListadoProps) {
+  const { recorrido } = route.params;
+
   const [historialRecorridos, setHistorialRecorridos] = useState<HistorialRecorrido[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
@@ -21,7 +23,7 @@ export default function HistorialRecorridoListado({ navigation }: HistorialRecor
 
       (async () => {
         try {
-          const historial = await getHistorialRecorridos(token);
+          const historial = await getHistorialRecorridos(token, recorrido.id);
           if (componentIsFocused && historial) {
             setHistorialRecorridos(historial);
           }
@@ -35,7 +37,7 @@ export default function HistorialRecorridoListado({ navigation }: HistorialRecor
   );
 
   const verDetalleHistorialRecorrido = (historialRecorrido: HistorialRecorrido) =>
-    navigation.navigate('HistorialRecorridoDetalle', { historialRecorrido });
+    navigation.navigate('HistorialRecorridoDetalle', { historialRecorrido, recorrido });
 
   const renderItem = (historialItemContainer: ListRenderItemInfo<HistorialRecorrido>) => (
     <View style={styles.line}>

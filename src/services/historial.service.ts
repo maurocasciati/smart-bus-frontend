@@ -3,9 +3,9 @@ import { HistorialRecorridoType } from '../components/form/FormTypes';
 import { HistorialRecorrido } from '../domain/HistorialRecorrido';
 import { authGet, authPost, throwError } from '../utils/service.utils';
 
-export const getHistorialRecorridos = async (token: string | null) => {
+export const getHistorialRecorridos = async (token: string | null, idRecorrido: number) => {
   try {
-    const resp = await authGet<HistorialRecorrido[]>(`${baseUrl}/HistorialRecorrido`, token);
+    const resp = await authGet<HistorialRecorrido[]>(`${baseUrl}/HistorialRecorrido/${idRecorrido}`, token);
     return resp.data;
   } catch(error) {
     throwError(error);

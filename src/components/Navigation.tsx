@@ -43,7 +43,7 @@ export type RootStackParamList = {
   RecorridoEnCursoTutor: { recorrido: Recorrido, eventoRecorrido: PubNubEvent };
   RecorridoEdicion: { recorrido: Recorrido | null };
   HistorialRecorridoListado: { recorrido: Recorrido };
-  HistorialRecorridoDetalle: { historialRecorrido: HistorialRecorrido };
+  HistorialRecorridoDetalle: { historialRecorrido: HistorialRecorrido, recorrido: Recorrido };
   PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
   PasajeroListado: { recorrido: Recorrido };

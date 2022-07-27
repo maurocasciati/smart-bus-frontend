@@ -28,7 +28,7 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
           channels: [channel],
           count: 1,
         },
-        (status, { channels }) => channels[channel] && setEvento(channels[channel][0] as PubNubEvent)
+        (status: any, { channels }: { channels: any }) => channels[channel] && setEvento(channels[channel][0] as PubNubEvent)
       );
     }, [])
   );

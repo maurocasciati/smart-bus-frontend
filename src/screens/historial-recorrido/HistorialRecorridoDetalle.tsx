@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo } from 'react-native';
 import { HistorialRecorridoDetalleProps } from '../../components/Navigation';
 import { IrregularidadHistorialRecorrido } from '../../domain/IrregularidadHistorialRecorrido';
@@ -7,15 +7,22 @@ import { styles } from '../../styles/styles';
 import { mapDateTimeStringToDate, mapDateTimeStringToTime, mapDateToDayNumber } from '../../utils/date.utils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ActionButton from '../../components/ActionButton';
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
+import { getCertificadoHTML } from '../../utils/pdf.utils';
+import { AuthContext } from '../../auth/AuthProvider';
+import { RolUsuario } from '../../domain/RolUsuario';
 
 export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoDetalleProps) {
-  const { historialRecorrido } = route.params;
+  const { historialRecorrido, recorrido } = route.params;
+
+  const { rol } = useContext(AuthContext);
 
   const renderItem = (paradaItemContainer: ListRenderItemInfo<ParadaHistorialRecorrido>) => (
     <View style={styles.line}>
       <View style={{ flexDirection: 'row', paddingHorizontal: 20, paddingVertical: 5 }}>
         <View style={{ flex: 12 }}>
-          <Text style={styles.title}>{paradaItemContainer.item.nombre}</Text>
+          <Text style={styles.title}>{paradaItemContainer.item.nombre} {paradaItemContainer.item.apellido}</Text>
           { !paradaItemContainer.item.exito && 
             <Text style={{ ...styles.subtitle, color: 'darkorange'}}>
               { historialRecorrido.recorrido.esRecorridoDeIda
@@ -51,8 +58,25 @@ export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoD
     </View>
   );
 
-  const terminoTarde = () => historialRecorrido.recorrido.esRecorridoDeIda && !historialRecorrido.interrumpido && historialRecorrido.fechaFinalizacion
-    && mapDateToDayNumber(historialRecorrido.fechaFinalizacion) > mapDateToDayNumber(historialRecorrido.recorrido.horario);
+  const getParadas = () => {
+    const idPasajeros: number[] = recorrido.pasajeros.map((p) => p.id);
+    return rol?.valueOf() === RolUsuario.TUTOR
+      ? historialRecorrido.paradas.filter((p) => idPasajeros.includes(p.idPasajero))
+      : historialRecorrido.paradas;
+  };
+
+  const terminoTarde = () =>
+    rol?.valueOf() === RolUsuario.TUTOR &&
+    historialRecorrido.recorrido.esRecorridoDeIda &&
+    !historialRecorrido.interrumpido &&
+    historialRecorrido.fechaFinalizacion &&
+    historialRecorrido.fechaParadaEscuela &&
+    mapDateToDayNumber(historialRecorrido.fechaParadaEscuela) > mapDateToDayNumber(historialRecorrido.recorrido.horario);
+  
+  const imprimirPDF = async () => {
+    const { uri } = await Print.printToFileAsync({ html: getCertificadoHTML(recorrido, historialRecorrido) });
+    Sharing.shareAsync(uri);
+  };
   
   return (
     <View style={styles.container}>
@@ -67,7 +91,7 @@ export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoD
           <Text style={styles.title}>{historialRecorrido.recorrido?.nombre}</Text>
           <Text style={styles.subtitle}></Text>
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ flex: 2 }}>
+            <View style={{ flex: 1 }}>
               <Text style={styles.subtitle}>Fecha:</Text>
               <Text style={styles.title}>{mapDateTimeStringToDate(historialRecorrido.fechaInicio)}</Text>
             </View>
@@ -82,7 +106,7 @@ export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoD
           </View>
           <Text style={styles.subtitle}></Text>
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ flex: 3 }}>
+            <View style={{ flex: 2 }}>
               <Text style={styles.subtitle}>Escuela:</Text>
               <Text style={styles.title}>{historialRecorrido.recorrido.escuela?.nombre}</Text>
             </View>
@@ -96,7 +120,7 @@ export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoD
           <Text style={styles.subtitle}></Text>
           <Text style={styles.subtitle}>Paradas:</Text>
         </View>
-        <FlatList data={historialRecorrido.paradas} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
+        <FlatList data={getParadas()} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
         <Text style={styles.subtitle}></Text>
         <View style={styles.detallesRecorridoIrregularidades}>
           <Text style={styles.subtitle}>Irregularidades:</Text>
@@ -108,7 +132,7 @@ export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoD
               <Text style={styles.subtitle}>Este recorrido llegó tarde a la escuela.</Text>
             </View>
             <View style={{ flex: 1, height: 36 }}>
-              <ActionButton name='Imprimir certificado' action={() => null} />
+              <ActionButton name='Certificado' action={imprimirPDF} />
             </View>
           </View>
         </>}
