@@ -13,6 +13,7 @@ import { AuthContext } from '../auth/AuthProvider';
 import { getRecorridoOriginal } from '../services/recorrido.service';
 import ErrorText from '../components/ErrorText';
 import { useFocusEffect } from '@react-navigation/native';
+import ActionButton from '../components/ActionButton';
 
 export default function RecorridoDetalle({ route, navigation }: RecorridoDetalleProps) {
   const { recorrido } = route.params;
@@ -51,6 +52,16 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
         <MapViewRecorrido recorrido={recorridoFetched} />
       </View>
 
+      <View style={localstyles.headerContainer}>
+        <View style={localstyles.botonHeader}>
+          <ActionButton name='Ver historial' action={() => navigation.navigate('HistorialRecorridoListado', { recorrido: recorridoFetched })} secondary={true}></ActionButton>
+        </View>
+        <View style={localstyles.botonHeader}/>
+        <View style={localstyles.botonHeader}/>
+      </View>
+
+      <View style={localstyles.espacio}/>
+
       { tieneEscuela && tienePasajeros &&
       <View style={localstyles.detailsContainer}>
         <View style={localstyles.recorridoFetchedContainer}>
@@ -84,15 +95,9 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
             <SecondaryButton name='Ver listado' action={() => navigation.navigate('PasajeroListado', { recorrido: recorridoFetched })}></SecondaryButton>
           </View>
         </View>
-        <View style={localstyles.footerContainer}>
-          <View style={localstyles.footerButton}>
-            { mensajeError && ErrorText(mensajeError) }
-            <PrimaryButton name={'INICIAR'} action={() => navigation.navigate('RecorridoEnCurso', { recorrido: recorridoFetched })}/>
-          </View>
-          <View style={localstyles.historialButton}>
-            { mensajeError && ErrorText(mensajeError) }
-            <SecondaryButton name={'Historial'} action={() => navigation.navigate('HistorialRecorridoListado', { recorrido: recorridoFetched })}/>
-          </View>
+        <View style={localstyles.footerButton}>
+          { mensajeError && ErrorText(mensajeError) }
+          <PrimaryButton name={'INICIAR'} action={() => navigation.navigate('RecorridoEnCurso', { recorrido: recorridoFetched })}/>
         </View>
       </View>
       }
@@ -115,7 +120,7 @@ const localstyles = StyleSheet.create({
     elevation: 6,
     backgroundColor: '#fff',
     margin: 25,
-    flex: 1,
+    flex: 4,
   },
   recorridoFetchedContainer: {
     flexDirection: 'row',
@@ -157,20 +162,10 @@ const localstyles = StyleSheet.create({
     fontSize: 16,
     flex: 3,
   },
-  footerContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexGrow: 1,
-    justifyContent: 'space-around'
-  },
-  historialButton:{
-    width: 100,
-    height: 50,
-    marginLeft: -80,
-    marginTop: 20
-  },
   footerButton: {
-    width: 500
+    marginBottom: -10,
+    alignItems: 'center',
+    elevation: 6,
   },
   type: {
     fontSize: 12,
@@ -179,5 +174,19 @@ const localstyles = StyleSheet.create({
   hour: {
     fontSize: 16,
     textAlign: 'center',
+  },
+  headerContainer: {
+    marginTop: -720,
+    padding: 0,
+    marginHorizontal: 25,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  botonHeader: {
+    flex: 1,
+    padding: 10
+  },
+  espacio: {
+    flex: 11,
   },
 });

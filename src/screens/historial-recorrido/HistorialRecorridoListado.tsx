@@ -4,17 +4,18 @@ import { View, Text, SafeAreaView, FlatList, ListRenderItemInfo, TouchableOpacit
 import { AuthContext } from '../../auth/AuthProvider';
 import ErrorText from '../../components/ErrorText';
 import { HistorialRecorridoListadoProps } from '../../components/Navigation';
-import PrimaryButton from '../../components/PrimaryButton';
 import { HistorialRecorrido } from '../../domain/HistorialRecorrido';
-import { RolUsuario } from '../../domain/RolUsuario';
 import { getHistorialRecorridos } from '../../services/historial.service';
 import { styles } from '../../styles/styles';
+import { mapDateTimeStringToDate, mapDateTimeStringToTime } from '../../utils/date.utils';
 
-export default function HistorialRecorridoListado({ navigation }: HistorialRecorridoListadoProps) {
+export default function HistorialRecorridoListado({ route, navigation }: HistorialRecorridoListadoProps) {
+  const { recorrido } = route.params;
+
   const [historialRecorridos, setHistorialRecorridos] = useState<HistorialRecorrido[]>([]);
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
-  const { token, rol } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
 
   useFocusEffect(
     useCallback(() => {
@@ -22,7 +23,7 @@ export default function HistorialRecorridoListado({ navigation }: HistorialRecor
 
       (async () => {
         try {
-          const historial = await getHistorialRecorridos(token);
+          const historial = await getHistorialRecorridos(token, recorrido.id);
           if (componentIsFocused && historial) {
             setHistorialRecorridos(historial);
           }
@@ -35,11 +36,8 @@ export default function HistorialRecorridoListado({ navigation }: HistorialRecor
     }, [])
   );
 
-  const verDetalleHistorialRecorrido = (historialRecorrido: HistorialRecorrido) => {
-    rol?.valueOf() === RolUsuario.CHOFER ? navigation.navigate('HistorialRecorridoDetalle', { historialRecorrido })
-      : rol?.valueOf() === RolUsuario.TUTOR ? navigation.navigate('HistorialRecorridoDetalleTutor', { historialRecorrido })
-        : null;
-  };
+  const verDetalleHistorialRecorrido = (historialRecorrido: HistorialRecorrido) =>
+    navigation.navigate('HistorialRecorridoDetalle', { historialRecorrido, recorrido });
 
   const renderItem = (historialItemContainer: ListRenderItemInfo<HistorialRecorrido>) => (
     <View style={styles.line}>
@@ -50,10 +48,14 @@ export default function HistorialRecorridoListado({ navigation }: HistorialRecor
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>{historialItemContainer.item.recorrido.nombre}</Text>
           <Text style={styles.subtitle}>{historialItemContainer.item.recorrido.escuela?.nombre}</Text>
+          { historialItemContainer.item.interrumpido && 
+            <Text style={{ ...styles.subtitle, color: 'darkorange' }}>Este recorrido fue interrumpido.</Text>
+          }
         </View>
         <View>
-          <Text style={styles.hour}>{historialItemContainer.item.fechaInicio}</Text>
-          <Text style={styles.hour}>{historialItemContainer.item.fechaFinalizacion}</Text>
+          <Text style={styles.hour}>{mapDateTimeStringToDate(historialItemContainer.item.fechaInicio)}</Text>
+          <Text style={styles.subtitle}>Inicio: {mapDateTimeStringToTime(historialItemContainer.item.fechaInicio)}</Text>
+          <Text style={styles.subtitle}>Fin: {mapDateTimeStringToTime(historialItemContainer.item.fechaFinalizacion)}</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -67,9 +69,6 @@ export default function HistorialRecorridoListado({ navigation }: HistorialRecor
 
       <View style={styles.center}>
         { mensajeError && ErrorText(mensajeError) }
-        { rol?.valueOf() === RolUsuario.CHOFER && 
-          <PrimaryButton name={'Crear Recorrido'} action={() => navigation.navigate('RecorridoEdicion', { recorrido: null } )}/>
-        }
       </View>
     </View>
   );
