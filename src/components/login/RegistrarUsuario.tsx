@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert } from 'react-native';
 import { VALIDACIONES } from '../../domain/Validaciones';
-import { signUp } from '../../services/login.service';
+import { signUp, signUpChofer } from '../../services/login.service';
 import ErrorText from '../ErrorText';
 import CustomTextInput from '../form/CustomTextInput';
 import { DataInicialRegistroType, SignUpFormType } from '../form/FormTypes';
@@ -27,7 +27,7 @@ export default function RegistrarUsuario(props: { toggleLogin: () => void, dataI
     setRegistrarUsuarioError(null);
 
     try {
-      const resp = await signUp(dataRegistro);
+      const resp = props.dataInicial?.tipoDeUsuario === 1 ? await signUpChofer(dataRegistro) : await signUp(dataRegistro);
       if(resp){
         Alert.alert('', `El usuario ${dataRegistro.email} fue registrado con exito`);
         props.toggleLogin();

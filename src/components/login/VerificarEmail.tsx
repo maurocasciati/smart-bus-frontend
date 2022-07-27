@@ -26,8 +26,14 @@ export default function VerificarEmail(props: { toggleVerificado: (dataUsuario: 
       if (resp) {
         const { data, status }: { data: DataInicialRegistroType, status: number } = resp;
         if (status === 204) {
-          Alert.alert('', `El usuario ${email} no está invitado a la aplicación`);
-          props.toggleLogin();
+          Alert.alert(
+            `El usuario ${email} no está invitado a la aplicación`,
+            '¿Quiere registrarse como chofer?',
+            [
+              { text: 'Cancelar', style: 'cancel', onPress: props.toggleLogin },
+              { text: 'Registrar', style: 'destructive', onPress: () => props.toggleVerificado({ tipoDeUsuario: 1, email }) },
+            ]
+          );
         } else if (data.fueActivado) {
           Alert.alert('', `El usuario ${email} ya está registrado`);
           props.toggleLogin();
