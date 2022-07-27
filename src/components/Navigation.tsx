@@ -27,6 +27,10 @@ import PasajeroDetalleTutor from '../screens/tutor/PasajeroDetalleTutor';
 import HistorialRecorridoListado from '../screens/historial-recorrido/HistorialRecorridoListado';
 import { HistorialRecorrido } from '../domain/HistorialRecorrido';
 import HistorialRecorridoDetalle from '../screens/historial-recorrido/HistorialRecorridoDetalle';
+import RecorridoEnCursoTutor from '../screens/tutor/RecorridoEnCursoTutor';
+import { PubNubEvent } from '../domain/PubNubEvent';
+import UsuarioListado from '../screens/UsuarioListado';
+import PasajeroOrden from '../screens/PasajeroOrden';
 
 // Definicion de las pantallas de la aplicación, y los parametros que deben recibir
 export type RootStackParamList = {
@@ -36,6 +40,7 @@ export type RootStackParamList = {
   RecorridoDetalle: { recorrido: Recorrido };
   RecorridoDetalleTutor: { recorrido: Recorrido };
   RecorridoEnCurso: { recorrido: Recorrido };
+  RecorridoEnCursoTutor: { recorrido: Recorrido, eventoRecorrido: PubNubEvent };
   RecorridoEdicion: { recorrido: Recorrido | null };
   HistorialRecorridoListado: { recorrido: Recorrido };
   HistorialRecorridoDetalle: { historialRecorrido: HistorialRecorrido };
@@ -43,6 +48,7 @@ export type RootStackParamList = {
   PasajeroDetalleTutor: { pasajero: Pasajero, recorrido: Recorrido | null };
   PasajeroEdicion: { dataRecorrido: RecorridoFormType | null, pasajero: Pasajero | null, recorrido: Recorrido | null };
   PasajeroListado: { recorrido: Recorrido };
+  PasajeroOrden: { recorrido: Recorrido };
   PasajeroSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
   EscuelaEdicion: { dataRecorrido: RecorridoFormType | null, escuela: Escuela | null, recorrido: Recorrido | null };
   EscuelaSeleccion: { dataRecorrido: RecorridoFormType, recorrido: Recorrido | null };
@@ -50,13 +56,16 @@ export type RootStackParamList = {
   EventualidadDomicilio: { recorrido: Recorrido, pasajero: Pasajero };
   EstadoDeCuenta: { recorrido: Recorrido, pasajero: Pasajero };
   TutorListado: { pasajero: Pasajero, recorrido: Recorrido };
+  UsuarioListado: { escuela: Escuela, recorrido: Recorrido };
 };
 
 // Definición del tipo de dato de las props de cada pantalla
 export type InicioProps = NativeStackScreenProps<RootStackParamList, 'Inicio'>;
 export type RecorridoListadoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoListado'>;
 export type RecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalle'>;
+export type RecorridoDetalleTutorProps = NativeStackScreenProps<RootStackParamList, 'RecorridoDetalleTutor'>;
 export type RecorridoEnCursoProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCurso'>;
+export type RecorridoEnCursoTutorProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEnCursoTutor'>;
 export type RecorridoEdicionProps = NativeStackScreenProps<RootStackParamList, 'RecorridoEdicion'>;
 export type HistorialRecorridoListadoProps = NativeStackScreenProps<RootStackParamList, 'HistorialRecorridoListado'>;
 export type HistorialRecorridoDetalleProps = NativeStackScreenProps<RootStackParamList, 'HistorialRecorridoDetalle'>;
@@ -71,6 +80,7 @@ export type EventualidadAusenciaProps = NativeStackScreenProps<RootStackParamLis
 export type EventualidadDomicilioProps = NativeStackScreenProps<RootStackParamList, 'EventualidadDomicilio'>;
 export type EstadoDeCuentaProps = NativeStackScreenProps<RootStackParamList, 'EstadoDeCuenta'>;
 export type TutorListadoProps = NativeStackScreenProps<RootStackParamList, 'TutorListado'>;
+export type UsuarioListadoProps = NativeStackScreenProps<RootStackParamList, 'UsuarioListado'>;
 
 // Declaración del stack de pantallas que se va a usar dentro del componente de navegación
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -89,12 +99,13 @@ export default function NavigationComponent() {
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalle" component={RecorridoDetalle} options={{ title: 'Recorrido' }}/>
-            <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en curso' }}/>
+            <Stack.Screen name="RecorridoEnCurso" component={RecorridoEnCurso} options={{ title: 'Recorrido en curso', headerBackVisible: false }}/>
             <Stack.Screen name="RecorridoEdicion" component={RecorridoEdicion} options={{ title: 'Recorrido' }}/>
             <Stack.Screen name="HistorialRecorridoListado" component={HistorialRecorridoListado} options={{ title: 'Historial Recorrido' }}/>
             <Stack.Screen name="HistorialRecorridoDetalle" component={HistorialRecorridoDetalle} options={{ title: 'Detalle Historial Recorrido' }}/>
             <Stack.Screen name="PasajeroEdicion" component={PasajeroEdicion} options={{ title: 'Pasajero' }}/>
             <Stack.Screen name="PasajeroListado" component={PasajeroListado} options={{ title: 'Listado de Pasajeros' }}/>
+            <Stack.Screen name="PasajeroOrden" component={PasajeroOrden} options={{ title: 'Ordenar Pasajeros' }}/>
             <Stack.Screen name="PasajeroSeleccion" component={PasajeroSeleccion} options={{ title: 'Seleccionar Pasajeros' }}/>
             <Stack.Screen name="EscuelaEdicion" component={EscuelaEdicion} options={{ title: 'Escuela' }}/>
             <Stack.Screen name="EscuelaSeleccion" component={EscuelaSeleccion} options={{ title: 'Seleccionar Escuela' }}/>
@@ -102,12 +113,14 @@ export default function NavigationComponent() {
             <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
             <Stack.Screen name="EstadoDeCuenta" component={VerEstadoDeCuenta} options={{ title: 'Estado de cuenta' }}/>
             <Stack.Screen name="TutorListado" component={TutorListado} options={{ title: 'Listado de tutores' }}/>
+            <Stack.Screen name="UsuarioListado" component={UsuarioListado} options={{ title: 'Listado de usuarios' }}/>
           </>
         ) : rol.valueOf() == RolUsuario.TUTOR ? (
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
             <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
             {/* <Stack.Screen name="HistorialRecorridoDetalleTutor" component={HistorialRecorridoDetalleTutor} options={{ title: 'Detalle Historial Recorrido' }}/> */}
+            <Stack.Screen name="RecorridoEnCursoTutor" component={RecorridoEnCursoTutor} options={{ title: 'Recorrido en curso' }}/>
             <Stack.Screen name="PasajeroDetalleTutor" component={PasajeroDetalleTutor} options={{ title: 'Detalles del pasajero' }}/>
             <Stack.Screen name="EventualidadAusencia" component={EventualidadAusencia} options={{ title: 'Establecer ausencia' }}/>
             <Stack.Screen name="EventualidadDomicilio" component={EventualidadDomicilio} options={{ title: 'Cambio de domicilio temporal' }}/>
@@ -116,6 +129,8 @@ export default function NavigationComponent() {
         ) : rol.valueOf() == RolUsuario.ESCUELA ? (
           <>
             <Stack.Screen name="RecorridoListado" component={RecorridoListado} options={{ title: 'Listado de Recorridos' }}/>
+            <Stack.Screen name="RecorridoDetalleTutor" component={RecorridoDetalleTutor} options={{ title: 'Recorrido' }}/>
+            <Stack.Screen name="RecorridoEnCursoTutor" component={RecorridoEnCursoTutor} options={{ title: 'Recorrido en curso' }}/>
           </>
         ) : <></>}
       </Stack.Navigator>

@@ -10,7 +10,7 @@ import { mapDateTimeStringToTime } from '../utils/date.utils';
 import ModalConfirmacion from '../components/ModalConfirmacion';
 import { Recorrido } from '../domain/Recorrido';
 import { AuthContext } from '../auth/AuthProvider';
-import { getRecorrido } from '../services/recorrido.service';
+import { getRecorridoOriginal } from '../services/recorrido.service';
 import ErrorText from '../components/ErrorText';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -29,7 +29,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
       (async () => {
         await Location.requestForegroundPermissionsAsync();
         try {
-          const recorridoFetchedResponse = await getRecorrido(token, recorrido.id);
+          const recorridoFetchedResponse = await getRecorridoOriginal(token, recorrido.id);
           if (componentIsFocused && recorridoFetchedResponse) {
             setRecorridoFetched(recorridoFetchedResponse);
           }
@@ -45,10 +45,10 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
   const tieneEscuela = !!recorridoFetched?.escuela;
   const tienePasajeros = !!recorridoFetched?.pasajeros && recorridoFetched.pasajeros.length > 0;
 
-  return (
+  return (recorridoFetched ?
     <View style={styles.container}>
       <View>
-        <MapViewRecorrido recorrido={recorridoFetched || recorrido} />
+        <MapViewRecorrido recorrido={recorridoFetched} />
       </View>
 
       { tieneEscuela && tienePasajeros &&
@@ -104,6 +104,7 @@ export default function RecorridoDetalle({ route, navigation }: RecorridoDetalle
         confirm={() => navigation.navigate('RecorridoEdicion', { recorrido: recorridoFetched || recorrido } )}
       />
     </View>
+    : <></>
   );
 }
 
@@ -179,19 +180,4 @@ const localstyles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-  warning: {
-    alignItems: 'center',
-    width: '100%',
-  },
-  warningtext: {
-    padding: 5,
-    paddingHorizontal: 50,
-    margin: 8,
-    color: 'red',
-    borderColor: 'red',
-    borderRadius: 30,
-    borderWidth: 1,
-    flexDirection: 'row',
-    textAlign: 'center',
-  }
 });

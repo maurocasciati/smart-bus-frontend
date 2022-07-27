@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useContext } from 'react';
 import { View, TextInput, GestureResponderEvent } from 'react-native';
-import { AuthContext } from '../auth/AuthProvider';
-import { signIn } from '../services/login.service';
-import { styles } from '../styles/styles';
-import ErrorText from './ErrorText';
-import PrimaryButton from './PrimaryButton';
+import { AuthContext } from '../../auth/AuthProvider';
+import { signIn } from '../../services/login.service';
+import { styles } from '../../styles/styles';
+import ErrorText from '../ErrorText';
+import PrimaryButton from '../PrimaryButton';
+
 
 export default function SignIn() {
   const [email, setEmail] = useState('');

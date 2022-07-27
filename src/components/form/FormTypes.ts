@@ -1,5 +1,11 @@
 import { LatLng } from 'react-native-maps';
 
+export type DataInicialRegistroType = {
+    fueActivado: boolean,
+    email: string,
+    tipoDeUsuario: number,
+};
+
 export type SignUpFormType = {
     nombre: string,
     apellido: string,
@@ -22,6 +28,8 @@ export type EscuelaFormType = {
     id: number,
     nombre: string,
     direccion: DomicilioFormType | null,
+    emailUsuario: string,
+    emailUsuarios: string[],
 };
 
 export type PasajeroFormType = {
@@ -29,6 +37,7 @@ export type PasajeroFormType = {
     nombre: string,
     apellido: string,
     fechaNacimiento: string,
+    nacimiento: Date,
     telefono: string,
     domicilio: DomicilioFormType | null,
     pisoDepartamento: string,
@@ -46,5 +55,25 @@ export type EventualidadFormType = {
     idRecorrido: number,
     fechaInicio: string,
     fechaFin: string,
+    inicio: Date,
+    fin: Date,
+    duracion: string,
     direccion: DomicilioFormType | null,
 };
+
+export type HistorialRecorridoType = {
+    idRecorrido: number,
+    fechaInicio: Date,
+    fechaFinalizacion?: Date,
+    fechaParadaEscuela?: Date,
+    paradas: {
+        idPasajero: number,
+        fechaParada: Date,
+        exito: boolean,
+    }[],
+    interrumpido: boolean,
+    irregularidades: {
+        fechaIrregularidad: Date,
+        description: string,
+    }[],
+}

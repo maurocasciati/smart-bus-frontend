@@ -6,7 +6,7 @@ import ErrorText from '../components/ErrorText';
 import { PasajeroListadoProps } from '../components/Navigation';
 import PrimaryButton from '../components/PrimaryButton';
 import { Pasajero } from '../domain/Pasajero';
-import { getRecorrido } from '../services/recorrido.service';
+import { getRecorridoOriginal } from '../services/recorrido.service';
 import { styles } from '../styles/styles';
 
 export default function PasajeroListado({ route, navigation }: PasajeroListadoProps) {
@@ -23,7 +23,7 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
 
       (async () => {
         try {
-          const recorridoResponse = await getRecorrido(token, recorrido.id);
+          const recorridoResponse = await getRecorridoOriginal(token, recorrido.id);
           if (componentIsFocused && recorridoResponse) {
             setListadoPasajeros(recorridoResponse.pasajeros);
           }
@@ -52,11 +52,6 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
             {pasajeroItem.item.pisoDepartamento ? pasajeroItem.item.domicilio.domicilio + ' ' + pasajeroItem.item.pisoDepartamento : pasajeroItem.item.domicilio.domicilio}
           </Text>
         </View>
-        {/* TODO: Mostrar de este lado los botones para cambiar el orden del listado de pasajeros
-      <View>  
-        <Text style={localstyles.type}>{recorrido.item.esRecorridoDeIda ? 'Ida' : 'Vuelta'}</Text>
-        <Text style={localstyles.hour}>{recorrido.item.horario}</Text>
-      </View> */}
       </TouchableOpacity>
     </View>
   );
@@ -69,7 +64,7 @@ export default function PasajeroListado({ route, navigation }: PasajeroListadoPr
 
       <View style={styles.center}>
         { mensajeError && ErrorText(mensajeError) }
-        <PrimaryButton name={'Volver'} action={() => navigation.navigate('RecorridoDetalle', { recorrido })}/>
+        <PrimaryButton name={'Ordenar paradas'} action={() => navigation.navigate('PasajeroOrden', { recorrido })}/>
       </View>
     </View>
   );
