@@ -15,7 +15,7 @@ import { AuthContext } from '../auth/AuthProvider';
 import NotFound from '../components/NotFound';
 import { usePubNub } from 'pubnub-react';
 import { LocationPermissionResponse, LocationSubscription } from 'expo-location';
-import { postHistorialRecorrido } from '../services/historialRecorrido.service';
+import { postHistorialRecorrido } from '../services/historial.service';
 import { HistorialRecorridoType } from '../components/form/FormTypes';
 import ModalInput from '../components/ModalInput';
 
@@ -191,6 +191,16 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   };
 
   const notificarIrregularidad = (texto: string): void => {
+    setHistorialRecorrido({
+      ...historialRecorrido,
+      irregularidades: [
+        ...historialRecorrido.irregularidades,
+        {
+          fechaIrregularidad: new Date(),
+          descripcion: texto,
+        }
+      ]
+    });
     pubnub.publish({ channel, message: { enCurso: true, posicionChofer: currentPosition, waypoints, irregularidad: texto }});
   };
 

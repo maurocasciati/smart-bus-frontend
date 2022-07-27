@@ -74,6 +74,6 @@ export type HistorialRecorridoType = {
     interrumpido: boolean,
     irregularidades: {
         fechaIrregularidad: Date,
-        description: string,
+        descripcion: string,
     }[],
 }
