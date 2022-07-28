@@ -13,3 +13,9 @@ export const mapDateToDayNumber = (date: Date): number => {
   const hourString = mapDateTimeStringToTime(date);
   return +(hourString.slice(0, 2) + hourString.slice(3));
 };
+
+export const getNowDate = (): Date => {
+  const now = new Date();
+  now.setTime(now.getTime() - (3*60*60*1000));
+  return now;
+};

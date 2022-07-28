@@ -18,6 +18,7 @@ import { LocationPermissionResponse, LocationSubscription } from 'expo-location'
 import { postHistorialRecorrido } from '../services/historial.service';
 import { HistorialRecorridoType } from '../components/form/FormTypes';
 import ModalInput from '../components/ModalInput';
+import { getNowDate } from '../utils/date.utils';
 
 export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCursoProps) {
   const { recorrido } = route.params;
@@ -32,7 +33,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const [mostrarNotificarIrregularidad, setMostrarNotificarIrregularidad] = useState<boolean>(false);
   const [historialRecorrido, setHistorialRecorrido] = useState<HistorialRecorridoType>({
     idRecorrido: recorrido.id,
-    fechaInicio: new Date(),
+    fechaInicio: getNowDate(),
     fechaFinalizacion: undefined,
     fechaParadaEscuela: undefined,
     paradas: [],
@@ -140,7 +141,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
     try {
       const resp = await postHistorialRecorrido(token, {
         ...historialRecorrido,
-        fechaFinalizacion: new Date(),
+        fechaFinalizacion: getNowDate(),
         interrumpido,
       });
       if (resp) {
@@ -170,7 +171,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
           ...historialRecorrido.paradas,
           {
             idPasajero: paradas[0].id,
-            fechaParada: new Date(),
+            fechaParada: getNowDate(),
             exito,
           },
         ],
@@ -181,7 +182,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
   const paradaEscuela = (): void => {
     setHistorialRecorrido({
       ...historialRecorrido,
-      fechaParadaEscuela: new Date(),
+      fechaParadaEscuela: getNowDate(),
     });
     removerParada();
   };
@@ -196,7 +197,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       irregularidades: [
         ...historialRecorrido.irregularidades,
         {
-          fechaIrregularidad: new Date(),
+          fechaIrregularidad: getNowDate(),
           descripcion: texto,
         }
       ]
