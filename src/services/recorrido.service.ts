@@ -34,6 +34,7 @@ export const getRecorrido = async (token: string | null, idRecorrido: number) =>
 export const postRecorrido = async (token: string | null, data: RecorridoFormType) => {
   try {
     data.horario = mapTimeToDateTimeString(data.horario);
+    data.pasajeros = data.idPasajeros.map((idPasajero, index) => ({ idPasajero, orden: index }));
     const resp = await authPost<Recorrido>(`${baseUrl}/Recorrido`, data, token);
     return resp.data;
   } catch(error) {
