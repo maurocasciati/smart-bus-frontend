@@ -22,6 +22,7 @@ export type RecorridoFormType = {
     idPasajeros: number[],
     idEscuela: number,
     idChofer: number,
+    pasajeros?: { idPasajero: number, orden: number }[],
 };
 
 export type EscuelaFormType = {
