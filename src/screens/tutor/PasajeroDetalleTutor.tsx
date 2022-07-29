@@ -26,7 +26,7 @@ export default function PasajeroDetalleTutor({ route, navigation }: PasajeroDeta
             name1="Establecer ausencia"
             action1={() => recorrido && navigation.navigate('EventualidadAusencia', { recorrido, pasajero })}
             secondary1={true}
-            name2="Establecer cambio de domicilio"
+            name2="Establecer domicilio temp."
             action2={() => recorrido && navigation.navigate('EventualidadDomicilio', { recorrido, pasajero })}
             secondary2={true} />
           <PrimaryButton name="Ver estado de cuenta" action={() => navigation.navigate('EstadoDeCuenta', { pasajero, recorrido })} />

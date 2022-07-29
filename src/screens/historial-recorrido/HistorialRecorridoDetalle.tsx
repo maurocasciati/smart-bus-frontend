@@ -20,7 +20,7 @@ export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoD
 
   const renderItem = (paradaItemContainer: ListRenderItemInfo<ParadaHistorialRecorrido>) => (
     <View style={styles.line}>
-      <View style={{ flexDirection: 'row', paddingHorizontal: 20, paddingVertical: 5 }}>
+      <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 5 }}>
         <View style={{ flex: 12 }}>
           <Text style={styles.title}>{paradaItemContainer.item.nombre} {paradaItemContainer.item.apellido}</Text>
           { !paradaItemContainer.item.exito && 
@@ -47,7 +47,7 @@ export default function HistorialRecorridoDetalle({ route }: HistorialRecorridoD
 
   const renderItemIrregularidad = (paradaItemContainer: ListRenderItemInfo<IrregularidadHistorialRecorrido>) => (
     <View style={styles.line}>
-      <View style={{ paddingHorizontal: 20, paddingVertical: 5 }}>
+      <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
         <View style={{ flex: 1 }}>
           <Text style={styles.subtitle}>Mensaje a las {mapDateTimeStringToTime(paradaItemContainer.item.fechaIrregularidad)}:</Text>
         </View>
