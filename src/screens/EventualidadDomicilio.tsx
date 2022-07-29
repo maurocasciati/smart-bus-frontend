@@ -13,7 +13,7 @@ import { AuthContext } from '../auth/AuthProvider';
 import { RolUsuario } from '../domain/RolUsuario';
 import CustomDatePicker from '../components/form/CustomDatePicker';
 import CustomNumberInput from '../components/form/CustomNumberInput';
-import { mapDateTimeStringToYear } from '../utils/date.utils';
+import { getNowDate, mapDateTimeStringToYear } from '../utils/date.utils';
 
 export default function EventualidadDomicilio({ route, navigation }: EventualidadDomicilioProps) {
   const { pasajero, recorrido } = route.params;
@@ -28,7 +28,7 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
       idRecorrido: recorrido.id,
       fechaInicio: '',
       fechaFin: '',
-      inicio: new Date(),
+      inicio: getNowDate(),
       duracion: '1',
       direccion: null,
     }
@@ -36,7 +36,7 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
 
   const guardarEventualidad = async (dataEventualidad: EventualidadFormType) => {
     setMensajeError(null);
-    const fechaFin = new Date();
+    const fechaFin = getNowDate();
     fechaFin.setDate(dataEventualidad.inicio.getDate() + +dataEventualidad.duracion);
     dataEventualidad.fechaFin = mapDateTimeStringToYear(fechaFin);
     dataEventualidad.fechaInicio = mapDateTimeStringToYear(dataEventualidad.inicio);
@@ -63,7 +63,7 @@ export default function EventualidadDomicilio({ route, navigation }: Eventualida
           errors={errors}
           placeholder='Fecha desde'
           rules={VALIDACIONES.TEXTO_NO_VACIO}
-          minimumDate={new Date()}
+          minimumDate={getNowDate()}
         />
         <CustomNumberInput
           placeholder='Duración: '
