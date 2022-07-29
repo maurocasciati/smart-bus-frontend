@@ -15,14 +15,12 @@ import { mapDateTimeStringToTime } from '../../utils/date.utils';
 
 export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDetalleTutorProps) {
   const { recorrido } = route.params;
-  console.log('original: ' + recorrido.pasajeros.length);
 
   const [evento, setEvento] = useState<PubNubEvent | null>(null);
   const [recorridoActual, setRecorridoActual] = useState<Recorrido>();
 
   const pubnub = usePubNub();
   const channel = recorrido.id.toString();
-  // const participaHoy = 
 
   const { token, rol } = useContext(AuthContext);
 
@@ -43,7 +41,6 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
           try {
             const resp = await getRecorrido(token, recorrido.id);
             if (resp) {
-              console.log('fetched: ' + resp.pasajeros.length);
               setRecorridoActual(resp);
             }
           } catch(e) {
@@ -57,10 +54,7 @@ export default function RecorridoDetalleTutor({ route, navigation }: RecorridoDe
   );
 
   useEffect(() => {
-    const listener = { message: (event: PubNubEvent) => {
-      setEvento(event);
-      console.log(event);
-    }};
+    const listener = { message: (event: PubNubEvent) => setEvento(event) };
     const subscription = { channels: [channel], withPresence: true };
 
     pubnub.addListener(listener);
