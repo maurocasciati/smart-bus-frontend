@@ -254,7 +254,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       ? (
         <>
           <View style={{ flex: 1, margin: 5 }}>
-            <ActionButton name='No sube' action={() => paradaPasajero(false)} secondary={true} disabled={lejosDeProximaParada}></ActionButton>
+            <ActionButton name='No sube' action={() => paradaPasajero(false)} secondary={true}></ActionButton>
           </View>
           <View style={{ flex: 3, margin: 5 }}>
             <ActionButton name='Confirmar subida' action={() => paradaPasajero(true)} disabled={lejosDeProximaParada}></ActionButton>
@@ -263,7 +263,7 @@ export default function RecorridoEnCurso({ route, navigation }: RecorridoEnCurso
       ) : (
         <>
           <View style={{ flex: 1, margin: 5 }}>
-            <ActionButton name='No baja' action={() => paradaPasajero(false)} secondary={true} disabled={lejosDeProximaParada}></ActionButton>
+            <ActionButton name='No baja' action={() => paradaPasajero(false)} secondary={true}></ActionButton>
           </View>
           <View style={{ flex: 3, margin: 5 }}>
             <ActionButton name='Confirmar bajada' action={() => paradaPasajero(true)} disabled={lejosDeProximaParada}></ActionButton>
